@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Graph</title>
+    <!-- Link to external CSS -->
+    <link rel="stylesheet" href="assets/css/control-room-display.css">
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Capacity Deviation Situational Awareness Display</h1>
+    </header>
+    <main>
+        <div id="graph-container">
+            <canvas id="dynamicGraph"></canvas>
+        </div>
+        <div id="update-time">
+            Last Updated: <span id="updateTimestamp">Loading...</span>
+        </div>
+    </main>
+    <!-- Link to external JavaScript -->
+    <script src="assets/js/control-room-display.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+﻿/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0; /* Light text */
+}
+
+/* Header styling */
+header {
+    background-color: #1f1f1f; /* Dark header background */
+    color: #e0e0e0; /* Light text */
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #333; /* Subtle separator */
+}
+
+/* Main content styling */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+#graph-container {
+    width: 80%;
+    max-width: 800px;
+    background-color: #1e1e1e; /* Dark container background */
+    border: 1px solid #333; /* Subtle border */
+    padding: 1rem;
+    border-radius: 5px; /* Rounded corners for modern look */
+}
+
+canvas {
+    background-color: #222; /* Dark canvas background */
+    border: 1px solid #444; /* Subtle border */
+}
+
+/* Update time styling */
+#update-time {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: #b0b0b0; /* Lighter gray for contrast */
+}
+
+/* Footer styling */
+footer {
+    background-color: #1f1f1f; /* Dark footer background */
+    color: #e0e0e0; /* Light text */
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}
