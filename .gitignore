@@ -1,0 +1,16 @@
+# Ignore Visual Studio files
+.vs/
+
+# Ignore temporary files
+*.log
+*.tmp
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+
+# Ignore node_modules (if applicable)
+node_modules/
+
+# Ignore environment variables and secrets
+.env
