@@ -13,7 +13,7 @@
 </head>
 <body>
     <header>
-        <h1>Capacity Deviation Situational Awareness Display</h1>
+        <h1>Interactive Data Visualization for ISO New England Control Room</h1>
     </header>
     <main>
         <div id="graph-container">
@@ -22,6 +22,31 @@
         <div id="update-time">
             Last Updated: <span id="updateTimestamp">Loading...</span>
         </div>
+        <!-- Project Description Section -->
+        <section id="project-description">
+            <h2>About The Capacity Deviation Display:</h2>
+            <p>
+                I developed an interactive data visualization tool to support the decision-making processes in ISO New England's control center, a high-tech environment resembling a NASA launch room, equipped with numerous monitors displaying critical information about grid management. This tool focuses on <strong>capacity deviation</strong>, providing actionable insights to control room operators managing the power grid.
+            </p>
+            <h2>Key Features:</h2>
+            <ul>
+                <li><strong>Interactive Graphs:</strong> Operators can toggle between different visualizations and hover over specific data points to reveal granular details, enabling precise analysis.</li>
+                <li><strong>Data Integration:</strong> The visualization leverages six optimized SQL queries to collect and organize real-time data about grid capacity and performance.</li>
+                <li><strong>Scheduled Data Updates:</strong> An R script, running as a scheduled task every five minutes, processes the data and writes it to a file. This file is dynamically fetched and displayed by JavaScript on the control room monitors.</li>
+                <li><strong>Custom Security-Driven Workflow:</strong> Due to strict security protocols in the control room, a traditional dynamic JavaScript data-fetching solution was not viable. Instead, this workaround ensures compliance with these requirements while maintaining real-time accuracy.</li>
+            </ul>
+            <h2>Technologies Used:</h2>
+            <ul>
+                <li><strong>SQL:</strong> For efficient querying and data extraction across multiple sources.</li>
+                <li><strong>R:</strong> For data processing, transformation, and scheduling tasks.</li>
+                <li><strong>JavaScript:</strong> For dynamic front-end visualization and interactivity.</li>
+                <li><strong>HTML/CSS:</strong> For a responsive and accessible user interface.</li>
+            </ul>
+            <h2>Impact:</h2>
+            <p>
+                This project bridges technical constraints and user needs, providing a critical tool for real-time monitoring and decision-making in a secure, high-stakes environment. The visualization has streamlined capacity management, enabling operators to respond proactively to grid fluctuations.
+            </p>
+        </section>
     </main>
     <!-- Link to external JavaScript -->
     <script src="assets/js/control-room-display.js"></script>

@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Finder</title>
+    <link rel="stylesheet" href="assets/css/FoodpalCSS.css">
+</head>
+<body>
+    <header>
+        <h1>Recipe Finder</h1>
+        <p>Discover recipes and simulate ordering ingredients online!</p>
+    </header>
+    <main>
+        <section id="home">
+            <h2>Welcome to Recipe Finder</h2>
+            <p>Click the button below to start exploring recipes and experience our demo functionality.</p>
+            <button id="startApp">Start Exploring Recipes</button>
+        </section>
+
+        <section id="preferences" style="display: none;">
+            <h2>Set Your Preferences</h2>
+            <label for="diet">Dietary Preference:</label>
+            <select id="dietSelect">
+                <option value="">None</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Gluten Free">Gluten Free</option>
+            </select>
+
+            <label for="intolerances">Intolerances:</label>
+            <input type="text" id="intolerancesInput" placeholder="e.g., Dairy, Eggs">
+
+            <button id="savePreferences">Save Preferences</button>
+        </section>
+
+        <section id="recipeSearch" style="display: none;">
+            <h2>Search for Recipes</h2>
+            <label for="cuisines">Choose a cuisine:</label>
+            <select id="cuisineSelect">
+                <option value="Italian">Italian</option>
+                <option value="Mexican">Mexican</option>
+                <option value="Asian">Asian</option>
+                <option value="American">American</option>
+            </select>
+            <button id="searchRecipes">Search</button>
+
+            <div id="recipeResults"></div>
+        </section>
+
+        <section id="recipeDetails" style="display: none;"></section>
+    </main>
+
+    <script src="assets/js/foodpal.js"></script>
+</body>
+</html>
