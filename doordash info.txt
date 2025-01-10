@@ -1,0 +1,11 @@
+doordash info:
+
+
+signing secret:
+XB2C5lzAH_2wxumpLhLLRVy6wZd2wuFiF7O9PeAVKac
+
+Dev ID:
+c6b30377-3bbe-4ab3-b2d6-0fd3d9e352db
+
+Key ID:
+645fa798-0e24-4b95-a1a7-1b8b870f7a7f

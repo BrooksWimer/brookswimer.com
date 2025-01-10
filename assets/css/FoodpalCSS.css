@@ -1,0 +1,82 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    padding: 2rem;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+#recipeResults, #recipeDetails, #orderSection {
+    margin-top: 2rem;
+}
+
+.recipeCard {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
+}
+
+    .recipeCard h3 {
+        margin: 0 0 0.5rem;
+    }
+
+#orderSection {
+    padding: 1rem;
+    background-color: #e8f5e9;
+    border: 1px solid #4CAF50;
+    border-radius: 5px;
+}
+
+#preferences {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f0f4c3;
+    border: 1px solid #cddc39;
+    border-radius: 5px;
+}
+
+    #preferences label {
+        display: block;
+        margin-top: 1rem;
+    }
+
+    #preferences input, #preferences select {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #preferences button {
+        margin-top: 1rem;
+    }
