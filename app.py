@@ -20,7 +20,7 @@ def safe_click(driver, xpath, retries=3):
     """Safely click an element with retries to handle stale elements."""
     for attempt in range(retries):
         try:
-            element = WebDriverWait(driver, 20).until(
+            element = WebDriverWait(driver, 60).until(
                 EC.element_to_be_clickable((By.XPATH, xpath))
             )
             element.click()
@@ -34,7 +34,7 @@ def safe_send_keys(driver, xpath, text, retries=3):
     """Safely send keys to an input field with retries."""
     for attempt in range(retries):
         try:
-            input_field = WebDriverWait(driver, 20).until(
+            input_field = WebDriverWait(driver, 60).until(
                 EC.presence_of_element_located((By.XPATH, xpath))
             )
             input_field.clear()
@@ -72,6 +72,7 @@ def find_stores():
 
     try:
         driver.get("https://www.doordash.com/tabs/grocery")
+        print(driver.page_source)
 
         # Click the address input button
         if not safe_click(driver, "/html/body/div[1]/div[1]/div[2]/main/main/header/div/div[2]/div[2]/div[1]/div/button/span/span/span[2]/span/div/div/span"):
