@@ -60,7 +60,7 @@ def find_stores():
     # Updated Chrome Options for Heroku
     # Updated Chrome Options for Heroku
     options = Options()
-    options.add_argument("--headless=new")  # Use new headless mode
+    options.add_argument("--headless")  # Use new headless mode
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     #options.add_argument("--disable-dev-shm-usage")  # Prevent shared memory issues
@@ -72,7 +72,7 @@ def find_stores():
 
     # Correct Chrome and Chromedriver paths for Heroku's Chrome for Testing
     chrome_path = "/app/.chrome-for-testing/chrome-linux64/chrome"
-    chromedriver_path = "/app/.chrome-for-testing/chrome-linux64/chromedriver"
+    chromedriver_path = "/app/.chrome-for-testing/chromedriver-linux64/chromedriver"
 
     # Set up the driver with Heroku paths
     service = Service(executable_path=chromedriver_path)
