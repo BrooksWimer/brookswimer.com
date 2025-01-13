@@ -5,6 +5,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import undetected_chromedriver as uc
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import time
 import os 
 
@@ -54,23 +58,25 @@ def find_stores():
         return jsonify({"error": "No address provided"}), 400
 
     # Updated Chrome Options for Heroku
-    options = uc.ChromeOptions()
-    options.add_argument("--headless=new")  # Use the new headless mode
+    # Updated Chrome Options for Heroku
+    options = Options()
+    options.add_argument("--headless=new")  # Use new headless mode
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")  # Prevents shared memory issues
+    options.add_argument("--disable-dev-shm-usage")  # Prevent shared memory issues
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-software-rasterizer")
     options.add_argument("--remote-debugging-port=9222")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
 
-    #driver = uc.Chrome(options=options)
-    # Add paths for Heroku's Chrome and Chromedriver
-    chrome_path = os.getenv('GOOGLE_CHROME_BIN', '/app/.apt/usr/bin/google-chrome')
-    chromedriver_path = os.getenv('CHROMEDRIVER_PATH', '/app/.chromedriver/bin/chromedriver')
+    # Correct Chrome and Chromedriver paths for Heroku's Chrome for Testing
+    chrome_path = "/app/.chrome-for-testing/chrome-linux64/chrome"
+    chromedriver_path = "/app/.chrome-for-testing/chromedriver-linux64/chromedriver"
 
-    driver = uc.Chrome(executable_path=chromedriver_path, options=options)
+    # Set up the driver with Heroku paths
+    service = Service(executable_path=chromedriver_path)
+    driver = webdriver.Chrome(service=service, options=options)
 
     try:
         driver.get("https://www.doordash.com/")
