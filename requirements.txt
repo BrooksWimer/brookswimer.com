@@ -6,3 +6,4 @@ googlemaps
 chromedriver-autoinstaller
 undetected-chromedriver
 flask_cors
+setuptools
