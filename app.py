@@ -62,6 +62,8 @@ def find_stores():
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-software-rasterizer")
     options.add_argument("--remote-debugging-port=9222")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
 
     #driver = uc.Chrome(options=options)
     # Add paths for Heroku's Chrome and Chromedriver
@@ -71,7 +73,12 @@ def find_stores():
     driver = uc.Chrome(executable_path=chromedriver_path, options=options)
 
     try:
-        driver.get("https://www.doordash.com/tabs/grocery")
+        driver.get("https://www.doordash.com/")
+        time.sleep(5)  # Wait for Cloudflare to process
+
+        # Step 3: Navigate to the Grocery tab dynamically
+        grocery_url = "https://www.doordash.com/tabs/grocery/"
+        driver.get(grocery_url)
         print(driver.page_source)
 
         # Click the address input button
