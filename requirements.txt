@@ -4,3 +4,4 @@ gunicorn
 requests
 googlemaps
 chromedriver-autoinstaller
+undetected-chromedriver
