@@ -1,0 +1,6 @@
+flask
+selenium
+gunicorn
+requests
+googlemaps
+chromedriver-autoinstaller
