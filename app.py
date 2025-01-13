@@ -59,6 +59,7 @@ def find_stores():
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--remote-debugging-port=9222")
+    options.add_argument("--headless=new")
 
     #driver = uc.Chrome(options=options)
     chrome_path = "/app/.chromedriver/bin/chromedriver"
