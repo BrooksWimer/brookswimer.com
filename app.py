@@ -62,11 +62,11 @@ def find_stores():
     options.add_argument("--headless=new")
 
     #driver = uc.Chrome(options=options)
-    chrome_path = "/app/.chromedriver/bin/chromedriver"
-    chrome_bin = "/app/.apt/usr/bin/google-chrome"
+    # Add paths for Heroku's Chrome and Chromedriver
+    chrome_path = os.getenv('GOOGLE_CHROME_BIN', '/app/.apt/usr/bin/google-chrome')
+    chromedriver_path = os.getenv('CHROMEDRIVER_PATH', '/app/.chromedriver/bin/chromedriver')
 
-    options.binary_location = chrome_bin
-    driver = uc.Chrome(executable_path=chrome_path, options=options)
+    driver = uc.Chrome(executable_path=chromedriver_path, options=options)
 
     try:
         driver.get("https://www.doordash.com/tabs/grocery")
