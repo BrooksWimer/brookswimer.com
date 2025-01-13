@@ -55,12 +55,13 @@ def find_stores():
 
     # Updated Chrome Options for Heroku
     options = uc.ChromeOptions()
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--headless=new")  # Use the new headless mode
     options.add_argument("--disable-gpu")
-    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")  # Prevents shared memory issues
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-software-rasterizer")
     options.add_argument("--remote-debugging-port=9222")
-    options.add_argument("--headless=new")
 
     #driver = uc.Chrome(options=options)
     # Add paths for Heroku's Chrome and Chromedriver
