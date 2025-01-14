@@ -5,9 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import undetected_chromedriver as uc
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+#from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
+from selenium_stealth import stealth
 from selenium.webdriver.chrome.options import Options
 import time
 import os 
@@ -29,6 +31,9 @@ def safe_click(driver, xpath, retries=3):
             )
             element.click()
             return True
+        except StaleElementReferenceException as stale_err:
+            print(f"[Attempt {attempt + 1}] Stale element encountered. Retrying: {xpath}")
+            time.sleep(2)
         except Exception as e:
             print(f"[Attempt {attempt + 1}] Failed to click element: {xpath}, Error: {e}")
             time.sleep(2)  # Wait and retry
@@ -59,34 +64,31 @@ def find_stores():
 
     # Updated Chrome Options for Heroku
     # Updated Chrome Options for Heroku
-    options = Options()
-    options.add_argument("--headless")  # Use new headless mode
-    options.add_argument("--disable-gpu")
+    # Set up Chrome options
+    options = uc.ChromeOptions()
+
+    #  Enable Incognito Mode
+    options.add_argument("--incognito")
+
+    # Other stealthy options
+    #options.add_argument("--headless=new")  # Headless mode with latest engine
+    options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("--no-sandbox")
-    #options.add_argument("--disable-dev-shm-usage")  # Prevent shared memory issues
-    #options.add_argument("--disable-extensions")
-    #options.add_argument("--disable-software-rasterizer")
-    #options.add_argument("--remote-debugging-port=9222")
-   # options.add_argument("--disable-blink-features=AutomationControlled")
-   # options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
 
-    # Correct Chrome and Chromedriver paths for Heroku's Chrome for Testing
-    chrome_path = "/app/.chrome-for-testing/chrome-linux64/chrome"
-    chromedriver_path = "/app/.chrome-for-testing/chromedriver-linux64/chromedriver"
 
-    # Set up the driver with Heroku paths
-    service = Service(executable_path=chromedriver_path)
-    driver = webdriver.Chrome(service=service, options=options)
+    # Initialize WebDriver
+    driver = uc.Chrome(options=options)
 
     try:
-        driver.get("https://www.doordash.com/")
-        time.sleep(5)  # Wait for Cloudflare to process
-        print(driver.page_source)
-
         # Step 3: Navigate to the Grocery tab dynamically
         grocery_url = "https://www.doordash.com/tabs/grocery/"
         driver.get(grocery_url)
-        print(driver.page_source)
+        time.sleep(5)
 
         # Click the address input button
         if not safe_click(driver, "/html/body/div[1]/div[1]/div[2]/main/main/header/div/div[2]/div[2]/div[1]/div/button/span/span/span[2]/span/div/div/span"):
@@ -116,6 +118,8 @@ def find_stores():
         # Extract store names
         stores = [{"name": store.text} for store in store_elements]
 
+        driver.quit()
+
         return jsonify({"stores": stores})
 
     except Exception as e:
@@ -124,8 +128,6 @@ def find_stores():
         traceback.print_exc()  # Debugging full error trace
         return jsonify({"error": str(e)}), 500
 
-    finally:
-        driver.quit()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
