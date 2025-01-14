@@ -1,4 +1,5 @@
-﻿<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,56 +39,64 @@
                 return;
             }
 
-            // DoorDash API key
-            const DOORDASH_API_KEY = "c6b30377-3bbe-4ab3-b2d6-0fd3d9e352db"; // Replace with your DoorDash API key
+            // API endpoint from your Flask backend hosted on Heroku
+            const apiUrl = `http://192.168.4.134:5000/find_stores?address=${encodeURIComponent(userAddress)}`;
 
-            // DoorDash API endpoint for finding nearby stores
-            const apiUrl = `/.netlify/functions/nearby_stores?address=${encodeURIComponent(userAddress)}`;
+
+
+            console.log("Fetching nearby stores...");
+
+            // Print the API URL
+            console.log(`API URL: ${apiUrl}`);
 
             fetch(apiUrl, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${DOORDASH_API_KEY}`,
-                    "Content-Type": "application/json",
-                },
+                method: 'GET',
             })
                 .then((response) => {
+                    // Log the full response object
+                    console.log("Raw Response:", response);
+
                     if (!response.ok) {
-                        throw new Error(`Error: ${response.statusText}`);
+                        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                     }
                     return response.json();
                 })
                 .then((data) => {
+                    // Log the parsed JSON data
+                    console.log("Received Data:", data);
+
                     if (data.stores && data.stores.length > 0) {
+                        console.log(`Found ${data.stores.length} stores.`);
                         displayNearbyStores(data.stores);
                     } else {
+                        console.warn("No nearby stores found. Please try a different address.");
                         alert("No nearby stores found. Please try a different address.");
                     }
                 })
                 .catch((error) => {
+                    // Log any fetch or parsing errors
                     console.error("Error fetching nearby stores:", error);
                     alert("An error occurred while fetching stores. Please try again.");
                 });
         });
 
-        // Function to display the list of nearby stores
-        function displayNearbyStores(stores) {
-            const storeListDiv = document.getElementById("storeList");
-            const storeOptions = document.getElementById("storeOptions");
+            // Function to display the list of nearby stores
+            function displayNearbyStores(stores) {
+                const storeListDiv = document.getElementById("storeList");
+                const storeOptions = document.getElementById("storeOptions");
 
-            // Populate the list of stores
-            storeOptions.innerHTML = stores
-                .map(
-                    (store) => `
-                    <li>
-                      <strong>${store.name}</strong> - ${store.address}
-                    </li>
-                  `
-                )
-                .join("");
+                // Populate the list of stores
+                storeOptions.innerHTML = stores
+                    .map((store) => `
+                        <li>
+                          <strong>${store.name}</strong>
+                        </li>
+                    `)
+                    .join("");
 
-            // Show the store list
-            storeListDiv.style.display = "block";
+                // Show the store list
+                storeListDiv.style.display = "block";
+            
         }
     </script>
 </body>

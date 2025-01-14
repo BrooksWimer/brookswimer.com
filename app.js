@@ -40,7 +40,7 @@ const body = JSON.stringify({
 })
 
 axios
-	.get('https://api.doordash.com/drive/v2/stores/nearby?address=4%20Gardner%20St%2C%20Allston%2C%20MA%2002134', {
+	.get('https://openapi.doordash.com/developer/v1/businesses/biz-27551630/stores/store-27551630', {
 		headers: {
 			Authorization: 'Bearer ' + token,
 			'Content-Type': 'application/json',
