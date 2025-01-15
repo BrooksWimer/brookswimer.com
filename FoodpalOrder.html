@@ -1,4 +1,4 @@
-﻿<!--<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,173 +39,23 @@
                 return;
             }
 
-            // API endpoint from your Flask backend hosted on Heroku
-            //const apiUrl = `https://24.61.191.115:5000/find_stores?address=${encodeURIComponent(userAddress)}`;
             const apiUrl = `https://api.brookswimer.com/find_stores?address=${encodeURIComponent(userAddress)}`;
 
-
-
             console.log("Fetching nearby stores...");
-
-            // Print the API URL
-            console.log(`API URL: ${apiUrl}`);
-
-            //fetch(apiUrl, {
-            //    method: 'GET',
-            //})
-            //    .then((response) => {
-            //        // Log the full response object
-            //        console.log("Raw Response:", response);
-
-            //        if (!response.ok) {
-            //            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
-            //        }
-            //        return response.json();
-            //    })
-            //    .then((data) => {
-            //        // Log the parsed JSON data
-            //        console.log("Received Data:", data);
-
-            //        if (data.stores && data.stores.length > 0) {
-            //            console.log(`Found ${data.stores.length} stores.`);
-            //            displayStoreButtons(data.stores);
-            //        } else {
-            //            console.warn("No nearby stores found. Please try a different address.");
-            //            alert("No nearby stores found. Please try a different address.");
-            //        }
-            //    })
-            //    .catch((error) => {
-            //        // Log any fetch or parsing errors
-            //        console.error("Error fetching nearby stores:", error);
-            //        alert("An error occurred while fetching stores. Please try again.");
-            //    });
-
-            fetch('./assets/stores.json')
-                .then(response => response.json())
-                .then(data => {
-                    displayStoreButtons(data.stores);
-                })
-                .catch(error => console.error("Error loading JSON:", error));
-
-
-
-        });
-
-            // Function to display the list of nearby stores
-            function displayNearbyStores(stores) {
-                const storeListDiv = document.getElementById("storeList");
-                const storeOptions = document.getElementById("storeOptions");
-
-                // Populate the list of stores
-                storeOptions.innerHTML = stores
-                    .map((store) => `
-                        <li>
-                          <strong>${store.name}</strong>
-                        </li>
-                    `)
-                    .join("");
-
-                // Show the store list
-                storeListDiv.style.display = "block";
-
-            function displayStoreButtons(stores) {
-                const storeListDiv = document.getElementById("storeList");
-                storeListDiv.innerHTML = "";  // Clear previous results
-
-                stores.forEach((store) => {
-                    // Create a button for each store
-                    const button = document.createElement("button");
-                    button.innerText = store.name;
-                    button.style.margin = "10px";
-                    button.style.padding = "10px 20px";
-                    button.style.cursor = "pointer";
-
-                    // Action when the button is clicked
-                    button.addEventListener("click", () => {
-                        alert(`You selected ${store.name}`);
-                        // You can add more actions here (navigate, show details, etc.)
-                    });
-
-                    storeListDiv.appendChild(button);
-                });
-
-                // Make the store list visible
-                storeListDiv.style.display = "block";
-            }
-
-        }
-    </script>
-</body>
-</html>-->
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Ingredients</title>
-    <link rel="stylesheet" href="assets/css/FoodpalCSS.css">
-</head>
-<body>
-    <header>
-        <h1>Order Ingredients</h1>
-        <p>Review your selected recipe and ingredients below.</p>
-    </header>
-    <main>
-        <section id="orderDetails">
-            <h2 id="recipeTitle"></h2>
-            <h3>Ingredients:</h3>
-            <ul id="ingredientList"></ul>
-
-            <label for="userAddress">Enter your delivery address:</label>
-            <input type="text" id="userAddress" placeholder="Street #, City, State, Postal Code">
-            <button id="findStoresButton">Find Stores</button>
-
-            <div id="storeList" style="display: none;">
-                <h3>Nearby Stores</h3>
-                <ul id="storeOptions"></ul>
-            </div>
-
-            <button id="placeOrderButton" style="display: none;">Place Order</button>
-        </section>
-    </main>
-
-    <script>
-        document.getElementById("findStoresButton").addEventListener("click", () => {
-            const userAddress = document.getElementById("userAddress").value;
-
-            if (!userAddress) {
-                alert("Please enter a valid address.");
-                return;
-            }
-
-            // API endpoint from your Flask backend hosted on Heroku
-            //const apiUrl = `https://24.61.191.115:5000/find_stores?address=${encodeURIComponent(userAddress)}`;
-            const apiUrl = `https://api.brookswimer.com/find_stores?address=${encodeURIComponent(userAddress)}`;
-
-
-
-            console.log("Fetching nearby stores...");
-
-            // Print the API URL
             console.log(`API URL: ${apiUrl}`);
 
             fetch(apiUrl, {
                 method: 'GET',
             })
                 .then((response) => {
-                    // Log the full response object
                     console.log("Raw Response:", response);
-
                     if (!response.ok) {
                         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
                     }
                     return response.json();
                 })
                 .then((data) => {
-                    // Log the parsed JSON data
                     console.log("Received Data:", data);
-
                     if (data.stores && data.stores.length > 0) {
                         console.log(`Found ${data.stores.length} stores.`);
                         displayNearbyStores(data.stores);
@@ -215,29 +65,47 @@
                     }
                 })
                 .catch((error) => {
-                    // Log any fetch or parsing errors
                     console.error("Error fetching nearby stores:", error);
                     alert("An error occurred while fetching stores. Please try again.");
                 });
         });
 
-        // Function to display the list of nearby stores
+        // Display stores as clickable buttons
         function displayNearbyStores(stores) {
             const storeListDiv = document.getElementById("storeList");
             const storeOptions = document.getElementById("storeOptions");
 
-            // Populate the list of stores
-            storeOptions.innerHTML = stores
-                .map((store) => `
-                            <li>
-                              <strong>${store.name}</strong>
-                            </li>
-                        `)
-                .join("");
+            storeOptions.innerHTML = stores.map((store) => `
+                    <li>
+                        <button onclick="selectStore('${store.name}')">
+                            <strong>${store.name}</strong>
+                        </button>
+                    </li>
+                `).join("");
 
-            // Show the store list
             storeListDiv.style.display = "block";
+        }
 
+        // Send selected store to backend
+        function selectStore(storeName) {
+            console.log(`Selected store: ${storeName}`);
+
+            fetch('https://api.brookswimer.com/select_store', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ store_name: storeName })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Store selection response:", data);
+                    alert(data.message || "Store selected successfully!");
+                })
+                .catch(error => {
+                    console.error("Error selecting store:", error);
+                    alert("Failed to select the store. Please try again.");
+                });
         }
     </script>
 </body>
