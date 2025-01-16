@@ -44,8 +44,8 @@ function viewRecipe(recipeId) {
     fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`)
         .then(response => response.json())
         .then(data => {
-            const recipeTitle = data.title; // Extract the title
-            const ingredients = data.extendedIngredients; // Extract the ingredients
+            const recipeTitle = data.title;
+            const ingredients = data.extendedIngredients;
 
             const detailsDiv = document.getElementById('recipeDetails');
             detailsDiv.style.display = 'block';
@@ -67,21 +67,28 @@ function viewRecipe(recipeId) {
         });
 }
 
+// Simplify the ingredient data to only include 'name' and 'amount + unit'
+function simplifyIngredients(ingredients) {
+    return ingredients.map(ingredient => ({
+        name: ingredient.name,
+        amount: `${ingredient.amount} ${ingredient.unit}`.trim()
+    }));
+}
 
-
-
+// Redirect to order page with simplified ingredient data
 function navigateToOrderPage(recipeTitle, ingredients) {
-    // Redirect to an order page with query parameters
-    const orderPageUrl = `FoodpalOrder.html?title=${encodeURIComponent(recipeTitle)}&ingredients=${encodeURIComponent(JSON.stringify(ingredients))}`;
+    const simplifiedIngredients = simplifyIngredients(ingredients);
+    const encodedIngredients = encodeURIComponent(JSON.stringify(simplifiedIngredients));
+    const orderPageUrl = `FoodpalOrder.html?title=${encodeURIComponent(recipeTitle)}&ingredients=${encodedIngredients}`;
     window.location.href = orderPageUrl;
 }
 
-
+// Categorize and display order confirmation
 function simulateOrder(recipeTitle, ingredients) {
     const categories = {
         Pantry: ['flour', 'sugar', 'salt', 'oil'],
         Dairy: ['milk', 'butter', 'cheese'],
-        Produce: ['tomato', 'onion', 'potato'],
+        Produce: ['tomato', 'onion', 'potato', 'avocado', 'cilantro'],
         Meat: ['chicken', 'beef', 'pork'],
     };
 
@@ -98,7 +105,7 @@ function simulateOrder(recipeTitle, ingredients) {
         if (!categorizedIngredients[category]) {
             categorizedIngredients[category] = [];
         }
-        categorizedIngredients[category].push(`${ingredient.name}: ${ingredient.amount} ${ingredient.unit}`);
+        categorizedIngredients[category].push(`${ingredient.name}: ${ingredient.amount}`);
     });
 
     const orderSection = document.getElementById('orderSection');
@@ -114,5 +121,3 @@ function simulateOrder(recipeTitle, ingredients) {
     <a href="https://mock-tracking-url.com" target="_blank">Track Your Order</a>
   `;
 }
-
-

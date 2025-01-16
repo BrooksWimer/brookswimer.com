@@ -7,7 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
         }
+
 
         .store-button {
             margin: 10px;
@@ -15,26 +18,47 @@
             background-color: #28a745;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
+
 
             .store-button:hover {
                 background-color: #218838;
             }
 
+
         #products {
             margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+
+
+        .product-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+
+            .product-item:last-child {
+                border-bottom: none;
+            }
     </style>
 </head>
 <body>
+
 
     <h1 id="recipe-title">Loading Recipe...</h1>
     <h2>Select a Store:</h2>
     <div id="store-list"></div>
 
+
     <h2>Available Products:</h2>
     <div id="products"></div>
+
 
     <script>
         // Parse URL parameters to extract title and grocery list
@@ -45,13 +69,15 @@
             return { title, ingredients };
         }
 
+
         // Display the recipe title and ingredients
         function displayRecipeDetails(title, ingredients) {
-            document.getElementById('recipe-title').textContent = title;
+            document.getElementById('recipe-title').textContent = `Recipe: ${title}`;
             console.log('Grocery List:', ingredients);
         }
 
-        // Fetch nearby stores from backend
+
+        // Fetch nearby stores from the backend
         function fetchStores(address) {
             fetch(`https://api.brookswimer.com/find_stores?address=${encodeURIComponent(address)}`)
                 .then(response => response.json())
@@ -65,10 +91,12 @@
                 .catch(error => console.error("Error fetching stores:", error));
         }
 
-        // Display store buttons
+
+        // Display store buttons for user selection
         function displayStoreButtons(stores) {
             const storeListDiv = document.getElementById("store-list");
-            storeListDiv.innerHTML = "";  // Clear previous stores
+            storeListDiv.innerHTML = "";  // Clear previous buttons
+
 
             stores.forEach(store => {
                 const button = document.createElement("button");
@@ -79,10 +107,15 @@
             });
         }
 
+
         // Send POST request to select store and send grocery list
         function selectStore(storeId) {
             const { ingredients } = parseURLParams();
             const groceryList = ingredients.map(item => item.name);
+
+
+            console.log("Sending grocery list to backend:", groceryList);
+
 
             fetch("https://api.brookswimer.com/select_store", {
                 method: "POST",
@@ -100,29 +133,40 @@
                 .catch(error => console.error("Error selecting store:", error));
         }
 
-        // Display product details
+
+        // Display product details from backend
         function displayProducts(products) {
             const productsDiv = document.getElementById("products");
-            productsDiv.innerHTML = "";  // Clear previous results
+            productsDiv.innerHTML = "<h3>Products Found:</h3>";
+
 
             products.forEach(product => {
                 const productDiv = document.createElement("div");
+                productDiv.className = "product-item";
                 productDiv.innerHTML = `<strong>${product[0]}</strong> - ${product[1]} (${product[2]})`;
                 productsDiv.appendChild(productDiv);
             });
         }
 
+
         // Main execution flow
         window.onload = () => {
             const { title, ingredients } = parseURLParams();
 
-            // Show recipe details
+
+            // Display recipe details
             displayRecipeDetails(title, ingredients);
 
-            // Fetch stores after loading
-            const address = "4 Gardner Street Allston MA";  // Replace with dynamic user input if needed
+
+            // Fetch nearby stores (default address used here, replace with user input if needed)
+            const address = "4 Gardner Street Allston MA";
             fetchStores(address);
         };
     </script>
 </body>
 </html>
+
+
+
+
+
