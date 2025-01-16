@@ -7,10 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            padding: 20px;
         }
-
 
         .store-button {
             margin: 10px;
@@ -18,47 +15,26 @@
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
         }
-
 
             .store-button:hover {
                 background-color: #218838;
             }
 
-
         #products {
             margin-top: 20px;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-
-        .product-item {
-            padding: 5px 0;
-            border-bottom: 1px solid #ccc;
-        }
-
-
-            .product-item:last-child {
-                border-bottom: none;
-            }
     </style>
 </head>
 <body>
-
 
     <h1 id="recipe-title">Loading Recipe...</h1>
     <h2>Select a Store:</h2>
     <div id="store-list"></div>
 
-
     <h2>Available Products:</h2>
     <div id="products"></div>
-
 
     <script>
         // Parse URL parameters to extract title and grocery list
@@ -69,13 +45,11 @@
             return { title, ingredients };
         }
 
-
-        // Display the recipe title and ingredients
+        // Display the recipe title and log ingredients
         function displayRecipeDetails(title, ingredients) {
-            document.getElementById('recipe-title').textContent = `Recipe: ${title}`;
-            console.log('Grocery List:', ingredients);
+            document.getElementById('recipe-title').textContent = title;
+            console.log('Parsed Grocery List:', ingredients);
         }
-
 
         // Fetch nearby stores from the backend
         function fetchStores(address) {
@@ -91,82 +65,79 @@
                 .catch(error => console.error("Error fetching stores:", error));
         }
 
-
-        // Display store buttons for user selection
+        // Display store buttons with store IDs hidden
         function displayStoreButtons(stores) {
             const storeListDiv = document.getElementById("store-list");
             storeListDiv.innerHTML = "";  // Clear previous buttons
 
-
             stores.forEach(store => {
                 const button = document.createElement("button");
                 button.className = "store-button";
-                button.textContent = store.name;
-                button.onclick = () => selectStore(store.id);
+                button.textContent = store.name;   // Show only the store name
+                button.setAttribute("data-store-id", store.id);  // Store the ID internally
+                button.onclick = () => selectStore(store.id);  // Pass store ID on click
                 storeListDiv.appendChild(button);
             });
         }
 
-
-        // Send POST request to select store and send grocery list
+        // Send store ID and grocery list to the backend
         function selectStore(storeId) {
             const { ingredients } = parseURLParams();
+
+            // Prepare the grocery list with ingredient names
             const groceryList = ingredients.map(item => item.name);
 
-
             console.log("Sending grocery list to backend:", groceryList);
+            console.log("Selected store ID:", storeId);
 
-
+            // POST request to backend with store ID and grocery list
             fetch("https://api.brookswimer.com/select_store", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ store_id: storeId, grocery_list: groceryList })
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Server responded with ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.products) {
                         displayProducts(data.products);
                     } else {
-                        alert("Failed to fetch products.");
+                        alert("No products found or failed to fetch products.");
                     }
                 })
-                .catch(error => console.error("Error selecting store:", error));
+                .catch(error => {
+                    console.error("Error selecting store:", error);
+                    alert("Failed to process the order. Please try again.");
+                });
         }
 
-
-        // Display product details from backend
+        // Display the fetched product details
         function displayProducts(products) {
             const productsDiv = document.getElementById("products");
-            productsDiv.innerHTML = "<h3>Products Found:</h3>";
-
+            productsDiv.innerHTML = "";  // Clear previous results
 
             products.forEach(product => {
                 const productDiv = document.createElement("div");
-                productDiv.className = "product-item";
                 productDiv.innerHTML = `<strong>${product[0]}</strong> - ${product[1]} (${product[2]})`;
                 productsDiv.appendChild(productDiv);
             });
         }
 
-
         // Main execution flow
         window.onload = () => {
             const { title, ingredients } = parseURLParams();
 
-
             // Display recipe details
             displayRecipeDetails(title, ingredients);
 
-
-            // Fetch nearby stores (default address used here, replace with user input if needed)
-            const address = "4 Gardner Street Allston MA";
+            // Fetch nearby stores (static address for now)
+            const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
             fetchStores(address);
         };
     </script>
 </body>
 </html>
-
-
-
-
-
