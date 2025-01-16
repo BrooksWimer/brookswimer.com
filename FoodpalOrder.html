@@ -3,110 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Ingredients</title>
-    <link rel="stylesheet" href="assets/css/FoodpalCSS.css">
-</head>
-<body>
-    <header>
-        <h1>Order Ingredients</h1>
-        <p>Review your selected recipe and ingredients below.</p>
-    </header>
-    <main>
-        <section id="orderDetails">
-            <h2 id="recipeTitle"></h2>
-            <h3>Ingredients:</h3>
-            <ul id="ingredientList"></ul>
-
-            <label for="userAddress">Enter your delivery address:</label>
-            <input type="text" id="userAddress" placeholder="Street #, City, State, Postal Code">
-            <button id="findStoresButton">Find Stores</button>
-
-            <div id="storeList" style="display: none;">
-                <h3>Nearby Stores</h3>
-                <ul id="storeOptions"></ul>
-            </div>
-
-            <button id="placeOrderButton" style="display: none;">Place Order</button>
-        </section>
-    </main>
-
-    <script>
-        document.getElementById("findStoresButton").addEventListener("click", () => {
-            const userAddress = document.getElementById("userAddress").value;
-
-            if (!userAddress) {
-                alert("Please enter a valid address.");
-                return;
-            }
-
-            const apiUrl = `https://api.brookswimer.com/find_stores?address=${encodeURIComponent(userAddress)}`;
-
-            console.log("Fetching nearby stores...");
-            console.log(`API URL: ${apiUrl}`);
-
-            fetch(apiUrl, {
-                method: 'GET',
-            })
-                .then((response) => {
-                    console.log("Raw Response:", response);
-                    if (!response.ok) {
-                        throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log("Received Data:", data);
-                    if (data.stores && data.stores.length > 0) {
-                        console.log(`Found ${data.stores.length} stores.`);
-                        displayNearbyStores(data.stores);
-                    } else {
-                        console.warn("No nearby stores found. Please try a different address.");
-                        alert("No nearby stores found. Please try a different address.");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching nearby stores:", error);
-                    alert("An error occurred while fetching stores. Please try again.");
-                });
-        });
-
-        // Display stores as clickable buttons
-        function displayNearbyStores(stores) {
-            const storeListDiv = document.getElementById("storeList");
-            const storeOptions = document.getElementById("storeOptions");
-
-            storeOptions.innerHTML = stores.map((store) => `
-                    <li>
-                        <button onclick="selectStore('${store.name}')">
-                            <strong>${store.name}</strong>
-                        </button>
-                    </li>
-                `).join("");
-
-            storeListDiv.style.display = "block";
+    <title>FoodPal Grocery Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
         }
 
-        // Send selected store to backend
-        function selectStore(storeName) {
-            console.log(`Selected store: ${storeName}`);
+        .store-button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
 
-            fetch('https://api.brookswimer.com/select_store', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ store_name: storeName })
+            .store-button:hover {
+                background-color: #218838;
+            }
+
+        #products {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="recipe-title">Loading Recipe...</h1>
+    <h2>Select a Store:</h2>
+    <div id="store-list"></div>
+
+    <h2>Available Products:</h2>
+    <div id="products"></div>
+
+    <script>
+        // Parse URL parameters to extract title and grocery list
+        function parseURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            const title = params.get('title');
+            const ingredients = params.get('ingredients') ? JSON.parse(decodeURIComponent(params.get('ingredients'))) : [];
+            return { title, ingredients };
+        }
+
+        // Display the recipe title and ingredients
+        function displayRecipeDetails(title, ingredients) {
+            document.getElementById('recipe-title').textContent = title;
+            console.log('Grocery List:', ingredients);
+        }
+
+        // Fetch nearby stores from backend
+        function fetchStores(address) {
+            fetch(`https://api.brookswimer.com/find_stores?address=${encodeURIComponent(address)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.stores && data.stores.length > 0) {
+                        displayStoreButtons(data.stores);
+                    } else {
+                        alert("No nearby stores found.");
+                    }
+                })
+                .catch(error => console.error("Error fetching stores:", error));
+        }
+
+        // Display store buttons
+        function displayStoreButtons(stores) {
+            const storeListDiv = document.getElementById("store-list");
+            storeListDiv.innerHTML = "";  // Clear previous stores
+
+            stores.forEach(store => {
+                const button = document.createElement("button");
+                button.className = "store-button";
+                button.textContent = store.name;
+                button.onclick = () => selectStore(store.id);
+                storeListDiv.appendChild(button);
+            });
+        }
+
+        // Send POST request to select store and send grocery list
+        function selectStore(storeId) {
+            const { ingredients } = parseURLParams();
+            const groceryList = ingredients.map(item => item.name);
+
+            fetch("https://api.brookswimer.com/select_store", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ store_id: storeId, grocery_list: groceryList })
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Store selection response:", data);
-                    alert(data.message || "Store selected successfully!");
+                    if (data.products) {
+                        displayProducts(data.products);
+                    } else {
+                        alert("Failed to fetch products.");
+                    }
                 })
-                .catch(error => {
-                    console.error("Error selecting store:", error);
-                    alert("Failed to select the store. Please try again.");
-                });
+                .catch(error => console.error("Error selecting store:", error));
         }
+
+        // Display product details
+        function displayProducts(products) {
+            const productsDiv = document.getElementById("products");
+            productsDiv.innerHTML = "";  // Clear previous results
+
+            products.forEach(product => {
+                const productDiv = document.createElement("div");
+                productDiv.innerHTML = `<strong>${product[0]}</strong> - ${product[1]} (${product[2]})`;
+                productsDiv.appendChild(productDiv);
+            });
+        }
+
+        // Main execution flow
+        window.onload = () => {
+            const { title, ingredients } = parseURLParams();
+
+            // Show recipe details
+            displayRecipeDetails(title, ingredients);
+
+            // Fetch stores after loading
+            const address = "4 Gardner Street Allston MA";  // Replace with dynamic user input if needed
+            fetchStores(address);
+        };
     </script>
 </body>
 </html>
