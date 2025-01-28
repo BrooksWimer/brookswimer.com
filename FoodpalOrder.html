@@ -115,17 +115,47 @@
                 });
         }
 
+        // Track selected quantities for each product
+        const selectedQuantities = {};
+
         // Display the fetched product details
         function displayProducts(products) {
             const productsDiv = document.getElementById("products");
-            productsDiv.innerHTML = "";  // Clear previous results
+            productsDiv.innerHTML = ""; // Clear previous results
 
             products.forEach(product => {
                 const productDiv = document.createElement("div");
-                productDiv.innerHTML = `<strong>${product.name}</strong> - ${product.price} (${product.quantity})`;
+
+                // Create a label for the product
+                const productLabel = document.createElement("span");
+                productLabel.innerHTML = `<strong>${product.name}</strong> - ${product.price} (${product.quantity})`;
+                productDiv.appendChild(productLabel);
+
+                // Create an input field for quantity selection
+                const quantityInput = document.createElement("input");
+                quantityInput.type = "number";
+                quantityInput.min = 0;
+                quantityInput.value = 0; // Default to 0
+                quantityInput.style.margin = "0 10px";
+                quantityInput.addEventListener("input", () => {
+                    selectedQuantities[product.name] = parseInt(quantityInput.value) || 0;
+                });
+                productDiv.appendChild(quantityInput);
+
+                // Add the product div to the parent container
                 productsDiv.appendChild(productDiv);
             });
+
+            // Add a log button to display the selected quantities
+            const logButton = document.createElement("button");
+            logButton.textContent = "Log Selected Quantities";
+            logButton.style.marginTop = "20px";
+            logButton.onclick = () => {
+                console.log("Selected Quantities:", selectedQuantities);
+            };
+            productsDiv.appendChild(logButton);
         }
+
 
         // Main execution flow
         window.onload = () => {
