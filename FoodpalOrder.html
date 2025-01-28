@@ -114,6 +114,14 @@
                     alert("Failed to process the order. Please try again.");
                 });
         }
+        // Dummy product data for testing
+        const dummyProducts = [
+            { name: "Milk", price: "$4.50", quantity: "1 gallon" },
+            { name: "Eggs", price: "$3.00", quantity: "12 eggs" },
+            { name: "Soda", price: "$1.50", quantity: "12 oz can" },
+            { name: "Rice", price: "$2.00", quantity: "1 lb" },
+            { name: "Chicken Breast", price: "$8.00", quantity: "2 lbs" }
+        ];
 
         // Track selected quantities for each product
         const selectedQuantities = {};
@@ -164,10 +172,17 @@
             // Display recipe details
             displayRecipeDetails(title, ingredients);
 
+            // Display recipe details
+            displayRecipeDetails("Dummy Recipe for Testing", ingredients);
+
+            // Instead of fetching from the backend, display dummy products
+            displayProducts(dummyProducts);
+
             // Fetch nearby stores (static address for now)
-            const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
-            fetchStores(address);
+            //const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
+            //fetchStores(address);
         };
     </script>
 </body>
 </html>
+
