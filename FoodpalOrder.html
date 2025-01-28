@@ -158,11 +158,33 @@
             const logButton = document.createElement("button");
             logButton.textContent = "Log Selected Quantities";
             logButton.style.marginTop = "20px";
-            logButton.onclick = () => {
-                console.log("Selected Quantities:", selectedQuantities);
-            };
+            //logButton.onclick = () => {
+            //    console.log("Selected Quantities:", selectedQuantities);
+            //};
+            logButton.onclick = logSelectedQuantitiesAndDisplayItems;
             productsDiv.appendChild(logButton);
         }
+
+        function logSelectedQuantitiesAndDisplayItems() {
+            // Create the items list
+            const items = Object.keys(selectedQuantities)
+                .filter(productName => selectedQuantities[productName] > 0) // Exclude items with 0 quantity
+                .map(productName => ({
+                    name: productName,
+                    quantity: selectedQuantities[productName],
+                    description: `This is a package of ${productName}` // Placeholder description
+                }));
+
+            // Log the items list to the console
+            console.log("Generated Items List:", items);
+
+            // Display the items list in the UI for debugging/testing purposes
+            const productsDiv = document.getElementById("products");
+            const itemsDiv = document.createElement("div");
+            itemsDiv.innerHTML = `<h3>Generated Items List:</h3><pre>${JSON.stringify(items, null, 2)}</pre>`;
+            productsDiv.appendChild(itemsDiv);
+        }
+
 
 
         // Main execution flow
