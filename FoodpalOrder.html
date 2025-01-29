@@ -161,7 +161,7 @@
             //logButton.onclick = () => {
             //    console.log("Selected Quantities:", selectedQuantities);
             //};
-            logButton.onclick = logSelectedQuantitiesAndDisplayItems;
+            logButton.onclick = logSelectedQuantitiesAndSendOrder;
             productsDiv.appendChild(logButton);
         }
 
@@ -185,6 +185,48 @@
             productsDiv.appendChild(itemsDiv);
         }
 
+        function logSelectedQuantitiesAndSendOrder() {
+            // Create the items list
+            const items = Object.keys(selectedQuantities)
+                .filter(productName => selectedQuantities[productName] > 0) // Exclude items with 0 quantity
+                .map(productName => ({
+                    name: productName,
+                    quantity: selectedQuantities[productName]
+                }));
+
+            // Log the items to the console for debugging
+            console.log("Generated Items List:", items);
+
+            // Prepare the request body
+            const requestBody = {
+                items: items // Include only the items list; the backend will handle the rest
+            };
+
+            // Send the request to the backend
+            fetch("https://api.brookswimer.com/create_order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestBody)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Server responded with ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Order created successfully:", data);
+                    alert("Order has been created successfully!");
+                })
+                .catch(error => {
+                    console.error("Error creating order:", error);
+                    alert("Failed to create order. Please try again.");
+                });
+        }
+
+
 
 
         // Main execution flow
@@ -198,11 +240,11 @@
             displayRecipeDetails("Dummy Recipe for Testing", ingredients);
 
             // Instead of fetching from the backend, display dummy products
-            displayProducts(dummyProducts);
+            //displayProducts(dummyProducts);
 
-            // Fetch nearby stores (static address for now)
-            //const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
-            //fetchStores(address);
+             //Fetch nearby stores (static address for now)
+            const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
+            fetchStores(address);
         };
     </script>
 </body>
