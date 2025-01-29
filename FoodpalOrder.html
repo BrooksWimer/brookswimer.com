@@ -36,6 +36,9 @@
     <h2>Available Products:</h2>
     <div id="products"></div>
 
+    <h2>Order Summary</h2>
+    <div id="order-details"></div>
+
     <script>
         // Parse URL parameters to extract title and grocery list
         function parseURLParams() {
@@ -185,6 +188,46 @@
             productsDiv.appendChild(itemsDiv);
         }
 
+
+        function displayOrderDetails(orderDetailsString) {
+            try {
+                // Parse the stringified JSON
+                const orderDetails = JSON.parse(orderDetailsString);
+
+                // Get the display container
+                const orderDiv = document.getElementById("order-details");
+                orderDiv.innerHTML = "<h2>Order Details</h2>"; // Clear previous content
+
+                // Create elements to display key order details
+                const detailsHtml = `
+                <p><strong>Order ID:</strong> ${orderDetails.external_delivery_id}</p>
+                <p><strong>Status:</strong> ${orderDetails.delivery_status}</p>
+                <p><strong>Tracking:</strong> <a href="${orderDetails.tracking_url}" target="_blank">Track Order</a></p>
+                <p><strong>Pickup Address:</strong> ${orderDetails.pickup_address}</p>
+                <p><strong>Dropoff Address:</strong> ${orderDetails.dropoff_address}</p>
+                <p><strong>Estimated Pickup Time:</strong> ${new Date(orderDetails.pickup_time_estimated).toLocaleString()}</p>
+                <p><strong>Estimated Dropoff Time:</strong> ${new Date(orderDetails.dropoff_time_estimated).toLocaleString()}</p>
+                <p><strong>Order Total:</strong> $${(orderDetails.order_value / 100).toFixed(2)}</p>
+                <p><strong>Delivery Fee:</strong> $${(orderDetails.fee / 100).toFixed(2)}</p>
+            `;
+
+                // Display the items in the order
+                let itemsHtml = "<h3>Items Ordered:</h3><ul>";
+                orderDetails.items.forEach(item => {
+                    itemsHtml += `<li>${item.quantity}x ${item.name}</li>`;
+                });
+                itemsHtml += "</ul>";
+
+                // Append details to the container
+                orderDiv.innerHTML += detailsHtml + itemsHtml;
+            } catch (error) {
+                console.error("Failed to parse and display order details:", error);
+            }
+        }
+
+
+
+
         function logSelectedQuantitiesAndSendOrder() {
             // Create the items list
             const items = Object.keys(selectedQuantities)
@@ -217,8 +260,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log("Order created successfully:", data);
-                    alert("Order has been created successfully!");
+                    displayOrderDetails(data.order_details);
                 })
                 .catch(error => {
                     console.error("Error creating order:", error);
@@ -242,7 +284,7 @@
             // Instead of fetching from the backend, display dummy products
             //displayProducts(dummyProducts);
 
-             //Fetch nearby stores (static address for now)
+            //Fetch nearby stores (static address for now)
             const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
             fetchStores(address);
         };
