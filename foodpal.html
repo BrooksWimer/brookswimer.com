@@ -53,11 +53,29 @@
             <section id="status-update">
                 <h3>Status Update</h3>
                 <p>
-                    I am currently working on hosting the application on this website. In the meantime, please feel free to review our code:
+                    FoodPal is currently a demo, and getting it to work has been a major undertaking. Instead of simply embedding an existing tool, I’ve had to rebuild the entire system to function on my website. While it’s not yet fully deployed in a reliable manner, here’s what’s gone into making it work so far:
                 </p>
+                
+                <h4>1. Rebuilding the Backend</h4>
                 <p>
-                    <a href="https://github.com/jdsuh50/CS411-Team-Project" target="_blank">View the GitHub Repository</a>
+                    I had to create a Flask-based backend from scratch to handle requests, process user input, and communicate with the automation system. This includes managing store selections, grocery lists, and formatting data for the frontend.
                 </p>
+                
+                <h4>2. Hosting My Own WebDriver Server</h4>
+                <p>
+                    Since external hosting services don’t support running WebDriver scripts, I had to turn my old computer into a dedicated server to handle automation. This setup allows FoodPal to process requests dynamically, but I’m still fine-tuning stability and performance to make it more reliable.
+                </p>
+                
+                <h4>3. Overcoming CORS, SSL, and Hosting Challenges</h4>
+                <p>
+                    To integrate FoodPal into my website, I had to configure:
+                </p>
+                
+                <ul>
+                    <li>CORS (Cross-Origin Resource Sharing): Allows secure communication between the frontend and backend.</li>
+                    <li>SSL Certificates: Supports HTTPS and prevents security warnings.</li>
+                    <li>Hosting Adjustments: Keeps the system online while managing resource limitations.</li>
+                </ul>             
 
                 <p>
                     <button onclick="location.href='FoodpalDemo.html'">View Demo</button>
