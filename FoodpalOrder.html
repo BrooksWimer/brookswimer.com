@@ -99,13 +99,13 @@
                 button.className = "store-button";
                 button.textContent = store.name;   // Show only the store name
                 button.setAttribute("data-store-id", store.id);  // Store the ID internally
-                button.onclick = () => selectStore(store.id);  // Pass store ID on click
+                button.onclick = () => selectStore(store.id, store.name);  // Pass store ID on click
                 storeListDiv.appendChild(button);
             });
         }
 
         // Send store ID and grocery list to the backend
-        function selectStore(storeId) {
+        function selectStore(storeId, storeName) {
             const { ingredients } = parseURLParams();
 
             // Prepare the grocery list with ingredient names
@@ -118,7 +118,7 @@
             fetch("https://api.brookswimer.com/select_store", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ store_id: storeId, grocery_list: groceryList })
+                body: JSON.stringify({ store_id: storeId, grocery_list: groceryList, store_name: storeName })
             })
                 .then(response => {
                     if (!response.ok) {
