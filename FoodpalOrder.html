@@ -34,7 +34,7 @@
     <h2>Enter Your Address:</h2>
     <input type="text" id="address-input" placeholder="Enter your address here" style="width: 300px; padding: 5px;">
     <button onclick="handleAddressSubmit()">Submit</button>
-    
+
     <h2>Select a Store:</h2>
     <div id="store-list"></div>
 
@@ -57,6 +57,22 @@
         function displayRecipeDetails(title, ingredients) {
             document.getElementById('recipe-title').textContent = title;
             console.log('Parsed Grocery List:', ingredients);
+        }
+
+        // Handle the address submission
+        function handleAddressSubmit() {
+            const inputField = document.getElementById("address-input");
+            const address = inputField.value.trim();  // Get and trim input
+
+            if (address) {
+                savedAddress = address;  // Store address globally
+                console.log("Address saved:", savedAddress);
+
+                // Fetch stores using the entered address
+                fetchStores(savedAddress);
+            } else {
+                alert("Please enter a valid address.");
+            }
         }
 
         // Fetch nearby stores from the backend
@@ -289,9 +305,9 @@
             // Instead of fetching from the backend, display dummy products
             //displayProducts(dummyProducts);
 
-            //Fetch nearby stores (static address for now)
-            const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
-            fetchStores(address);
+            // //Fetch nearby stores (static address for now)
+            // const address = "4 Gardner Street Allston MA";  // Replace with dynamic input if necessary
+            // fetchStores(address);
         };
     </script>
 </body>
