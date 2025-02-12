@@ -246,7 +246,6 @@
         // Track selected quantities for each product
         const selectedQuantities = {};
 
-        // Display the fetched product details
         function displayProducts(products) {
             const productsDiv = document.getElementById("products");
             productsDiv.innerHTML = ""; // Clear previous results
@@ -280,16 +279,26 @@
 
             // Create sections for each matched ingredient
             Object.keys(groupedProducts).forEach(ingredient => {
-                // Header for the ingredient
-                const header = document.createElement("h3");
+                // Header for the ingredient (Standalone line)
+                const header = document.createElement("h2");
                 header.textContent = ingredient;
                 header.style.color = "#ff4500"; // Highlight ingredient category
+                header.style.marginTop = "15px";
+                header.style.textAlign = "left"; // Align header to left
                 productsDiv.appendChild(header);
+
+                // Create a container for the product list
+                const ingredientContainer = document.createElement("div");
+                ingredientContainer.style.marginLeft = "20px"; // Indent products under header
 
                 // List products under the ingredient category
                 groupedProducts[ingredient].forEach(product => {
                     const productDiv = document.createElement("div");
                     productDiv.classList.add("product-card");
+                    productDiv.style.display = "flex";
+                    productDiv.style.justifyContent = "space-between";
+                    productDiv.style.alignItems = "center";
+                    productDiv.style.marginBottom = "8px";
 
                     // Create a label for the product
                     const productLabel = document.createElement("span");
@@ -301,14 +310,18 @@
                     quantityInput.type = "number";
                     quantityInput.min = 0;
                     quantityInput.value = 0; // Default to 0
-                    quantityInput.style.margin = "0 10px";
+                    quantityInput.style.width = "50px";
+                    quantityInput.style.marginLeft = "10px";
                     quantityInput.addEventListener("input", () => {
                         selectedQuantities[product.name] = parseInt(quantityInput.value) || 0;
                     });
 
                     productDiv.appendChild(quantityInput);
-                    productsDiv.appendChild(productDiv);
+                    ingredientContainer.appendChild(productDiv);
                 });
+
+                // Append the ingredient container under the header
+                productsDiv.appendChild(ingredientContainer);
             });
 
             // Add a log button to display the selected quantities
@@ -318,6 +331,7 @@
             logButton.onclick = logSelectedQuantitiesAndSendOrder;
             productsDiv.appendChild(logButton);
         }
+
 
 
 
