@@ -251,59 +251,74 @@
             const productsDiv = document.getElementById("products");
             productsDiv.innerHTML = ""; // Clear previous results
 
+            const { ingredients } = parseURLParams(); // Get recipe ingredients from URL
+            const ingredientNames = ingredients.map(ing => ing.name.toLowerCase()); // Convert names to lowercase for comparison
+
+            const groupedProducts = {};
+
+            // Helper function: Find best-matching recipe ingredient for a product
+            function findMatchingIngredient(productName) {
+                productName = productName.toLowerCase();
+                for (let ingredient of ingredientNames) {
+                    if (productName.includes(ingredient)) {
+                        return ingredient; // Match found
+                    }
+                }
+                return "Uncategorized"; // No match
+            }
+
+            // Organize products under their corresponding recipe ingredient headers
             products.forEach(product => {
-                const productDiv = document.createElement("div");
+                const matchedIngredient = findMatchingIngredient(product.name);
 
-                // Create a label for the product
-                const productLabel = document.createElement("span");
-                productLabel.innerHTML = `<strong>${product.name}</strong> - ${product.price} (${product.quantity})`;
-                productDiv.appendChild(productLabel);
+                if (!groupedProducts[matchedIngredient]) {
+                    groupedProducts[matchedIngredient] = [];
+                }
 
-                // Create an input field for quantity selection
-                const quantityInput = document.createElement("input");
-                quantityInput.type = "number";
-                quantityInput.min = 0;
-                quantityInput.value = 0; // Default to 0
-                quantityInput.style.margin = "0 10px";
-                quantityInput.addEventListener("input", () => {
-                    selectedQuantities[product.name] = parseInt(quantityInput.value) || 0;
+                groupedProducts[matchedIngredient].push(product);
+            });
+
+            // Create sections for each matched ingredient
+            Object.keys(groupedProducts).forEach(ingredient => {
+                // Header for the ingredient
+                const header = document.createElement("h3");
+                header.textContent = ingredient;
+                header.style.color = "#ff4500"; // Highlight ingredient category
+                productsDiv.appendChild(header);
+
+                // List products under the ingredient category
+                groupedProducts[ingredient].forEach(product => {
+                    const productDiv = document.createElement("div");
+                    productDiv.classList.add("product-card");
+
+                    // Create a label for the product
+                    const productLabel = document.createElement("span");
+                    productLabel.innerHTML = `<strong>${product.name}</strong> - ${product.price} (${product.quantity})`;
+                    productDiv.appendChild(productLabel);
+
+                    // Create an input field for quantity selection
+                    const quantityInput = document.createElement("input");
+                    quantityInput.type = "number";
+                    quantityInput.min = 0;
+                    quantityInput.value = 0; // Default to 0
+                    quantityInput.style.margin = "0 10px";
+                    quantityInput.addEventListener("input", () => {
+                        selectedQuantities[product.name] = parseInt(quantityInput.value) || 0;
+                    });
+
+                    productDiv.appendChild(quantityInput);
+                    productsDiv.appendChild(productDiv);
                 });
-                productDiv.appendChild(quantityInput);
-
-                // Add the product div to the parent container
-                productsDiv.appendChild(productDiv);
             });
 
             // Add a log button to display the selected quantities
             const logButton = document.createElement("button");
             logButton.textContent = "Log Selected Quantities";
             logButton.style.marginTop = "20px";
-            //logButton.onclick = () => {
-            //    console.log("Selected Quantities:", selectedQuantities);
-            //};
             logButton.onclick = logSelectedQuantitiesAndSendOrder;
             productsDiv.appendChild(logButton);
         }
 
-        function logSelectedQuantitiesAndDisplayItems() {
-            // Create the items list
-            const items = Object.keys(selectedQuantities)
-                .filter(productName => selectedQuantities[productName] > 0) // Exclude items with 0 quantity
-                .map(productName => ({
-                    name: productName,
-                    quantity: selectedQuantities[productName],
-                    description: `This is a package of ${productName}` // Placeholder description
-                }));
-
-            // Log the items list to the console
-            console.log("Generated Items List:", items);
-
-            // Display the items list in the UI for debugging/testing purposes
-            const productsDiv = document.getElementById("products");
-            const itemsDiv = document.createElement("div");
-            itemsDiv.innerHTML = `<h3>Generated Items List:</h3><pre>${JSON.stringify(items, null, 2)}</pre>`;
-            productsDiv.appendChild(itemsDiv);
-        }
 
 
         function displayOrderDetails(orderDetailsString) {
