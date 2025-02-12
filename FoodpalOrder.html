@@ -5,26 +5,123 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodPal Grocery Order</title>
     <style>
+        /* General Page Styles */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Header */
+        h1 {
+            font-size: 2.5rem;
+            color: #ff6347;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #444;
+            margin-top: 20px;
+        }
+
+        /* Address Input */
+        #address-input {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px;
+            font-size: 1rem;
+            border: 2px solid #ff4500;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1.2rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #ff4500, #ff6347);
+            color: white;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #ff6347, #ff4500);
+            transform: scale(1.05);
+        }
+
+        /* Store Selection */
+        #store-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
         }
 
         .store-button {
             margin: 10px;
-            padding: 10px 20px;
+            padding: 12px 20px;
+            font-size: 1rem;
             background-color: #28a745;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
         }
 
-            .store-button:hover {
-                background-color: #218838;
-            }
+        .store-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
 
+        /* Product List */
         #products {
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin: 10px;
+            width: 250px;
+            text-align: left;
+        }
+
+        .product-card strong {
+            color: #ff4500;
+        }
+
+        .product-card input {
+            width: 50px;
+            text-align: center;
+            margin-left: 10px;
+        }
+
+        /* Order Summary */
+        #order-details {
+            margin-top: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+
     </style>
 </head>
 <body>

@@ -33,39 +33,54 @@ document.getElementById('searchRecipes').addEventListener('click', () => {
 function displayRecipes(recipes) {
     const resultsDiv = document.getElementById('recipeResults');
     resultsDiv.innerHTML = recipes.map(recipe => `
-    <div class="recipeCard">
-      <h3>${recipe.title}</h3>
-      <button onclick="viewRecipe(${recipe.id})">View Details</button>
-    </div>
-  `).join('');
+        <div class="recipeCard">
+            <h3>${recipe.title}</h3>
+            <button onclick="viewRecipe(${recipe.id}, this)">View Details</button>
+        </div>
+    `).join('');
 }
 
-function viewRecipe(recipeId) {
+
+function viewRecipe(recipeId, buttonElement) {
     fetch(`https://api.spoonacular.com/recipes/${recipeId}/information?apiKey=${SPOONACULAR_API_KEY}`)
         .then(response => response.json())
         .then(data => {
             const recipeTitle = data.title;
             const ingredients = data.extendedIngredients;
+            const instructions = data.analyzedInstructions[0]?.steps || [];
 
-            const detailsDiv = document.getElementById('recipeDetails');
-            detailsDiv.style.display = 'block';
-            detailsDiv.innerHTML = `
-                <h2>${recipeTitle}</h2>
-                <h3>Ingredients:</h3>
-                <ul>
-                    ${ingredients.map(ing => `<li>${ing.name}: ${ing.amount} ${ing.unit}</li>`).join('')}
-                </ul>
-                <h3>Instructions:</h3>
-                <ol>
-                    ${data.analyzedInstructions[0]?.steps.map(step => `<li>${step.step}</li>`).join('') || '<p>No instructions available.</p>'}
-                </ol>
-                <button onclick='navigateToOrderPage("${recipeTitle}", ${JSON.stringify(ingredients)})'>Order Ingredients</button>
-            `;
+            // Find the closest recipe card
+            const recipeCard = buttonElement.closest('.recipeCard');
+
+            // Check if details section already exists, remove if it does
+            let detailsDiv = recipeCard.querySelector('.recipe-details');
+            if (detailsDiv) {
+                detailsDiv.remove();  // Remove if already there
+            } else {
+                // Create new details section
+                detailsDiv = document.createElement('div');
+                detailsDiv.classList.add('recipe-details');
+                detailsDiv.innerHTML = `
+                    <h3>Ingredients:</h3>
+                    <ul>
+                        ${ingredients.map(ing => `<li>${ing.name}: ${ing.amount} ${ing.unit}</li>`).join('')}
+                    </ul>
+                    <h3>Instructions:</h3>
+                    <ol>
+                        ${instructions.map(step => `<li>${step.step}</li>`).join('') || '<p>No instructions available.</p>'}
+                    </ol>
+                    <button onclick='navigateToOrderPage("${recipeTitle}", ${JSON.stringify(ingredients)})'>Order Ingredients</button>
+                `;
+                
+                // Insert details below the clicked button
+                recipeCard.appendChild(detailsDiv);
+            }
         })
         .catch(error => {
             console.error('Error fetching recipe details:', error);
         });
 }
+
 
 // Simplify the ingredient data to only include 'name' and 'amount + unit'
 function simplifyIngredients(ingredients) {

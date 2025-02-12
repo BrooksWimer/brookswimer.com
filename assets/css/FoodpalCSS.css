@@ -1,82 +1,137 @@
-﻿body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: #f9f9f9;
-    color: #333;
+﻿/* Centering all text */
+body {
+    font-family: 'Poppins', sans-serif; /* Cool modern font */
+    text-align: center;  /* Centers text in most elements */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f8f9fa; /* Soft background */
 }
 
+/* Center header */
 header {
-    background-color: #4CAF50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ff6347; /* Tomato red */
+    margin-bottom: 10px;
+}
+
+/* Style buttons */
+button {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #ff6347, #ff4500);
     color: white;
-    padding: 1rem;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #ff4500, #ff6347);
+    transform: scale(1.05);
+}
+
+/* Centering main sections */
+main {
+    width: 90%;
+    max-width: 800px;
     text-align: center;
 }
 
-main {
-    padding: 2rem;
+/* Input and select fields */
+input, select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #ff4500;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+/* Center align the Preferences section */
+#preferences {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
 }
 
-button {
-    background-color: #4CAF50;
+/* Group label and input/select on the same line */
+#preferences div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px; /* Keep a clean width */
+    margin-bottom: 40px;
+    gap: 10px; /* Ensures spacing between label and input */
+}
+
+/* Ensure labels take up less space and align properly */
+#preferences label {
+    font-weight: bold;
+    width: 40%; /* Adjust width so label doesn’t take too much space */
+    text-align: right;
+}
+
+/* Make the input fields and dropdown the same size */
+#preferences select,
+#preferences input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 2px solid #ff4500;
+    border-radius: 5px;
+    width: 60%; /* Ensures both elements match in size */
+    text-align: center;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+/* Style the Save Preferences button */
+#savePreferences {
+    margin-top: 40px;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #ff4500, #ff6347);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    margin: 0.5rem 0;
+    border-radius: 8px;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 1rem;
+    transition: 0.3s;
 }
 
-    button:hover {
-        background-color: #45a049;
-    }
-
-#recipeResults, #recipeDetails, #orderSection {
-    margin-top: 2rem;
+#savePreferences:hover {
+    background: linear-gradient(45deg, #ff6347, #ff4500);
+    transform: scale(1.05);
 }
 
-.recipeCard {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    background-color: white;
+.recipe-details {
+    text-align: left;
+    margin-top: 10px;
+    padding: 10px;
+    border-left: 4px solid #ff4500; /* Adds a left border for styling */
+    background: #f9f9f9; /* Light background */
+    padding: 10px;
+    width: 90%;
 }
 
-    .recipeCard h3 {
-        margin: 0 0 0.5rem;
-    }
-
-#orderSection {
-    padding: 1rem;
-    background-color: #e8f5e9;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
+.recipe-details h3 {
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
-#preferences {
-    margin-top: 2rem;
-    padding: 1rem;
-    background-color: #f0f4c3;
-    border: 1px solid #cddc39;
-    border-radius: 5px;
+.recipe-details ul,
+.recipe-details ol {
+    padding-left: 20px; /* Ensures proper indentation */
 }
-
-    #preferences label {
-        display: block;
-        margin-top: 1rem;
-    }
-
-    #preferences input, #preferences select {
-        margin-top: 0.5rem;
-        padding: 0.5rem;
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    #preferences button {
-        margin-top: 1rem;
-    }
