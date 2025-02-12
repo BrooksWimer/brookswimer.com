@@ -162,11 +162,10 @@
             const address = inputField.value.trim();  // Get and trim input
 
             if (address) {
-                savedAddress = address;  // Store address globally
-                console.log("Address saved:", savedAddress);
+                console.log("Address saved:", address);
 
                 // Fetch stores using the entered address
-                fetchStores(savedAddress);
+                fetchStores(address);
             } else {
                 alert("Please enter a valid address.");
             }
