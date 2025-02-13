@@ -135,10 +135,11 @@
             margin-top: 20px;
             text-align: left;
             font-weight: bold;
-            color: orange; /* Makes headers orange */
+            color: orange;
             font-size: 1.5rem;
+            text-transform: uppercase; /* Makes text ALL CAPS */
+            margin-left: 10px; /* Slightly indents the headers */
         }
-
         /* Container for product rows */
         .ingredient-container {
             display: flex;
@@ -385,8 +386,9 @@
                     productDiv.classList.add("product-card");
 
                     // Create a label for the product
+                    const formattedPrice = parseFloat(product.price.replace(/[^0-9.]/g, '')).toFixed(2); // Ensures 2 decimal places
                     const productLabel = document.createElement("span");
-                    productLabel.innerHTML = `<strong>${product.name}</strong> - ${product.price} (${product.quantity})`;
+                    productLabel.innerHTML = `<strong>${product.name}</strong> - ${formattedPrice} (${product.quantity})`;
                     productDiv.appendChild(productLabel);
 
                     // Create an input field for quantity selection
@@ -497,6 +499,9 @@
             const requestBody = {
                 items: items // Include only the items list; the backend will handle the rest
             };
+
+            document.getElementById("products").innerHTML = ""; // Clear products once order is placed
+
 
             // Send the request to the backend
             fetch("https://api.brookswimer.com/create_order", {
