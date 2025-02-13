@@ -122,6 +122,77 @@
             text-align: left;
         }
 
+        /* Ensure the entire product section is left-aligned */
+        #products {
+            text-align: left;  /* Ensures all content inside #products is left-aligned */
+            width: 100%;
+        }
+
+        /* Style for ingredient headers */
+        .ingredient-header {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            text-align: left;
+            font-weight: bold;
+            color: orange; /* Makes headers orange */
+            font-size: 1.5rem;
+        }
+
+        /* Container for product rows */
+        .ingredient-container {
+            display: flex;
+            flex-wrap: wrap;  /* Allows multiple rows if needed */
+            gap: 10px;  /* Adds spacing between products */
+            align-items: flex-start;
+            margin-left: 20px; /* Indents products properly */
+        }
+
+        /* Ensure each product appears in a row */
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 180px;  /* Adjust width to control row structure */
+            padding: 10px;
+            border: 1px solid #ddd;  /* Light border for separation */
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Ensure product text and input field are centered */
+        .product-card span {
+            font-weight: bold;
+        }
+
+        .product-card input {
+            width: 50px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top: 5px solid orange;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+
+
+
     </style>
 </head>
 <body>
@@ -142,6 +213,18 @@
     <div id="order-details"></div>
 
     <script>
+        // Function to show a loading spinner inside a target element
+        function showLoadingIndicator(targetId) {
+            const targetDiv = document.getElementById(targetId);
+            targetDiv.innerHTML = `<div class="spinner"></div>`;  // Insert spinner
+            targetDiv.querySelector(".spinner").style.display = "block"; // Make sure it's visible
+        }
+
+        // Function to remove the loading spinner
+        function hideLoadingIndicator(targetId) {
+            const targetDiv = document.getElementById(targetId);
+            targetDiv.innerHTML = ""; // Clear loading icon
+        }
         // Parse URL parameters to extract title and grocery list
         function parseURLParams() {
             const params = new URLSearchParams(window.location.search);
@@ -164,6 +247,9 @@
             if (address) {
                 console.log("Address saved:", address);
 
+                showLoadingIndicator("store-list"); // Show loading spinner under "Select a Store"
+
+
                 // Fetch stores using the entered address
                 fetchStores(address);
             } else {
@@ -177,6 +263,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.stores && data.stores.length > 0) {
+                        hideLoadingIndicator("store-list"); // Remove loading spinner once stores are displayed
                         displayStoreButtons(data.stores);
                     } else {
                         alert("No nearby stores found.");
@@ -209,6 +296,9 @@
 
             console.log("Sending grocery list to backend:", groceryList);
             console.log("Selected store ID:", storeId);
+            document.getElementById("store-list").innerHTML = ""; // Hide store buttons
+            showLoadingIndicator("products"); // Show loading spinner under "Available Products"
+
 
             // POST request to backend with store ID and grocery list
             fetch("https://api.brookswimer.com/select_store", {
@@ -224,6 +314,7 @@
                 })
                 .then(data => {
                     if (data.products) {
+                        hideLoadingIndicator("products"); // Remove loading spinner when products are displayed
                         displayProducts(data.products);
                     } else {
                         alert("No products found or failed to fetch products.");
@@ -234,14 +325,6 @@
                     alert("Failed to process the order. Please try again.");
                 });
         }
-        // Dummy product data for testing
-        const dummyProducts = [
-            { name: "Milk", price: "$4.50", quantity: "1 gallon" },
-            { name: "Eggs", price: "$3.00", quantity: "12 eggs" },
-            { name: "Soda", price: "$1.50", quantity: "12 oz can" },
-            { name: "Rice", price: "$2.00", quantity: "1 lb" },
-            { name: "Chicken Breast", price: "$8.00", quantity: "2 lbs" }
-        ];
 
         // Track selected quantities for each product
         const selectedQuantities = {};
@@ -251,6 +334,7 @@
             productsDiv.innerHTML = ""; // Clear previous results
 
             const { ingredients } = parseURLParams(); // Get recipe ingredients from URL
+
             const ingredientNames = ingredients.map(ing => ing.name.toLowerCase()); // Convert names to lowercase for comparison
 
             const groupedProducts = {};
@@ -284,29 +368,21 @@
 
             // Create sections for each matched ingredient
             Object.keys(groupedProducts).forEach(ingredient => {
-                // Header for the ingredient (Standalone line)
-                const header = document.createElement("h2");
-                header.textContent = ingredient;
-                header.style.color = "#ff4500"; // Highlight ingredient category
-                header.style.margin = "20px 0 10px 0"; // Add spacing around header
-                header.style.display = "block"; // Ensures it is on its own line
-                header.style.textAlign = "left"; // Align header to left
-                productsDiv.appendChild(header);
+                // Header for the ingredient (ENSURES IT'S ON ITS OWN LINE)
+                const headerDiv = document.createElement("div");
+                headerDiv.classList.add("ingredient-header");
+                headerDiv.innerHTML = `<h2>${ingredient}</h2>`;
+                productsDiv.appendChild(headerDiv);
 
                 // Create a container for the product list
                 const ingredientContainer = document.createElement("div");
+                ingredientContainer.classList.add("ingredient-container");
                 ingredientContainer.style.marginLeft = "20px"; // Indent products under header
-                ingredientContainer.style.display = "flex";
-                ingredientContainer.style.flexDirection = "column"; // Force products to stack vertically
-                ingredientContainer.style.gap = "8px"; // Space between items
 
                 // List products under the ingredient category
                 groupedProducts[ingredient].forEach(product => {
-                    const productDiv = document.createElement("div");
+                    const productDiv = document.createElement("p"); // Wrapping each product in <p>
                     productDiv.classList.add("product-card");
-                    productDiv.style.display = "flex";
-                    productDiv.style.justifyContent = "space-between";
-                    productDiv.style.alignItems = "center";
 
                     // Create a label for the product
                     const productLabel = document.createElement("span");
@@ -333,12 +409,35 @@
             });
 
             // Add a log button to display the selected quantities
+           // Create a container div for the button
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.width = "100%";  // Ensures full width
+            buttonContainer.style.textAlign = "center";  // Centers the button
+            buttonContainer.style.marginTop = "30px";  // Adds spacing above
+
+            // Create the button
             const logButton = document.createElement("button");
-            logButton.textContent = "Log Selected Quantities";
-            logButton.style.marginTop = "20px";
+            logButton.textContent = "Place Order!";
+            logButton.style.padding = "10px 20px";
+            logButton.style.fontSize = "1.2rem";
+            logButton.style.border = "none";
+            logButton.style.cursor = "pointer";
+            logButton.style.borderRadius = "5px";
+            // logButton.style.background = "orange";  // Button color
+            // logButton.style.color = "white";
+            logButton.style.transition = "0.3s";
             logButton.onclick = logSelectedQuantitiesAndSendOrder;
-            productsDiv.appendChild(logButton);
+
+            // Button hover effect
+            logButton.onmouseover = () => logButton.style.background = "darkorange";
+            logButton.onmouseout = () => logButton.style.background = "orange";
+
+            // Append button inside the container, then add to the page
+            buttonContainer.appendChild(logButton);
+            productsDiv.appendChild(buttonContainer);
+
         }
+
 
 
 
@@ -431,6 +530,8 @@
 
             // Display recipe details
             displayRecipeDetails(title, ingredients);
+
+            displayProducts(dummyProducts)
 
             // Display recipe details
            // displayRecipeDetails("Dummy Recipe for Testing", ingredients);
