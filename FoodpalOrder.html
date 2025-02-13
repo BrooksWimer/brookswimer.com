@@ -214,6 +214,8 @@
     <div id="order-details"></div>
 
     <script>
+        let allProducts = [];  // Stores all fetched products
+        
         // Function to show a loading spinner inside a target element
         // function showLoadingIndicator(targetId) {
         //     const targetDiv = document.getElementById(targetId);
@@ -360,6 +362,7 @@
                 .then(data => {
                     if (data.products) {
                         hideLoadingIndicator("products"); // Remove loading spinner when products are displayed
+                        allProducts = data.products; 
                         displayProducts(data.products);
                     } else {
                         alert("No products found or failed to fetch products.");
