@@ -215,17 +215,59 @@
 
     <script>
         // Function to show a loading spinner inside a target element
+        // function showLoadingIndicator(targetId) {
+        //     const targetDiv = document.getElementById(targetId);
+        //     targetDiv.innerHTML = `<div class="spinner"></div>`;  // Insert spinner
+        //     targetDiv.querySelector(".spinner").style.display = "block"; // Make sure it's visible
+        // }
+
         function showLoadingIndicator(targetId) {
             const targetDiv = document.getElementById(targetId);
-            targetDiv.innerHTML = `<div class="spinner"></div>`;  // Insert spinner
-            targetDiv.querySelector(".spinner").style.display = "block"; // Make sure it's visible
+            targetDiv.innerHTML = `<div class="spinner"></div><div class="status-updates"></div>`; // Add spinner & status updates
         }
 
+
         // Function to remove the loading spinner
+        // function hideLoadingIndicator(targetId) {
+        //     const targetDiv = document.getElementById(targetId);
+        //     targetDiv.innerHTML = ""; // Clear loading icon
+        // }
+
         function hideLoadingIndicator(targetId) {
             const targetDiv = document.getElementById(targetId);
-            targetDiv.innerHTML = ""; // Clear loading icon
+            targetDiv.innerHTML = ""; // Remove spinner & updates when done
         }
+
+
+        // function for appending status updates
+        function appendStatusUpdate(targetId, message) {
+            const targetDiv = document.getElementById(targetId).querySelector(".status-updates");
+
+            if (targetDiv) {
+                const updateElement = document.createElement("p");
+                updateElement.textContent = message;
+                updateElement.style.fontSize = "14px";
+                updateElement.style.color = "#333";  // Dark gray for readability
+                targetDiv.appendChild(updateElement);
+            }
+        }
+
+        // listen for updates function
+        function listenForUpdates(targetId) {
+            const eventSource = new EventSource("/progress");
+
+            eventSource.onmessage = function(event) {
+                appendStatusUpdate(targetId, event.data);  // Attach update to the correct section
+            };
+
+            eventSource.onerror = function() {
+                console.error("Error receiving updates.");
+                eventSource.close();
+            };
+        }
+
+
+
         // Parse URL parameters to extract title and grocery list
         function parseURLParams() {
             const params = new URLSearchParams(window.location.search);
@@ -249,6 +291,7 @@
                 console.log("Address saved:", address);
 
                 showLoadingIndicator("store-list"); // Show loading spinner under "Select a Store"
+                listenForUpdates("store-list"); // Listen for updates while searching for stores
 
 
                 // Fetch stores using the entered address
@@ -299,6 +342,7 @@
             console.log("Selected store ID:", storeId);
             document.getElementById("store-list").innerHTML = ""; // Hide store buttons
             showLoadingIndicator("products"); // Show loading spinner under "Available Products"
+            listenForUpdates("products"); // Listen for updates while searching for stores
 
 
             // POST request to backend with store ID and grocery list
