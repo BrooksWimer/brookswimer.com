@@ -225,7 +225,10 @@
 
         function showLoadingIndicator(targetId) {
             const targetDiv = document.getElementById(targetId);
-            targetDiv.innerHTML = `<div class="spinner"></div><div class="status-updates"></div>`; // Add spinner & status updates
+            targetDiv.innerHTML = `
+                <div class="spinner"></div>
+                <div class="status-updates" style="margin-top: 10px;"></div> 
+            `;
             targetDiv.querySelector(".spinner").style.display = "block";
         }
 
@@ -312,6 +315,7 @@
                     if (data.stores && data.stores.length > 0) {
                         hideLoadingIndicator("store-list"); // Remove loading spinner once stores are displayed
                         displayStoreButtons(data.stores);
+                        
                     } else {
                         alert("No nearby stores found.");
                     }
@@ -603,7 +607,7 @@
             // Display recipe details
             displayRecipeDetails(title, ingredients);
 
-            displayProducts(dummyProducts)
+            // displayProducts(dummyProducts)
 
             // Display recipe details
            // displayRecipeDetails("Dummy Recipe for Testing", ingredients);
