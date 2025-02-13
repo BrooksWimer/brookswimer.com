@@ -215,7 +215,7 @@
 
     <script>
         let allProducts = [];  // Stores all fetched products
-        
+
         // Function to show a loading spinner inside a target element
         // function showLoadingIndicator(targetId) {
         //     const targetDiv = document.getElementById(targetId);
@@ -226,6 +226,7 @@
         function showLoadingIndicator(targetId) {
             const targetDiv = document.getElementById(targetId);
             targetDiv.innerHTML = `<div class="spinner"></div><div class="status-updates"></div>`; // Add spinner & status updates
+            targetDiv.querySelector(".spinner").style.display = "block";
         }
 
 
