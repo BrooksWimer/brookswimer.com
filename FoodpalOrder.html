@@ -184,6 +184,7 @@
             animation: spin 1s linear infinite;
             margin: 10px auto;
             display: none;
+            margin-bottom: 10px;
         }
 
         @keyframes spin {
@@ -194,7 +195,7 @@
         .status-updates {
             display: block;  /* Ensure it takes up its own full line */
             margin-top: 10px; /* Add space between spinner and updates */
-            text-align: left; /* Ensure updates are left-aligned */
+            text-align: center; /* Ensure updates are left-aligned */
         }
 
 
@@ -233,7 +234,7 @@
             const targetDiv = document.getElementById(targetId);
             targetDiv.innerHTML = `
                 <div class="spinner"></div>
-                <div class="status-updates" style="margin-top: 10px;"></div> 
+                <div class="status-updates"></div> 
             `;
             targetDiv.querySelector(".spinner").style.display = "block";
         }
