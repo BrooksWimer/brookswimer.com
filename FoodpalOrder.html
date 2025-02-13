@@ -175,6 +175,13 @@
             margin-top: 5px;
         }
 
+        .loading-container {
+            display: flex;
+            flex-direction: column;  /* Forces vertical stacking */
+            align-items: center;  /* Centers everything */
+            width: 100%;
+        }
+
         .spinner {
             border: 5px solid rgba(0, 0, 0, 0.1);
             border-top: 5px solid orange;
@@ -233,8 +240,10 @@
         function showLoadingIndicator(targetId) {
             const targetDiv = document.getElementById(targetId);
             targetDiv.innerHTML = `
-                <div class="spinner"></div>
-                <div class="status-updates"></div> 
+                <div class="loading-container">
+                    <div class="spinner"></div>
+                    <div class="status-updates"></div> 
+                </div>
             `;
             targetDiv.querySelector(".spinner").style.display = "block";
         }
