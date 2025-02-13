@@ -254,7 +254,7 @@
 
         // listen for updates function
         function listenForUpdates(targetId) {
-            const eventSource = new EventSource("/progress");
+            const eventSource = new EventSource("https://api.brookswimer.com/progress"); 
 
             eventSource.onmessage = function(event) {
                 appendStatusUpdate(targetId, event.data);  // Attach update to the correct section
