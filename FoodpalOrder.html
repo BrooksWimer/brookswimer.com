@@ -258,9 +258,14 @@
             // Helper function: Find best-matching recipe ingredient for a product
             function findMatchingIngredient(productName) {
                 productName = productName.toLowerCase();
+
                 for (let ingredient of ingredientNames) {
-                    if (productName.includes(ingredient)) {
-                        return ingredient; // Match found
+                    const ingredientWords = ingredient.split(" "); // Split ingredient into words
+
+                    for (let word of ingredientWords) {
+                        if (productName.includes(word)) {
+                            return ingredient; // Match found
+                        }
                     }
                 }
                 return "Uncategorized"; // No match
@@ -283,13 +288,17 @@
                 const header = document.createElement("h2");
                 header.textContent = ingredient;
                 header.style.color = "#ff4500"; // Highlight ingredient category
-                header.style.marginTop = "15px";
+                header.style.margin = "20px 0 10px 0"; // Add spacing around header
+                header.style.display = "block"; // Ensures it is on its own line
                 header.style.textAlign = "left"; // Align header to left
                 productsDiv.appendChild(header);
 
                 // Create a container for the product list
                 const ingredientContainer = document.createElement("div");
                 ingredientContainer.style.marginLeft = "20px"; // Indent products under header
+                ingredientContainer.style.display = "flex";
+                ingredientContainer.style.flexDirection = "column"; // Force products to stack vertically
+                ingredientContainer.style.gap = "8px"; // Space between items
 
                 // List products under the ingredient category
                 groupedProducts[ingredient].forEach(product => {
@@ -298,7 +307,6 @@
                     productDiv.style.display = "flex";
                     productDiv.style.justifyContent = "space-between";
                     productDiv.style.alignItems = "center";
-                    productDiv.style.marginBottom = "8px";
 
                     // Create a label for the product
                     const productLabel = document.createElement("span");
