@@ -50,5 +50,10 @@
     </main>
     <!-- Link to external JavaScript -->
     <script src="assets/js/control-room-display.js"></script>
+    <script>
+        // After the chart is rendered
+        const imageUrl = chartInstance.toBase64Image();
+        console.log(imageUrl); // This will print the image data URL to the console
+    </script>
 </body>
 </html>

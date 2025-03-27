@@ -1,6 +1,4 @@
-﻿
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,6 +43,13 @@
             text-align: center;
             padding: 20px 20px;
         }
+
+        #modelCanvas {
+            width: 60% !important;  /* Keep it narrow like we did in index */
+            height: 800px !important;  /* Increased height for taller view */
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -81,6 +86,13 @@
     </main>
 
     <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const canvas = document.getElementById('modelCanvas');
+        if (!canvas) {
+            console.error('Canvas element not found!');
+            return;
+        }
+
         // Scene setup
         const scene = new THREE.Scene();
 
@@ -91,7 +103,7 @@
 
         // Renderer setup
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('modelCanvas') });
-        renderer.setSize(window.innerWidth - 40, 600); // Ensure it matches the canvas size
+        renderer.setSize(window.innerWidth * 0.6, 800);  // Match the CSS dimensions
 
         // Lights
         const ambientLight = new THREE.AmbientLight(0xffffff, 1);
@@ -106,12 +118,12 @@
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.minDistance = 2;
-        controls.maxDistance = 500; // Increased max zoom distance for large scenes
+        controls.maxDistance = 500;
         controls.target.set(5, 10, 0);
 
         // HDRI Environment
         const exrLoader = new THREE.EXRLoader();
-        exrLoader.load('rogland_clear_night_4k.exr', (texture) => {
+        exrLoader.load('./rogland_clear_night_4k.exr', (texture) => {
             texture.mapping = THREE.EquirectangularReflectionMapping;
             scene.environment = texture;
             scene.background = texture;
@@ -119,7 +131,7 @@
 
         // GLTF Model
         const loader = new THREE.GLTFLoader();
-        loader.load('InfinityTower.py.glb', (gltf) => {
+        loader.load('./InfinityTower.py.glb', (gltf) => {
             const model = gltf.scene;
             model.scale.set(0.1, 0.1, 0.1);
             model.position.set(0, 0, 0);
@@ -136,12 +148,13 @@
 
         // Handle resizing
         window.addEventListener('resize', () => {
-            //const width = window.innerWidth - 40;
-            const height = 600; // Keep consistent height
+            const width = window.innerWidth * 0.6;
+            const height = 800;  // Keep consistent height
             renderer.setSize(width, height);
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
         });
+    });
     </script>
 </body>
 </html>
