@@ -28,6 +28,9 @@
 		$window.on('load', function() {
 			window.setTimeout(function() {
 				$body.removeClass('is-preload');
+				// Show all articles
+				$main_articles.show();
+				$main.show();
 			}, 100);
 		});
 
@@ -52,6 +55,11 @@
 			}).triggerHandler('resize.flexbox-fix');
 
 		}
+
+	// Window stuff.
+		$window
+			.scrollTop(0)
+			.triggerHandler('resize.flexbox-fix');
 
 	// Nav.
 		var $nav = $header.children('nav'),

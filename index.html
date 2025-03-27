@@ -8,6 +8,20 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<!-- Add Three.js dependencies -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/EXRLoader.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/fflate@0.7.4/umd/index.min.js"></script>
+		<style>
+			#modelCanvas {
+				width: 60% !important;
+				height: 600px !important;
+				display: block;
+				margin: 0;
+			}
+		</style>
 	</head>
 	<body class="is-preload">
 
@@ -24,39 +38,81 @@
 								<h1>Brooks Wimer's Software Portfolio</h1>
 							</div>
 						</div>
-						<nav>
-							<ul>
-								<li><a href="#About-Me">About Me</a></li>
-								<li><a href="#Internship-Projects">Internship Projects</a></li>
-								<li><a href="#School-Projects">School Projects</a></li>
-								<li><a href="#Passion-Projects">Passion Projects</a></li>
-								<li><a href="#contact">Contact</a></li>
-								<!--<li><a href="#elements">Elements</a></li>-->
-							</ul>
-						</nav>
 					</header>
 
 				<!-- Main -->
 					<div id="main">
+						<!-- 3D Models -->
+						<div class="project">
+							<h3>3D Models</h3>
+							<section id="model-viewer">
+								<canvas id="modelCanvas"></canvas>
+							</section>
+							<p>3D modeling project</p>
+							<button onclick="location.href='3D_models.html'">View Project</button>
+						</div>
+
+						<!-- FoodPall -->
+						<div class="project">
+							<h3>FoodPall</h3>
+							<iframe 
+								src="FoodpalDemo.html" 
+								style="width: 80%; height: 800px; border: none; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
+							></iframe>
+							<p>Food delivery service</p>
+							<button onclick="location.href='foodpal.html'">View Project</button>
+						</div>
+
+						<!-- Control Room Display -->
+						<div class="project">
+							<h3>Control Room Display</h3>
+							<span class="image left">
+								<img src="images/control_room_display.png" alt="Control Room Graph showing capacity deviation metrics" />
+							</span>
+							<p>Real-time power grid monitoring</p>
+							<button onclick="location.href='control-room-display.html'" class="project-button">View Project</button>
+						</div>
+
+						<!-- Emergency Contact Automation -->
+						<div class="project">
+							<h3>Emergency Contact Automation</h3>
+							<span class="image">
+								<img src="images/ENS_weekly_gliffy.png" alt="Emergency Notification System Logic Flow Diagram" />
+							</span>
+							<p>Automated emergency response system</p>
+							<button onclick="location.href='emergency-contact-automation.html'">View Project</button>
+						</div>
+
+						<!-- API Documentation -->
+						<div class="project">
+							<h3>API Documentation</h3>
+							<img src="images/iso_training.png" 
+								 alt="ISO-NE API Training Screenshot" 
+								 style="width: 60%; display: block; margin-bottom: 20px;">
+							<p>Interactive training module</p>
+							<button onclick="location.href='api-documentation.html'">View Project</button>
+						</div>
 
 						<!-- About Me -->
-						<article id="About-Me">
-							<h2 class="major">About Me</h2>
-							<span class="image main"><img src="images/face2.jpg" alt="Brooks Wimer" /></span>
+						<div class="project">
+							<h3>About Me</h3>
+							<img src="images/face2.jpg" 
+								 alt="" 
+								 style="width: 40%; display: block; margin-bottom: 20px;">
 							<p>
-								Hi, I’m Brooks Wimer, a Computer Science major at Boston University with a 3.8 GPA,
+								Hi, I'm Brooks Wimer, a Computer Science major at Boston University with a 3.8 GPA,
 								driven by a passion for solving real-world problems through technology. My journey spans
 								from automating emergency notification systems for my internship to building 3D models for fun.
 							</p>
 							<p>
 								I have a knack for turning concepts into functional solutions, such as the SmartChef Application,
 								a project that integrates recipe discovery with automated grocery delivery using APIs and web drivers.
-								Beyond academics, I’ve gained hands-on experience as a Software Development Intern at ISO New England,
-								where I contributed to tools for managing the region’s power grid.
+								Beyond academics, I've gained hands-on experience as a Software Development Intern at ISO New England,
+								where I contributed to tools for managing the region's power grid.
 							</p>
 							<p>
-								When I’m not coding, I serve as a Course Assistant for C# full-stack app development at Boston University,
-								play on the Club Roller Hockey Team, and ski whenever I can get the chance. I’m proficient in Python, R, Java, and the C-suite,
+								When I'm not coding, I serve as a Course Assistant for C# full-stack app development at Boston University,
+								play on the Club Roller Hockey Team, and ski whenever I can get the chance. I'm proficient in Python, R, Java, and the C-suite,
 								with growing expertise in SQL, React, and Linux.
 							</p>
 							<p>
@@ -69,92 +125,11 @@
 							<p>
 								<a href="resume.pdf" target="_blank" class="button">Download My Resume</a>
 							</p>
-						</article>
-
-
-						<!-- Internship Projects -->
-						<article id="Internship-Projects">
-							<h1 class="major">Internship Projects</h1>
-							<span class="image main"><img src="https://www.esaipower.com/wp-content/uploads/2022/04/ISO-NE.jpg" alt="" /></span>
-
-
-							<!-- Project 1 -->
-							<div class="project">
-								<h3>Emergency Contact Automation</h3>
-								<span class="image left"><img src="https://www.henryford.com/-/media/project/hfhs/henryford/henry-ford-blog/images/interior-banner-images/2020/04/er-still-safe.jpg" alt="" /></span>
-								<p>Automated synchronization between two critical systems to ensure data consistency and reduce manual work.</p>
-								<button onclick="location.href='emergency-contact-automation.html'">View Project</button>
-							</div>
-
-							<p></p>
-							<p></p>
-
-
-							<!-- Project 2 -->
-							<div class="project">
-								<h3>API Documentation</h3>
-								<span class="image left"><img src="https://imgproxy.divecdn.com/RonFqrobdWTjV2n0T9dQbQvwr6lWa-9qUdu0aRUaXYA/g:ce/rs:fill:1200:675:1/bG9jYWw6Ly8vZGl2ZWltYWdlL0dldHR5SW1hZ2VzLTEzMzU2NzE3MjEuanBn.webp" alt="" /></span>
-								<p>Created API documentation and API template to assist the 30% of New Englands Renewable Energy producers that failed to submit required data to ISO New England.</p>
-								<button onclick="location.href='api-documentation.html'">View Project</button>
-							</div>
-
-							<p></p>
-							<p></p>
-
-							<!-- Project 3 -->
-							<div class="project">
-								<h3>Control Room Display</h3>
-								<span class="image left">
-									<img src="https://www.comstocksmag.com/sites/main/files/imagecache/lightbox/main-images/0716_blog_energy1_0.jpg" alt="" />
-								</span>
-								<p>
-									Created a dynamically updating graphical interface that is utilized in New England's control center for visualizing capacity deviation. <br /><br />
-								</p>
-								<button onclick="location.href='control-room-display.html'" class="project-button">View Project</button>
-							</div>
-							<p> </p>
-							<p> </p>
-
-						</article>
-
-						<!-- School Projects -->
-						<article id="School-Projects">
-							<h2 class="major">School Projects</h2>
-							<span class="image main"><img src="https://logos-world.net/wp-content/uploads/2022/01/Boston-University-Logo.png" alt="" /></span>
-
-							<!-- Project 1 -->
-							<div class="project">
-								<h2>FoodPal</h2>
-								<span class="image left"><img src="https://mma.prnewswire.com/media/534929/Logo_horizontal_red.jpg?p=facebook" alt="" /></span>
-								<p>
-									Developed a full-stack application that automates the process of selecting recipes,
-									sourcing ingredients, and placing grocery orders through APIs and web scraping.
-								</p>
-								<button onclick="location.href='foodpal.html'">View Project</button>
-							</div>
-							<br>
-							<br>
-							<!-- Project 2 -->
-							<div class="project">
-								<h2>Sync-Sonic</h2>
-								<span class="image left"><img src="images/syncsonic.webp" alt="" /></span>
-								<p>
-									Currently working with the BU Spark! program to build an application that allows you to stream audio through 
-									multiple bluetooth devices regardles of the speaker brand. We plan to have a working product by the end of the semester.
-								</p>
-							</div>
-						</article>
-
-						<!-- Passion Projects -->
-						<article id="Passion-Projects">
-							<h2 class="major">Passion Projects</h2>
-							<span class="image main"><img src="images/graphic-design-inspiration.jpg" alt="" /></span>
-							<button onclick="location.href='3D_models.html'">View Project</button>
-						</article>
+						</div>
 
 						<!-- Contact -->
-						<article id="contact">
-							<h2 class="major">Contact</h2>
+						<div class="project">
+							<h3>Contact</h3>
 							<form method="post" action="#">
 								<div class="fields">
 									<div class="field half">
@@ -182,252 +157,7 @@
 							<p>
 								<a href="mailto:bwimer@bu.edu" class="email-link">bwimer@bu.edu</a>
 							</p>
-						</article>
-
-						<!-- Elements -->
-						<article id="elements">
-							<h2 class="major">Elements</h2>
-
-							<section>
-								<h3 class="major">Text</h3>
-								<p>
-									This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.
-								</p>
-								<hr />
-								<h2>Heading Level 2</h2>
-								<h3>Heading Level 3</h3>
-								<h4>Heading Level 4</h4>
-								<h5>Heading Level 5</h5>
-								<h6>Heading Level 6</h6>
-								<hr />
-								<h4>Blockquote</h4>
-								<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-								<h4>Preformatted</h4>
-								<pre><code>i = 0;
-
-while (!deck.isInOrder()) {
-    print 'Iteration ' + i;
-    deck.shuffle();
-    i++;
-}
-
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-							</section>
-
-							<section>
-								<h3 class="major">Lists</h3>
-
-								<h4>Unordered</h4>
-								<ul>
-									<li>Dolor pulvinar etiam.</li>
-									<li>Sagittis adipiscing.</li>
-									<li>Felis enim feugiat.</li>
-								</ul>
-
-								<h4>Alternate</h4>
-								<ul class="alt">
-									<li>Dolor pulvinar etiam.</li>
-									<li>Sagittis adipiscing.</li>
-									<li>Felis enim feugiat.</li>
-								</ul>
-
-								<h4>Ordered</h4>
-								<ol>
-									<li>Dolor pulvinar etiam.</li>
-									<li>Etiam vel felis viverra.</li>
-									<li>Felis enim feugiat.</li>
-									<li>Dolor pulvinar etiam.</li>
-									<li>Etiam vel felis lorem.</li>
-									<li>Felis enim et feugiat.</li>
-								</ol>
-								<h4>Icons</h4>
-								<ul class="icons">
-									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-									<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-									<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-									<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-								</ul>
-
-								<h4>Actions</h4>
-								<ul class="actions">
-									<li><a href="#" class="button primary">Default</a></li>
-									<li><a href="#" class="button">Default</a></li>
-								</ul>
-								<ul class="actions stacked">
-									<li><a href="#" class="button primary">Default</a></li>
-									<li><a href="#" class="button">Default</a></li>
-								</ul>
-							</section>
-
-							<section>
-								<h3 class="major">Table</h3>
-								<h4>Default</h4>
-								<div class="table-wrapper">
-									<table>
-										<thead>
-											<tr>
-												<th>Name</th>
-												<th>Description</th>
-												<th>Price</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Item One</td>
-												<td>Ante turpis integer aliquet porttitor.</td>
-												<td>29.99</td>
-											</tr>
-											<tr>
-												<td>Item Two</td>
-												<td>Vis ac commodo adipiscing arcu aliquet.</td>
-												<td>19.99</td>
-											</tr>
-											<tr>
-												<td>Item Three</td>
-												<td> Morbi faucibus arcu accumsan lorem.</td>
-												<td>29.99</td>
-											</tr>
-											<tr>
-												<td>Item Four</td>
-												<td>Vitae integer tempus condimentum.</td>
-												<td>19.99</td>
-											</tr>
-											<tr>
-												<td>Item Five</td>
-												<td>Ante turpis integer aliquet porttitor.</td>
-												<td>29.99</td>
-											</tr>
-										</tbody>
-										<tfoot>
-											<tr>
-												<td colspan="2"></td>
-												<td>100.00</td>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-
-								<h4>Alternate</h4>
-								<div class="table-wrapper">
-									<table class="alt">
-										<thead>
-											<tr>
-												<th>Name</th>
-												<th>Description</th>
-												<th>Price</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>Item One</td>
-												<td>Ante turpis integer aliquet porttitor.</td>
-												<td>29.99</td>
-											</tr>
-											<tr>
-												<td>Item Two</td>
-												<td>Vis ac commodo adipiscing arcu aliquet.</td>
-												<td>19.99</td>
-											</tr>
-											<tr>
-												<td>Item Three</td>
-												<td> Morbi faucibus arcu accumsan lorem.</td>
-												<td>29.99</td>
-											</tr>
-											<tr>
-												<td>Item Four</td>
-												<td>Vitae integer tempus condimentum.</td>
-												<td>19.99</td>
-											</tr>
-											<tr>
-												<td>Item Five</td>
-												<td>Ante turpis integer aliquet porttitor.</td>
-												<td>29.99</td>
-											</tr>
-										</tbody>
-										<tfoot>
-											<tr>
-												<td colspan="2"></td>
-												<td>100.00</td>
-											</tr>
-										</tfoot>
-									</table>
-								</div>
-							</section>
-
-							<section>
-								<h3 class="major">Buttons</h3>
-								<ul class="actions">
-									<li><a href="#" class="button primary">Primary</a></li>
-									<li><a href="#" class="button">Default</a></li>
-								</ul>
-								<ul class="actions">
-									<li><a href="#" class="button">Default</a></li>
-									<li><a href="#" class="button small">Small</a></li>
-								</ul>
-								<ul class="actions">
-									<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-									<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-								</ul>
-								<ul class="actions">
-									<li><span class="button primary disabled">Disabled</span></li>
-									<li><span class="button disabled">Disabled</span></li>
-								</ul>
-							</section>
-
-							<section>
-								<h3 class="major">Form</h3>
-								<form method="post" action="#">
-									<div class="fields">
-										<div class="field half">
-											<label for="demo-name">Name</label>
-											<input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
-										</div>
-										<div class="field half">
-											<label for="demo-email">Email</label>
-											<input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
-										</div>
-										<div class="field">
-											<label for="demo-category">Category</label>
-											<select name="demo-category" id="demo-category">
-												<option value="">-</option>
-												<option value="1">Manufacturing</option>
-												<option value="1">Shipping</option>
-												<option value="1">Administration</option>
-												<option value="1">Human Resources</option>
-											</select>
-										</div>
-										<div class="field half">
-											<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-											<label for="demo-priority-low">Low</label>
-										</div>
-										<div class="field half">
-											<input type="radio" id="demo-priority-high" name="demo-priority">
-											<label for="demo-priority-high">High</label>
-										</div>
-										<div class="field half">
-											<input type="checkbox" id="demo-copy" name="demo-copy">
-											<label for="demo-copy">Email me a copy</label>
-										</div>
-										<div class="field half">
-											<input type="checkbox" id="demo-human" name="demo-human" checked>
-											<label for="demo-human">Not a robot</label>
-										</div>
-										<div class="field">
-											<label for="demo-message">Message</label>
-											<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
-										</div>
-									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Send Message" class="primary" /></li>
-										<li><input type="reset" value="Reset" /></li>
-									</ul>
-								</form>
-							</section>
-
-						</article>
-
+						</div>
 					</div>
 
 			</div>
@@ -441,6 +171,70 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script src="assets/js/control-room-display.js"></script>
+			<script>
+				// Scene setup
+				const scene = new THREE.Scene();
+
+				// Camera setup
+				const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+				camera.position.set(0, 50, 30);
+				camera.lookAt(0, 0, 0);
+
+				// Renderer setup
+				const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('modelCanvas') });
+				renderer.setSize(window.innerWidth * 0.5, 600);
+
+				// Lights
+				const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+				scene.add(ambientLight);
+
+				const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+				directionalLight.position.set(5, 10, 7.5);
+				scene.add(directionalLight);
+
+				// OrbitControls
+				const controls = new THREE.OrbitControls(camera, renderer.domElement);
+				controls.enableDamping = true;
+				controls.dampingFactor = 0.05;
+				controls.minDistance = 2;
+				controls.maxDistance = 500;
+				controls.target.set(5, 10, 0);
+
+				// HDRI Environment
+				const exrLoader = new THREE.EXRLoader();
+				exrLoader.load('rogland_clear_night_4k.exr', (texture) => {
+					texture.mapping = THREE.EquirectangularReflectionMapping;
+					scene.environment = texture;
+					scene.background = texture;
+				});
+
+				// GLTF Model
+				const loader = new THREE.GLTFLoader();
+				loader.load('InfinityTower.py.glb', (gltf) => {
+					const model = gltf.scene;
+					model.scale.set(0.1, 0.1, 0.1);
+					model.position.set(0, 0, 0);
+					scene.add(model);
+				});
+
+				// Animation loop
+				function animate() {
+					requestAnimationFrame(animate);
+					controls.update();
+					renderer.render(scene, camera);
+				}
+				animate();
+
+				// Handle resizing
+				window.addEventListener('resize', () => {
+					const width = window.innerWidth * 0.5;
+					const height = 600;
+					renderer.setSize(width, height);
+					camera.aspect = width / height;
+					camera.updateProjectionMatrix();
+				});
+			</script>
 
 	</body>
 </html>

@@ -1,0 +1,1186 @@
+﻿//initialization block
+var frmRequestGet, frmRequestPut, frmRequest, frmLesson;
+var serverTimeout = 3;
+var start;
+var cmi;
+var contentReady;
+var isFinish;
+var isFinishHandling;
+var objError;
+var objApi;
+var commitTimeStamp;
+var commitTimeStampUpdated;
+var timerId;
+var communicateCommand, communicateParam, communicateFrame;
+var aiccDataVersion1;
+var currentSessionTime;
+var sessionTime1;
+var isDuringCommitInterval;
+var commitSetTimeoutHandler;
+var lastCommitDatetime;
+var accumulatedDataSizeForSendBeacon = 0;
+var isSent_sendbeaconlogerror;
+var isIOS = isIOSRunning();
+var shouldInvokeUnload = !isSupportBeforeunload();
+
+function isSupportBeforeunload() {
+    return !isIOSRunning() && !isAndroidRunning();
+}
+
+function isAndroidRunning() {
+    var isAndroidAgent = /Android/.test(navigator.userAgent);
+
+    return isAndroidAgent;
+}
+
+// https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
+function isIOSRunning() {
+    var iosQuirkPresent = function () {
+        var audio = new Audio();
+
+        audio.volume = 0.5;
+        return audio.volume === 1;   // volume cannot be changed from "1" on iOS 12 and below
+    };
+
+    var isIOSAgent = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isAppleDevice = navigator.userAgent.includes('Macintosh');
+    var isTouchScreen = navigator.maxTouchPoints >= 1;   // true for iOS 13 (and hopefully beyond)
+
+    return isIOSAgent || (isAppleDevice && (isTouchScreen || iosQuirkPresent()));
+}
+
+
+/*---------------------------------------------------------------------------------
+Initialize evrything needed to run the course
+---------------------------------------------------------------------------------*/
+function InitializeApi() {
+    //setup the api handle
+    SetupApi();
+
+    //Initialize the handles for the frames
+    SetupFramesHandles();
+
+    //make the initial call to getparam and launch course
+    GetParam();
+}
+
+/*---------------------------------------------------------------------------------
+    Initializes the api
+---------------------------------------------------------------------------------*/
+function SetupApi() {
+    /*---------------------------------------------------------------------------------
+            Create CMI object
+            Some providers look for it directly under top others under
+            top.document
+    ---------------------------------------------------------------------------------*/
+    window.API = new Object();
+    if (navigator.appName.toLowerCase() != "netscape")
+        window.document.API = window.API;
+    objApi = window.API;
+    //setup the api function calls
+    objApi.LMSGetValue = LMSGetValue;
+    objApi.LMSSetValue = LMSSetValue;
+    objApi.LMSInitialize = LMSInitialize;
+    objApi.LMSCommit = LMSAjaxCommit;
+    objApi.LMSFinish = LMSFinish;
+    objApi.LMSGetErrorString = LMSGetErrorString;
+    objApi.LMSGetDiagnostic = LMSGetDiagnostic;
+    objApi.LMSGetLastError = LMSGetLastError;
+    ErrorObject();
+}
+/*---------------------------------------------------------------------------------
+    Setup ErrorObject
+---------------------------------------------------------------------------------*/
+function ErrorObject() {
+    objError = new Array();
+    objError[0] = "No Error";
+    objError[101] = "General Exception";
+    objError[102] = "Server is busy";
+    objError[201] = "Invalid argument error";
+    objError[202] = "Element cannot have children";
+    objError[203] = "Element not an array- cannot have count";
+    objError[300] = "Error saving bookmark (expired session)";
+    objError[301] = "Not initialized";
+    objError[401] = "Not implemented error";
+    objError[402] = "Invalid SetValue, element is a CMI keyword";
+    objError[403] = "Element is read only";
+    objError[404] = "Element is write only";
+    objError[405] = "Incorrect data type";
+}
+/*---------------------------------------------------------------------------------
+    Setup frames handles
+    frmRequestGet, frmRequestPut, frmRequest, frmLesson
+---------------------------------------------------------------------------------*/
+function SetupFramesHandles() {
+    ConsoleLog('Setting Iframes');
+    for (var i = 0; i < window.frames.length; i++) {
+        try {
+            switch (window.frames[i].name) {
+                case 'frmRqst':
+                    frmRequest = window.frames[i];
+                    break;
+                case 'CourseIframe':
+                    frmLesson = window.frames[i];
+                    break;
+                case 'frmRsltPut':
+                    frmRequestPut = window.frames[i];
+                    break;
+                case 'frmRsltGet':
+                    frmRequestGet = window.frames[i];
+                    break;
+
+            }
+        }
+        catch (e) {
+            ConsoleLog(e);
+        }
+    }
+    //because of network latency sometimes the content of the request frame
+    //is not completly loaded.  Check if the form fields exists, if not try to get it again.
+
+    if (typeof (frmRequest) == "undefined") {
+        window.setTimeout("SetupFramesHandles()", 500);
+        return;
+    }
+}
+
+//***********************************************************************************
+//										LMS API functions
+//***********************************************************************************
+
+/*---------------------------------------------------------------------------------
+Initializes the cmi
+---------------------------------------------------------------------------------*/
+function LMSInitialize(i) {
+    isFinish = false;
+    return "true";
+    //return (cmi.core.error == 0);
+}
+
+/*---------------------------------------------------------------------------------
+    Initiates the final call to the LMS
+---------------------------------------------------------------------------------*/
+function LMSFinish(s) {
+    ConsoleLog(Bold('LMSFinish') + ' called, clearTimeout of commits', true);
+    isFinish = true;
+    clearTimeout(commitSetTimeoutHandler);
+    LMSCommit(s);
+    // when launch through Inline Player, we might want to remove the display none below
+    if (location.search.indexOf("&launchDirect=true") == -1) {
+        // no need to see the course frame anymore (help not to see 404 errors of courses CONT-16983)
+        $("#CourseIframe").css('display', 'none');
+    }
+    if (cmi.core.error != 0)
+        return "false";
+    return "true";
+}
+
+/*---------------------------------------------------------------------------------
+    LMSCommit call
+---------------------------------------------------------------------------------*/
+function LMSCommit(s) {
+    ConsoleLog('LMSCommit commit invoked', true);
+    var aiccData = BuildAiccData();
+
+    // this LMSCommit function is called just from LMSFinish 
+    // we would bypass sending aicc.aspx from here when
+    // * we enabled the feature of reduce commits AND
+    // * aiccData hasn't changed AND
+    // * last commit happened lately (we don't want to send aicc.aspx with same data in close proximity
+    var now = new Date();
+    var isLastCommitHappenedLately = true;
+    if (!lastCommitDatetime || now - lastCommitDatetime > 2000)
+        isLastCommitHappenedLately = false;
+    var sameAiccData = IsSameAiccData(aiccData);
+    var bypassCommitToServer = isReduceUnloadCommits && sameAiccData && isLastCommitHappenedLately;
+    ConsoleLog(['LMSCoimmit bypassCommitToServer', Bold(bypassCommitToServer), 'isReduceUnloadCommits', Bold(isReduceUnloadCommits), 'sameAiccData', Bold(sameAiccData), 'isLastCommitHappenedLately', Bold(isLastCommitHappenedLately)].join(), true);
+
+    var returnValue;
+    if (isScormSendBeaconDuringUnloadCorpSetting && window.unloaded && shouldSendBeacon()) {
+        if (bypassCommitToServer)
+            return bypassCommitToServer;
+        ConsoleLog(Bold('sendBeacon from LMSCommit'), true);
+        var data = {
+            command: 'putparam',
+            session_id: sessionId,
+            xslt: 'clientLMS/clientLMS.xsl',
+            aicc_data: ((!isCmiEncrypted) ? aiccData : AesUtils.encrypt(aiccData, cmiEncryptedPass))
+        };
+        if (isCmiEncrypted) {
+            data["encrypted"] = "true";
+            if (isTrace) {
+                data["aicc_data_raw"] = aiccData;
+            }
+        }
+        var urlToTransmitData = '../aicc.aspx';
+        SendCommitUsingSendBeacon(data, urlToTransmitData, aiccData);
+    }
+    else {
+        ConsoleLog('PutParam through form submit', true);
+        returnValue = PutParam(aiccData, bypassCommitToServer);
+    }
+    if (cmi.core.error != 0)
+        return "false";
+    return returnValue ?? "true";
+}
+
+function IsSameAiccData(aiccData, forceCommit) {
+    var sameAiccData = false;
+    if (aiccData == aiccDataVersion1 && !(commitTimeStampUpdated || (forceCommit && !isFinish)))
+        sameAiccData = true;
+    // Check if data has changed since last commit / commit timestamp was updated / force only if LMSFinish wasn't called
+    ConsoleLog(['sameAiccData', Bold(sameAiccData), 'aiccDataVersion1==aiccData', aiccData == aiccDataVersion1, 'aiccDataVersion1==aiccData.timestampreplace', aiccData.replace(currentSessionTime, sessionTime1) == aiccDataVersion1, 'isReduceUnloadCommits', isReduceUnloadCommits, 'commitTimeStampUpdated', commitTimeStampUpdated, 'forceCommit', forceCommit, 'isFinish', isFinish, 'window.unloaded', window.unloaded].join(), true);
+    if (sameAiccData) {
+        ConsoleLog(Bold('LMSAjaxCommit: sameAiccData we probably going to bypass data to server'), true);
+
+        // We are not going to call commit, but we do want to validate that there is a connection to the server and return relevant data
+        // (there are some courses that depends on this check
+        if (!checkKeepAlive()) {
+            var msg = "LMSAjaxCommit Error: checkKeepAlive() returned error.  Can not save course data.";
+            ConsoleLog(msg);
+            var GENERAL_ERROR = 101;
+            cmi.core.error = GENERAL_ERROR;  // General error used for POST fail 
+            cmi.core.error_text = objError[GENERAL_ERROR];
+            return "false";
+        }
+        else {
+            return "true";
+        }
+    }
+    else {
+        ConsoleLog('LMSAjaxCommit: New data - pass to LMS server');
+        ConsoleLog(aiccData, true);
+        // Save current data for next time
+        aiccDataVersion1 = aiccData;
+        sessionTime1 = currentSessionTime;
+    }
+}
+
+/*---------------------------------------------------------------------------------
+    Similar to LMSCommit, but done with ajax to work during window unload and to support lots of commit
+---------------------------------------------------------------------------------*/
+function LMSAjaxCommit(fromUnload, forceCommit, commitAfterTimeoutInterval) {
+    ConsoleLog([Bold('LMSCommit'), ' ajax commit invoked, fromUnload', Bold(fromUnload), 'forceCommit', Bold(forceCommit), 'commitAfterTimeoutInterval', Bold(commitAfterTimeoutInterval)].join(' '), true);
+    if (!fromUnload && isReduceUnloadCommits && reduceCommitsInterval && !commitAfterTimeoutInterval) {
+        // to support closing course from internal button, we'll delay commit calls to call only one commit when we get few request during 
+        ConsoleLog([Bold('LMSCommit Interval'), 'isDuringCommitInterval', Bold(isDuringCommitInterval)].join(' '), true);
+        if (!isDuringCommitInterval) {
+            isDuringCommitInterval = true;
+            commitSetTimeoutHandler = setTimeout(function () { LMSAjaxCommit(null, null, true) }, reduceCommitsInterval)
+        }
+        // we will return previous error status (for courses that check internet connectivity through commit calls' response)
+        if (cmi.core.error != 0)
+            return "false";
+        return "true";
+    }
+    isDuringCommitInterval = !commitAfterTimeoutInterval;
+    var aiccData = BuildAiccData();
+
+    var sameAiccData = IsSameAiccData(aiccData, forceCommit);
+    if (sameAiccData)
+        return sameAiccData;
+
+    // Save current data for next time
+    aiccDataVersion1 = aiccData;
+    sessionTime1 = currentSessionTime;
+
+    var data = {
+        command: 'putparam',
+        session_id: sessionId,
+        xslt: 'clientLMS/clientLMS.xsl',
+        aicc_data: ((!isCmiEncrypted) ? aiccData : AesUtils.encrypt(aiccData, cmiEncryptedPass))
+    };
+    if (isCmiEncrypted) {
+        data["encrypted"] = "true";
+        if (isTrace) {
+            data["aicc_data_raw"] = aiccData;
+        }
+    }
+
+    // this area is different than ScormLms.aspx as it runs in xPlor - not sure how it works inside xPlor
+    if (!window.invokeUnloadCalled && (fromUnload || window.terminateBeforeSessionTimeout)) {
+        ConsoleLog([Bold('invokedUnload'), 'recognized', 'fromUnload', Bold(fromUnload), 'isFinish', Bold(isFinish)].join(' '), true);
+        window.invokeUnloadCalled = true;
+        // this area is different than ScormLms.aspx as it runs in xPlor - not sure how it works inside xPlor
+        invokeUnload(window);
+        if (window.terminateBeforeSessionTimeout) {
+            // let the invokeUnload call the Commit, give 2 seconds to display the expiration message 
+            // (can't depend on LMSFinish because not all courses would call it)
+            window.setTimeout("onSessionExpire()", 2000);
+            // we will allow a grace of 30s of keep commiting stuff - afterwards we shall discard any additional commit calls
+            window.invokeUnloadCalledTimestamp = new Date();
+            return;
+        }
+        // if invokeUnload invoked unload function of course that in turn called commit/finish - we don't need to 
+        if (isReduceUnloadCommits && (fromUnload && window.sendBeaconCommit || isFinish)) {
+            ConsoleLog([Bold('no need to send our commit fromUnload event'), ' as either [', isFinish, '] LMSFinish was called or [', window.sendBeaconCommit, '] invokedUnload caused invocation of commits from course', 'fromUnload', fromUnload].join(' '), true);
+            return;
+        }
+    }
+
+    if (window.terminateBeforeSessionTimeout && window.invokeUnloadCalledTimestamp) {
+        var currentTimestamp = new Date();
+        // in case we got commit call after 30s since our invokeUnload call - we don't want to allow anymore commits (fix of CONT-22322)
+        if (currentTimestamp - window.invokeUnloadCalledTimestamp > 30000) {
+            ConsoleLog("LMSAjaxCommit: New data not passed to LMS server due to session timeout (course doesn't listen to unload events) " + currentTimestamp);
+            return;
+        }
+    }
+
+    var urlToTransmitData = '../aicc.aspx';
+    lastCommitDatetime = new Date();
+    if (isScormSendBeaconDuringUnloadCorpSetting && window.unloaded && shouldSendBeacon()) {
+        window.sendBeaconCommit = true;
+        ConsoleLog(Bold('sendBeacon'), true);
+        SendCommitUsingSendBeacon(data, urlToTransmitData, aiccData);
+    }
+    else {
+        ConsoleLog(Bold('sendAjax'), true);
+        SendCommitUsingAjax(data, urlToTransmitData, aiccData);
+    }
+    if (cmi.core.error != 0)
+        return "false";
+    return "true";
+}
+
+function SendCommitUsingSendBeacon(data, urlToTransmitData, aiccData, shouldCompress) {
+    var approxBytesOfFormDataHeaderPerKey = 600; //buffer took into account
+    if (shouldCompress) {
+        urlToTransmitData += (urlToTransmitData.includes("?") ? "&isCompressed=true" : "?isCompressed=true");
+        var compressedAiccData = btoa(pako.gzip(aiccData, { to: "string" })); //check if need json stringify
+        data["aicc_data"] = (data["encrypted"] != "true" ? compressedAiccData : AesUtils.encrypt(compressedAiccData, cmiEncryptedPass));
+    }
+    var currentRequestDataSize = 0;
+    var formDataToCommit = new FormData();
+    for (var key in data) {
+        formDataToCommit.append(key, data[key]);
+        currentRequestDataSize += (key || "").length + (data[key] || "").length + approxBytesOfFormDataHeaderPerKey;
+    }
+
+    currentRequestDataSize += 2000; //additional 2kb for headers and cookies
+
+    var isSentSuccessfully;
+    if (accumulatedDataSizeForSendBeacon + currentRequestDataSize < 60000) {
+        isSentSuccessfully = navigator.sendBeacon(urlToTransmitData, formDataToCommit);
+        if (isSentSuccessfully) {
+            accumulatedDataSizeForSendBeacon += currentRequestDataSize;
+        }
+    }
+    else if (!shouldCompress) { //didn't send using compression before so try again with compression
+        isSentSuccessfully = SendCommitUsingSendBeacon(data, urlToTransmitData, aiccData, true);
+    }
+    else if (!isSent_sendbeaconlogerror) {
+        accumulatedDataSizeForSendBeacon += currentRequestDataSize;
+        formDataToCommit.delete("aicc_data");
+        formDataToCommit.set("command", "sendbeaconlogerror");
+        isSentSuccessfully = navigator.sendBeacon(urlToTransmitData + "?isLaunchedInIframe=true&accumulatedBytes=" + accumulatedDataSizeForSendBeacon, formDataToCommit);
+        isSent_sendbeaconlogerror = isSentSuccessfully;
+    }
+
+    if (!isSentSuccessfully) {
+        if (isSent_sendbeaconlogerror) {
+            if (shouldCompress)
+                console.log("Already Sent sendbeaconlogerror. we ignore additional commits");
+        }
+        else
+            console.error("Either data and log haven't been sent successfully");
+    }
+
+    // for the recursive case, we need to bubble up the results of this attempt
+    return isSentSuccessfully;
+}
+
+function SendCommitUsingAjax(data, urlToTransmitData) {
+    $.ajax({
+        type: 'post',
+        url: urlToTransmitData,
+        data: data,
+        async: false
+    }).fail(function (XMLHttpRequest, textStatus, error) {
+        var msg = "LMSAjaxCommit Error: " + error;
+        ConsoleLog(msg);
+        if (error && error.message && error.message.indexOf('dismissal') != -1) {
+            ConsoleLog('Ajax Dismissal during unload', true);
+            //we found two cases this happens at:
+            // 1. CONT-20843 - course send LMSCommit while unload its pages 
+            //      currently these LMSCommits are failing - but clients haven't reported on a problem yet (when closing the course window, everything is saved through sendBeacon
+            //      if this need to be handled, we might flag this dismissal and implement setInterval that check if there were dismissal failures, it can re-send the data
+            // 2. CONT-20116 - on Android, when course unload event is called before scormLms/scormFrames unload
+            //      in this case, course commits/finish will be rejected but then our commit during ScormLms will be succeed
+            //      WE DIDN'T CALL sendBeacon AS IT WOULD FAIL THE SCENARIO ABOVE ON ANDROID
+        }
+        var GENERAL_ERROR = 101;
+        cmi.core.error = GENERAL_ERROR;  // General error used for POST fail 
+        cmi.core.error_text = objError[GENERAL_ERROR];
+
+    });
+}
+
+function shouldSendBeacon() {
+    // either Chrome version > 80 or Safari version > 13 
+    return getChromeVersion() >= 80 || isSafariShouldSendBeacon();
+}
+
+//if browsed from another browser than Chrome - will return false
+function getChromeVersion() {
+    var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+
+    return raw ? parseInt(raw[2], 10) : false;
+}
+
+//if browsed from another browser than Safari - will return false
+function isSafariShouldSendBeacon() {
+    // Safari has different user agents
+    // old format 
+    // Mozilla/5.0 (iPad; CPU OS 12_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.2 Mobile/15E148 Safari/604.1
+
+    var raw = navigator.userAgent.match(/([0-9]+)\.([0-9]+)[0-9\.]* Mobile\/\w+ Safari/);
+    if (!raw) {
+        // new format 
+        // Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15
+        // Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15
+
+        raw = navigator.userAgent.match(/([0-9]+)\.([0-9]+)[0-9\.]* Safari/);
+    }
+    // verify it's not chrome 
+    // Chrome user agent
+    // https://stackoverflow.com/questions/7944460/detect-safari-browser?answertab=active#tab-top
+    // Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
+
+    if (raw && navigator.userAgent.indexOf('Chrome') == -1) {
+        // we should sendBeacon for version 13.1 and up - to simplify we do it from 13
+
+        var mainVersion = parseInt(raw[1], 10);
+        return mainVersion >= 13;
+    }
+    return false;
+}
+
+function invokeUnload(owner) {
+
+    for (var i = 0; i < owner.frames.length; i++) {
+
+        var body = owner.frames[i].document.body;
+        try {
+            if (! +[1,]) {
+                $.each([owner.frames[i], body], function (j, element) {
+                    $.each(['pagehide', 'beforeunload', 'unload'], function (k, eventName) {
+                        try {
+                            var event = owner.frames[i].document.createEventObject();
+                            if (typeof (element["on" + eventName]) == "function") {
+                                element["on" + eventName].call(element, event);
+                                element["on" + eventName] = null;
+                            }
+                            "fireEvent" in element && element.fireEvent(eventName, event);
+                        } catch (e) {
+                        }
+                    });
+                });
+            } else {
+                $.each(['pagehide', 'beforeunload', 'unload'], function (k, eventName) {
+                    var event = document.createEvent('HTMLEvents');
+                    event.initEvent(eventName, true, false);
+                    body.dispatchEvent(event);
+
+                    body['on' + eventName] = owner.frames[i]['on' + eventName] = null;
+                });
+            }
+        } catch (e) { }
+
+        try {
+            invokeUnload(owner.frames[i]);
+        } catch (e) { }
+    };
+
+    if (window.terminateBeforeSessionTimeout) {
+        // leave the frames so we can display the message in the end
+        return;
+    }
+
+    $.each($('frame, iframe', owner.document), function (i, one) {
+        try {
+            one.parentNode.removeChild(one);
+        } catch (e) { }
+    });
+
+}
+
+function checkKeepAlive() {
+    // keepalive.js is keeping sessions alive indefinitely, which is a security issue.
+    // For now - we'll remove this keepalive check and just return "true" 
+    return true;
+
+    var xhr = new (window.ActiveXObject || XMLHttpRequest)("Microsoft.XMLHTTP");
+    var ajaxConnectivity;
+    var url = "/Core/scripts/keepalive.js?rand=" + Math.floor((1 + Math.random()) * 0x10000);
+    // Open new request as a HEAD to the root hostname with a random param to bust the cache
+    xhr.open("HEAD", url, false);
+
+    // Issue request and handle response
+    try {
+
+        xhr.send();
+        return (xhr.status >= 200 && xhr.status < 300 || xhr.status === 304);
+
+    } catch (error) {
+        ConsoleLog('ScormLMS:checkKeepAlive: Error [' + error + ']');
+        return false;
+    }
+}
+
+/*---------------------------------------------------------------------------------
+Builds the Aicc data string
+---------------------------------------------------------------------------------*/
+function BuildAiccData() {
+    var aiccData;
+    cmi.core.error = 0;
+    cmi.core.error_text = objError[0];
+    //build the aiccData param to send back to the LMS
+    //core block
+    currentSessionTime = (isReduceUnloadCommits ? decodeURIComponent(cmi.core.session_time) : CommitTimeDifference(cmi.core.session_time));
+    aiccData = "[core]\n" +
+        "lesson_status=" + cmi.core.lesson_status + ((cmi.core.exit == "") ? "\n" : ", " + cmi.core.exit + "\n") +
+        "lesson_location=" + ((typeof (cmi.core.lesson_location) == "undefined") ? "\n" : cmi.core.lesson_location + "\n") +
+        "score=" + ((typeof (cmi.core.score.raw) == "undefined") ? "\n" : cmi.core.score.raw + "\n") +
+        "time=" + currentSessionTime + "\n";  //Calculate the time difference between the last commit
+    //core_vendor block
+    aiccData += "[core_vendor]\n" + ((typeof (cmi.core.core_vendor) == "undefined") ? "" : cmi.core.core_vendor + "\n");
+    //core_lesson block
+    aiccData += "[core_lesson]\n" +
+        ((typeof (cmi.suspend_data) == "undefined") ? "" : cmi.suspend_data + "\n");
+    //objectives_status block
+    aiccData += "[objectives_status]\n";
+    //loop through the objectives
+    for (var i = 0; i < cmi.objectives.length; i++) {
+        aiccData += "j_id." + i + "=" + cmi.objectives[i].id + "\n";
+        if (cmi.objectives[i].status != "")
+            aiccData += "j_status." + i + "=" + cmi.objectives[i].status + "\n";
+        if (cmi.objectives[i].score.raw != "") {
+            aiccData += "j_score." + i + "=" + cmi.objectives[i].score.raw +
+                (isNaN(parseInt(cmi.objectives[i].score.max)) ? "\n" : ("," + cmi.objectives[i].score.max +
+                    (isNaN(parseInt(cmi.objectives[i].score.min)) ? "\n" : (", " + cmi.objectives[i].score.min + "\n"))));
+        }
+        if (cmi.objectives[i].completeDate != "")
+            aiccData += "j_completedate." + i + "=" + cmi.objectives[i].completeDate + "\n";
+    }
+
+    return aiccData;
+}
+
+/*---------------------------------------------------------------------------------
+VerifyElementExistence - verify element exists
+---------------------------------------------------------------------------------*/
+function VerifyElementExistence(s) {
+    try {
+        //objectives
+        if (s.search("cmi.objectives") >= 0) {
+            //verify element exists 
+            var str = s.substr(("cmi.objectives.").length);
+            var ar = str.split("\]");
+            if (parseInt(ar[0]) + 1 > parseInt(cmi.objectives._count))
+                cmi.objectives.add();
+        }
+
+        //interactions
+        if (s.search("interactions") > 0) {
+            //verify element exists
+            var str = s.substr(("cmi.interactions.").length);
+            var ar = str.split("\]");
+            if (parseInt(ar[0]) + 1 > parseInt(cmi.interactions._count))
+                cmi.interactions.add();
+
+            //check for correct responses
+            if (s.search("correct_responses") > 0) {
+                var re2 = /.+\.correct_responses\[(\d+)\].+/;
+                var ar2 = s.match(re2);
+                if (parseInt(ar2[1]) + 1 > parseInt(eval("cmi.interactions[" + ar[0] + "].correct_responses._count"))) {
+                    eval("cmi.interactions[" + ar[0] + "].correct_responses.add()");
+                }
+            }
+
+            //check for correct responses
+            if (s.search("objectives") > 0) {
+                var re2 = /.+\.objectives\[(\d+)\].+/;
+                var ar2 = s.match(re2);
+                if (parseInt(ar2[1]) + 1 > parseInt(eval("cmi.interactions[" + ar[0] + "].objectives._count"))) {
+                    eval("cmi.interactions[" + ar[0] + "].objectives.add()");
+                }
+            }
+
+        }
+    } catch (e) {
+        cmi.core.error = 201;
+        cmi.core.error_text = objError[201];
+        return false;
+    }
+    return true;
+}
+
+/*---------------------------------------------------------------------------------
+LMSSetValue
+---------------------------------------------------------------------------------*/
+function LMSSetValue(s, v) {
+    ConsoleLog(['LMSSetValue: key', s, ' value', v].join(), true);
+    ResetError();
+    //transform from cmi.[group].0.status => cmi.group[0].status
+    var re = /\.([\d]*)\./g;
+    s = s.replace(re, "\[$1\]\.");
+
+    if (!VerifyElementExistence(s)) {
+        return "false";
+    }
+
+    var elem;
+    try {
+        elem = eval(s);
+    } catch (e) {
+        cmi.core.error = 401;
+        cmi.core.error_text = objError[401];
+        return "false";
+    }
+    //---------------------------------------------------
+    //  NOT Supported
+    //---------------------------------------------------
+    if (typeof (elem) == "undefined") {
+        if (s.indexOf("cmi.core.score.") != -1) {
+            if (!(eval('cmi.core.score')))
+                cmi.core.Score.add();
+        }
+        else {
+            cmi.core.error = 401;
+            cmi.core.error_text = objError[401];
+            return "false";
+        }
+    }
+    //---------------------------------------------------
+    //  CMI Keyword
+    //---------------------------------------------------
+    if (s.indexOf("_children") != -1 || s.indexOf("_count") != -1) {
+        cmi.core.error = 402;
+        cmi.core.error_text = objError[402];
+        return "false";
+    }
+    //---------------------------------------------------
+    //  Read Only
+    //---------------------------------------------------
+    if (s.indexOf("cmi.core.student_id") != -1
+        || s.indexOf("cmi.core.student_name") != -1
+        || s.indexOf("cmi.core.credit") != -1
+        || s.indexOf("cmi.core.entry") != -1
+        || s.indexOf("cmi.core.total_time") != -1
+        || s.indexOf("cmi.core.lesson_mode") != -1
+        || s.indexOf("cmi.core.launch_data") != -1
+        || s.indexOf("cmi.comments_from_lms") != -1
+        || s.indexOf("mastery_score") != -1
+        || s.indexOf("max_time_allowed") != -1
+        || s.indexOf("time_limit_action") != -1) {
+        cmi.core.error = 405;
+        cmi.core.error_text = objError[405];
+        return "false";
+    }
+    //---------------------------------------------------
+    //  Incorrect Data Type
+    //---------------------------------------------------
+    if ((s.indexOf("score.raw") != -1 || s.indexOf("score.max") != -1 || s.indexOf("score.min") != -1) && isNaN(v)) {
+        cmi.core.error = 405;
+        cmi.core.error_text = objError[405];
+        return "false";
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
+    //  Lesson Location variable - triggering event for annotation purposes (calls the parent that is in ScormFrames.aspx)
+    //--------------------------------------------------------------------------------------------------------------------
+    if (s.indexOf("cmi.core.lesson_location") != -1 && v) {
+        window.triggerEvent("AnnotationEvt.12.Set", v);
+    }
+
+    //v = String(v).replace(/\n/g, "\\\n");
+    eval(s + "='" + escape(v) + "'");
+
+    return "true";
+}
+
+/*---------------------------------------------------------------------------------
+    LMSGetValue
+---------------------------------------------------------------------------------*/
+function LMSGetValue(s) {
+    ResetError();
+    var elem = null;
+    //transform from cmi.[group].0.status => cmi.group[0].status
+    var re = /\.([\d]*)\./g;
+    s = s.replace(re, "\[$1\]\.");
+
+    if (!VerifyElementExistence(s)) {
+        return "";
+    }
+
+    //test if this is part of the cmi
+    if (s.indexOf("cmi.") != -1) {
+        //split the string into parts and eval incrementaly
+        var parts = String(s).split(".");
+        var part = parts[0];
+        var varOk = true;
+        var i = 1;
+        for (i = 1; i < parts.length; i++) {
+            part += "." + parts[i];
+            elem = eval(part);
+            if (elem == null || typeof (elem) == "undefined") {
+                varOk = false;
+                break;
+            }
+        }
+
+        if (varOk) {
+            elem = eval(s);
+            // unescape change the variable type to string
+            // ideally the condition should be
+            // if (typeof(elem) == "string")
+            // but the unescape code existed since day one so we'll be more specific
+            if (s != "cmi.objectives._count")
+                elem = unescape(elem);
+        }
+        else
+            elem = null;
+    }
+
+    //---------------------------------------------------
+    //  NOT Supported
+    //---------------------------------------------------
+    if (elem == null) {
+        if (s.indexOf("elementk.") >= 0) {
+            //cmi.core.error = 401;
+            cmi.core.error_text = objError[401];
+        }
+        else {
+            cmi.core.error = 401;
+            cmi.core.error_text = objError[401];
+        }
+        return "";
+    }
+
+    if (s.indexOf("cmi.core.exit") != -1 || s.indexOf("cmi.core.session_time") != -1) {
+        cmi.core.error = 404;
+        cmi.core.error_text = objError[404];
+        return "";
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------
+    //  Lesson Location variable - triggering event for annotation purposes (calls the parent that is in ScormFrames.aspx)
+    //--------------------------------------------------------------------------------------------------------------------
+    if (s.indexOf("cmi.core.lesson_location") != -1 && elem) {
+        window.triggerEvent("AnnotationEvt.12.Get", elem);
+    }
+    return elem;
+}
+
+/*---------------------------------------------------------------------------------
+    Reset Error
+---------------------------------------------------------------------------------*/
+function ResetError() {
+    cmi.core.error = 0;
+    cmi.core.error_text = objError[0];
+}
+/*---------------------------------------------------------------------------------
+    LMSGetLastError
+---------------------------------------------------------------------------------*/
+function LMSGetLastError() {
+    return cmi.core.error;
+}
+/*---------------------------------------------------------------------------------
+    LMSGetErrorString
+---------------------------------------------------------------------------------*/
+function LMSGetErrorString(s) {
+    return objError[s];
+}
+/*---------------------------------------------------------------------------------
+    LMSGetDiagnostic
+---------------------------------------------------------------------------------*/
+function LMSGetDiagnostic(p) {
+    return "";
+}
+
+//***********************************************************************************
+//										Communication functions
+//***********************************************************************************
+
+/*---------------------------------------------------------------------------------
+    Makes the getparam call
+---------------------------------------------------------------------------------*/
+function GetParam() {
+    communicateCommand = "getparam";
+    communicateParam = "";
+    communicateFrame = "frmRsltGet";
+    Communicate();
+    //Communicate("getparam", "", "frmRsltGet");
+    GetParamResult();
+}
+
+/*---------------------------------------------------------------------------------
+    Makes the putparam call
+---------------------------------------------------------------------------------*/
+var lastCommunicateParam = "";
+var lastErrorCode = -1;
+
+function PutParam(data, bypassCommitToServer) {
+    communicateCommand = "putparam";
+    communicateParam = data;
+    communicateFrame = "frmRsltPut";
+
+    ConsoleLog(['PutParam bypassCommitToServer', bypassCommitToServer, 'lastErrorCode', Bold(lastErrorCode), 'communicateParam', communicateParam, 'lastCommunicateParam', lastCommunicateParam].join(), true);
+    if (!bypassCommitToServer && (lastErrorCode != 0 || communicateParam != lastCommunicateParam)) {
+        Communicate();
+    }
+    //	Communicate("putparam", data ,"frmRsltPut");
+    sleep(1000);
+    PutParamResult();
+    ClearScoCookie();
+
+    lastCommunicateParam = communicateParam;
+    lastErrorCode = cmi.core.error;
+    return bypassCommitToServer;
+}
+
+
+/*---------------------------------------------------------------------------------
+    Initiates the communication with the LMS
+---------------------------------------------------------------------------------*/
+//function Communicate(command, param, targetFrame)
+
+function Communicate() {
+    start = new Date();
+    if (frmRequest.document.aicc != null) {
+        //frmRequest.document.aicc.command.value = command;
+        frmRequest.document.aicc.command.value = communicateCommand;
+    }
+    else {
+        window.setTimeout("Communicate()", 500);
+        //window.setTimeout(Communicate(command, param, targetFrame),500);
+        return;
+    }
+
+    //frmRequest.document.aicc.command.value = command;
+    frmRequest.document.aicc.command.value = communicateCommand;
+    //frmRequest.document.aicc.aicc_data.value = param;
+    frmRequest.document.aicc.aicc_data.value = ((!isCmiEncrypted) ? communicateParam : AesUtils.encrypt(communicateParam, cmiEncryptedPass));
+    if (isCmiEncrypted && isTrace) {
+        frmRequest.document.aicc.aicc_data_raw.value = communicateParam;
+    }
+    //frmRequest.document.aicc.target = targetFrame;
+    frmRequest.document.aicc.target = communicateFrame;
+    frmRequest.document.aicc.session_id.value = sessionId;
+
+    frmRequest.document.aicc.submit();
+
+    if (isFinish) {
+        var urlToTransmitData = frmRequest.document.aicc.action;
+        var data = {
+            command: 'putparam',
+            session_id: sessionId,
+            xslt: 'clientLMS/clientLMS.xsl',
+            aicc_data: ((!isCmiEncrypted) ? communicateParam : AesUtils.encrypt(communicateParam, cmiEncryptedPass))
+        };
+        if (isCmiEncrypted) {
+            data["encrypted"] = "true";
+            if (isTrace) {
+                data["aicc_data_raw"] = communicateParam;
+            }
+        }
+
+        if (window.terminateBeforeSessionTimeout && window.invokeUnloadCalledTimestamp) {
+            var currentTimestamp = new Date();
+            // in case we got commit call after 30s since our invokeUnload call - we don't want to allow anymore commits (fix of CONT-22322)
+            if (currentTimestamp - window.invokeUnloadCalledTimestamp > 30000) {
+                ConsoleLog("Communicate: data not passed to LMS server due to session timeout (course doesn't listen to unload events) " + currentTimestamp);
+                return;
+            }
+        }
+
+        if (isScormSendBeaconDuringUnloadCorpSetting && window.top.unloaded && shouldSendBeacon()) {
+            ConsoleLog('LMSFinish sendBeacon', true);
+            SendCommitUsingSendBeacon(data, urlToTransmitData, communicateParam);
+        }
+        else {
+            ConsoleLog(Bold('LMSFinish sendAjax'), true);
+            SendCommitUsingAjax(data, urlToTransmitData, communicateParam);
+        }
+    }
+}
+
+/*---------------------------------------------------------------------------------
+    Checks the results of the getparam call
+---------------------------------------------------------------------------------*/
+function GetParamResult() {
+
+    if (typeof ($('#frmRsltGet')[0].contentWindow.cmi) != "undefined") {
+        cmi = $('#frmRsltGet')[0].contentWindow.cmi;
+        //this is for the Safari on the mac, which for some reason can't pickup 
+        //the cmi object under the form
+        if (typeof (cmi) == "undefined" && typeof (frmRequestGet.cmi) != "undefined")
+            cmi = frmRequestGet.cmi;
+
+        //--------------------------------------------------------------------------------------------------------------------
+        //  Lesson Location variable - triggering event for annotation purposes (calls the parent that is in ScormFrames.aspx)
+        //--------------------------------------------------------------------------------------------------------------------
+        if (cmi.core && cmi.core.lesson_location) {
+            window.triggerEvent("AnnotationEvt.12.Map", cmi.core.lesson_location);
+        }
+
+        if (cmi.core.error != 0) {
+            //normally we would display an error before closing the window
+            //alert(cmi.core.error_text);
+            if (!window.terminateBeforeSessionTimeout) {
+                window.close();
+            }
+            return;
+        }
+        else {
+            frmLesson.location.href = url;
+            return;
+        }
+    }
+    //if we get this far then something wasn't right, probably something to do with
+    //network latency.  Wait a second and try again
+    window.setTimeout("GetParamResult()", 1000);
+}
+
+/*---------------------------------------------------------------------------------
+Checks the results of the putparam call
+---------------------------------------------------------------------------------*/
+function PutParamResult() {
+    if (typeof (frmRequestPut.document) != "undefined") {
+        if (isFinish && !isFinishHandling) {
+            isFinishHandling = true;
+            if (cont != "y" || (cmi.core.exit.charAt(0) == "s" && cmi.core.lesson_status.charAt(0) == "i")) {
+                if (shouldReloadMainPage(!window.isReloadPageCalled) && window.opener && window.opener.reloadPage) {
+                    window.isReloadPageCalled = true;
+                    if (!window.debugSurpressReload) { // another debug option, not reloading opener page so we can still see our debug log
+                        window.top.opener.reloadPage();
+                    }
+                }
+                VerifyPutParamResult();
+                if (!window.terminateBeforeSessionTimeout) {
+                    window.setTimeout("CloseWindow()", 2000);
+                }
+                return;
+            }
+            else {
+                communicateCommand = "getnext";
+                communicateParam = "";
+                communicateFrame = "frmRsltPut";
+                Communicate();
+                //Communicate("getnext", "", "frmRsltPut");
+            }
+        }
+        else {
+            VerifyPutParamResult();
+            //this is for courses that submit data as the user progresses through the course
+        }
+        return;
+    }
+
+    //if we get this far then something wasn't right, probably something to do with
+    //network latency.  Wait a second and try again
+    window.setTimeout("PutParamResult()", 1000);
+}
+
+
+/*---------------------------------------------------------------------------------
+Checks the results of the put param call
+---------------------------------------------------------------------------------*/
+function VerifyPutParamResult() {
+    var result = frmRequestPut.document.body.innerHTML;
+    var re = /^error=(\d+)\s+error_text=(.+)\s+version=.*/gi;
+    var m = re.exec(result);
+    try {
+        if (m != null) {
+            var errorCode = parseInt(m[1]);
+            if (errorCode > 0) {
+                var errorMsg = m[2];
+                cmi.core.error = errorCode;;
+                cmi.core.error_text = errorMsg;
+            }
+        }
+    }
+    catch (e) {
+        ;
+    }
+}
+
+function Debug(debug) {
+    window.debugFlag = debug;
+    window.debugSurpressReload = debug;
+    ConsoleLog('Debug Log', true);
+}
+
+var debugWindow;
+function ConsoleLog(msg, debug) {
+
+    if (window.console && !debug) {
+
+        console.log(msg);
+    }
+    if (window.debugFlag) {
+        // for cases we want to debug stuff on the fly we push the logs to the opener window
+        // would work only from Transcript page (Learner Home/Search and Course Catalog Preview are opening and closing the opener after LaunchLo is invoked)
+        try {
+            if (window.top.opener && window.console)
+                window.top.opener.console.log(msg);
+            else {
+                if (!debugWindow) {
+                    debugWindow = window.open();
+                    debugWindow.document.write('CSOD Scorm1.2 Debug<BR><BR>');
+                }
+                debugWindow.document.write([new Date().toISOString(), msg, '<BR>'].join(' '));
+            }
+        } catch (ex) { }
+
+    }
+}
+
+function Bold(msg) {
+    return ['<b>', msg, '</b>'].join('')
+}
+
+function SecondsToHMS(secs) {
+    function z(n) { return (n < 10 ? '0' : '') + n; }
+    var secs = Math.abs(secs);
+    secs = z(secs / 3600 | 0) + ':' + z((secs % 3600) / 60 | 0) + ':' + z(secs % 60);
+    return secs;
+}
+
+function HMSToSeconds(hms) {
+    var secs = null;
+
+    try {
+        // Expected format is (HH)HH:mm:ss.mss
+        if (parts = hms.match(/^([0-9]{2,4}):([0-5][0-9]):([0-5][0-9])[\.$]?/)) {
+            secs = parseInt(parts[1]) * 3600 + parseInt(parts[2]) * 60 + parseInt(parts[3])
+        }
+    }
+    catch (e) {
+        console.log("Warning: wrong value " + hms + " in HMSToSeconds()");
+    }
+
+    return secs;
+}
+
+function CommitTimeDifference(session_time) {
+    var result = "00:00:00";
+    commitTimeStampUpdated = false;
+
+    // Expected format is (HH)HH:mm:ss.msms (probably URL-encoded)
+    var diff = secs = HMSToSeconds(decodeURIComponent(session_time));
+
+    if (diff !== null) {
+        // if not the first call, calculate diff with previous time stamp
+        if (typeof (commitTimeStamp) != "undefined") {
+            diff -= commitTimeStamp;
+        }
+        // new timestamp must be greter or equal to the previous one
+        if (diff > 0) {
+            commitTimeStamp = secs;
+            commitTimeStampUpdated = true;
+            result = SecondsToHMS(diff);
+        }
+    }
+    return result;
+}
+
+function sleep(n) {
+    var start, end;
+    start = new Date();
+    end = new Date(start.getTime() + n);
+    while ((end - start) > 0) {
+        start = new Date();
+    }
+}
+
+function CloseWindow() {
+    ClearScoCookie();
+    window.close();
+    return;
+}
+
+//This function and the ClearScoCookie are used to refresh the status of 
+//modules in the syllabus display
+function SetScoCookie() {
+    //setup the cookie for the sco
+    this.document.cookie = "sco=" + sessionId +
+        "; path=/";
+}
+
+function ClearScoCookie() {
+    var start = document.cookie.indexOf("sco="), end = 0;
+    if (start >= 0)
+        this.document.cookie = "sco=; path=/";
+}
+
+////////////////////////////
+/*
+function testF(fnc, test_cases, test_name) {
+    var success = 0;
+
+    test_cases.forEach(function (element) {
+        res = fnc(element[0]);
+
+        if (res != element[1]) {
+            console.log(test_name + ": assertion failed for `" + element[0] + "`. Expected `" +
+                element[1] + "` actual `" + res + "`");
+        }
+        else {
+            success++;
+        }
+    }
+    );
+
+    console.log(test_name + " result: " + success + "/" + test_cases.length + " success");
+}
+
+test_cases = [
+    ["00:00:01", 1],
+    ["00:01:01", 61],
+    ["00:00:00", 0],
+    ["00:00:00.0002", 0],
+    ["10:00:00.1002", 36000],
+    ["9999:00:00.0002", 35996400],
+    ["0100:00:00.0002", 360000],
+    ["0000:00:12.0002", 12],
+    ["00:70:00.0002", null],
+    ["0000:70:00.0002", null],
+    ["0000:70:70.0002", null],
+    ["1000:70:70.0002", null],
+    ["1000:50:50.0002", 3603050],
+    ["02:02:02.0002", 7322],
+    ["0002:02:02.0002", 7322],
+    ["0002:02:02.0002 pm", 7322],
+    ["0002:02:02.0002", 7322],
+    [new String("0002:02:02.0002"), 7322],
+    ["pm", null],
+    ["null", null],
+    ["", null],
+    [12, null],
+    [null, null]
+];
+
+testF(HMSToSeconds, test_cases, "HMSToSeconds() test");
+
+test_cases = [
+    ["00:01:59", "00:01:59"],
+    ["00:02:10", "00:00:11"],
+    ["00:02:50", "00:00:40"],
+    ["10:00:51", "09:58:01"],
+    ["1000:00:50", "989:59:59"],
+    [new String("1000:00:51"), "00:00:01"],
+    ["1000%3A00%3A53", "00:00:02"],
+    [null, "00:00:00"],
+    ["", "00:00:00"],
+    [12, "00:00:00"],
+    ["0", "00:00:00"],
+    ["00:00:00", "00:00:00"],
+    ["00:70:00", "00:00:00"],
+    ["00:00:70", "00:00:00"],
+    ["00:00:50", "00:00:00"],
+];
+
+testF(CommitTimeDifference, test_cases, "CommitTimeDifference() test");
+commitTimeStamp = 0;*/
