@@ -32,7 +32,7 @@ footer, header, hgroup, menu, nav, section {
 body {
 	line-height: 1;
 	-webkit-text-size-adjust: none;
-	overflow-y: auto;
+	overflow-y: auto !important;
 	height: 100%;
 }
 
@@ -1482,7 +1482,7 @@ body {
 		max-width: 1200px;
 		margin: 0 auto;
 		height: auto;
-		overflow-y: visible;
+		overflow-y: auto !important;
 		padding: 2em;
 		margin-top: 2em;
 		display: block !important;
