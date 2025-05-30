@@ -33,7 +33,6 @@ ENV/
 .DS_Store
 
 # Project specific
-**/images/
 **/masks/
 **/*.log
 **/chromedriver
@@ -80,21 +79,45 @@ Thumbs.db
 # Ignore Visual Studio files
 .vs/
 
-# Ignore temporary files
-*.log
-*.tmp
+# Large media files (raw/unprocessed)
+**/raw/
+**/source/
+**/*.psd
+**/*.PSD
+**/*.ai
+**/*.AI
+**/*.indd
+**/*.INDD
+**/*.raw
+**/*.RAW
+**/*.cr2
+**/*.CR2
+**/*.nef
+**/*.NEF
 
-# Ignore compiled Python files
-__pycache__/
-*.pyc
+# Large binary files
+**/*.zip
+**/*.ZIP
+**/*.rar
+**/*.RAR
+**/*.7z
+**/*.7Z
+**/*.tar
+**/*.TAR
+**/*.gz
+**/*.GZ
 
-# Ignore node_modules (if applicable)
-node_modules/
-
-# Ignore environment variables and secrets
-.env
 # Local Netlify folder
 .netlify
 
-#python backend 
-app.py
+# Python backend files
+**/app.py
+**/foodpallApp.py
+**/doordash info.txt
+
+# Backup files
+**/*.bak
+**/*.backup
+**/*.old
+**/*.orig
+**/*.temp
