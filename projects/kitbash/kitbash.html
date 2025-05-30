@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Customizable Game Controller - Brooks Wimer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+		<style>
+			.project-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2em;
+				color: #ffffff;
+			}
+
+			.project-header {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+
+			.feature-section {
+				margin: 2em 0;
+			}
+
+			.feature-section h2 {
+				color: #ffffff;
+				border-bottom: 2px solid #ffffff;
+				padding-bottom: 0.5em;
+				margin-bottom: 1em;
+			}
+
+			.feature-list {
+				list-style: none;
+				padding-left: 0;
+				color: #ffffff;
+			}
+
+			.feature-list li {
+				margin: 1em 0;
+				padding-left: 1.5em;
+				position: relative;
+			}
+
+			.feature-list li:before {
+				content: "•";
+				position: absolute;
+				left: 0;
+				color: #ffffff;
+			}
+
+			.tech-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1em;
+				margin: 1em 0;
+			}
+
+			.tech-item {
+				background: rgba(255, 255, 255, 0.1);
+				color: #ffffff;
+				padding: 0.5em 1em;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			.status-section {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 2em;
+				border-radius: 8px;
+				margin: 2em 0;
+				color: #ffffff;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="content">
+							<div class="inner">
+								<h1>Customizable Wireless Game Controller App</h1>
+								<p>CS501 Final Capstone Project</p>
+							</div>
+						</div>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="project-content">
+							<section class="feature-section">
+								<h2>Project Overview</h2>
+								<p>KITBASH is a customizable game controller application that allows users to create and configure their own game controller layouts. The application provides an intuitive interface for mapping buttons, joysticks, and other controls to create personalized gaming experiences.</p>
+							</section>
+
+							<section class="feature-section">
+								<h2>Demo Video</h2>
+								<div style="position: relative; width: 100%; padding-top: 56.25%; margin: 2em 0;">
+									<video 
+										style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px;"
+										controls
+										playsinline
+										preload="metadata"
+									>
+										<source src="/images/kitbash_demo.mp4" type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+							</section>
+
+							<section class="feature-section">
+								<h2>Key Features</h2>
+								<ul class="feature-list">
+									<li><strong>Drag-and-drop Controller Builder:</strong> Create layouts with components like buttons, D-pads, and joysticks. Components are highly customizable in terms of size, location, and function.</li>
+									<li><strong>Cloud Backup with Firebase:</strong> Layouts are stored in Firebase using XML-based schemas. Offline changes are buffered and synced when internet becomes available.</li>
+									<li><strong>Voice Recognition & Motion Control:</strong> Voice commands (e.g., "jump", "shoot") can activate controls in real-time. Device orientation is tracked using a weighted fusion of gyroscope and accelerometer data.</li>
+									<li><strong>Keyboard & Mouse Simulation:</strong> A Python listener script interprets incoming messages and simulates key presses or mouse movements using the keyboard and mouse libraries.</li>
+									<li><strong>Google Cloud Relay Server:</strong> Hosted relay server on Google Cloud to overcome WiFi restrictions and forward messages from the app to the local client script.</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
+								<h2>Technical Architecture</h2>
+								<div class="tech-stack">
+									<span class="tech-item">Android Jetpack Compose</span>
+									<span class="tech-item">Firebase Firestore</span>
+									<span class="tech-item">Firebase Auth</span>
+									<span class="tech-item">Python WebSocket</span>
+									<span class="tech-item">SpeechRecognizer</span>
+									<span class="tech-item">Kotlin Coroutines</span>
+									<span class="tech-item">Google Sign-In API</span>
+								</div>
+							</section>
+
+							<section class="feature-section">
+								<h2>Key Contributions</h2>
+								<ul class="feature-list">
+									<li>Designed and implemented the layout editor UI with custom graphics</li>
+									<li>Refactored the WebSocket integration to support continuous signals</li>
+									<li>Improved resilience to disconnection by buffering Firebase writes</li>
+									<li>Set up the cloud relay server on Google Cloud</li>
+									<li>Modified the client/server communication logic</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
+								<h2>Future Directions</h2>
+								<ul class="feature-list">
+									<li>Bluetooth-based communication for local device pairing</li>
+									<li>Rooted device support for gamepad input simulation</li>
+									<li>Gesture-based controls using phone motion</li>
+									<li>Trackpad component and visual customization features</li>
+									<li>Social component for sharing controller layouts</li>
+								</ul>
+							</section>
+
+							<section class="status-section">
+								<h2>Current Status</h2>
+								<p>The app is fully functional and currently supports streaming input from Android to any computer running the listener script. It is stable, responsive, and designed with scalability in mind.</p>
+								<p><strong>App Store Launch (In Progress):</strong> We are currently working on preparing the app for release on the Google Play Store, including finalizing production builds, securing Firebase keys, and integrating analytics and crash reporting.</p>
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p><a href="https://github.com/HamidAlakbarli/Custom-Wireless-Game-Controller" target="_blank">View Project on GitHub</a></p>
+						<p class="copyright">&copy; Brooks Wimer. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/browser.min.js"></script>
+			<script src="/assets/js/breakpoints.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<script src="/assets/js/main.js"></script>
+
+	</body>
+</html> 

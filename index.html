@@ -6,6 +6,7 @@
 		<title>Brooks Wimer</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<base href="/" />
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<!-- Add Three.js dependencies -->
@@ -14,12 +15,159 @@
 		<script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/EXRLoader.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/fflate@0.7.4/umd/index.min.js"></script>
+		<!-- MediaPipe Dependencies -->
+		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 		<style>
 			#modelCanvas {
-				width: 60% !important;
-				height: 600px !important;
+				width: 100% !important;
+				height: 100% !important;
 				display: block;
 				margin: 0;
+				padding: 0;
+			}
+			.project:hover > div:last-child {
+				opacity: 1;
+			}
+			.project {
+				position: relative;
+				display: flex;
+				flex-direction: row;
+				align-items: flex-start;
+				gap: 2em;
+				padding: 2em;
+			}
+			
+			.project img {
+				width: 30%;
+				height: auto;
+				object-fit: cover;
+				border-radius: 8px;
+			}
+
+			.project .text-content {
+				flex: 1;
+			}
+
+			.project h3 {
+				margin-top: 0;
+			}
+
+			.hover-content {
+				opacity: 0;
+				transition: opacity 0.3s ease;
+			}
+			
+			.project:hover .hover-content {
+				opacity: 1;
+			}
+
+			/* Remove borders and adjust containers */
+			#wrapper {
+				padding: 0;
+				margin: 0;
+				width: 100%;
+				max-width: none;
+			}
+
+			#main {
+				padding: 0;
+				margin: 0;
+				width: 100%;
+				max-width: none;
+			}
+
+			.fullscreen-card {
+				width: 100vw;
+				height: 100vh;
+				padding: 0;
+				margin: 0;
+				overflow: hidden;
+				position: relative;
+				border: none;
+			}
+
+			.fullscreen-card:first-of-type {
+				margin-top: 300px;
+			}
+
+			.project-header {
+				width: 100%;
+				height: 150px;
+				background: rgba(0, 0, 0, 0.7);
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				align-items: center;
+				padding: 0 40px;
+				position: relative;
+				z-index: 2;
+			}
+
+			.project-header h3 {
+				color: white;
+				margin: 0;
+				font-size: 2.5rem;
+				font-weight: bold;
+			}
+
+			.project-header button {
+				color: black;
+				border: none;
+				padding: 15px 30px;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: all 0.3s ease;
+				font-size: 1.1rem;
+				margin-left: 20px;
+			}
+
+			.project-header button:hover {
+				background: #f0f0f0;
+				color: black;
+				transform: translateY(-2px);
+			}
+
+			.project-content {
+				width: 100%;
+				height: calc(100vh - 150px);
+				position: relative;
+			}
+
+			.project-content img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			.project-content iframe {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+
+			/* Remove the hover effect styles */
+			.fullscreen-card::before {
+				display: none;
+			}
+
+			.logo-img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				border-radius: 50%;
+				display: block;
+			}
+
+			#header {
+				padding-top: 10em;
 			}
 		</style>
 	</head>
@@ -31,7 +179,7 @@
 				<!-- Header -->
 					<header id="header">
 						<div class="logo">
-							<span class="icon fa-gem"></span>
+							<img src="images/BrooksWimer_logo.png" alt="Brooks Wimer Logo" class="logo-img" />
 						</div>
 						<div class="content">
 							<div class="inner">
@@ -42,89 +190,137 @@
 
 				<!-- Main -->
 					<div id="main">
-						<!-- 3D Models -->
-						<div class="project">
-							<h3>3D Models</h3>
-							<section id="model-viewer">
-								<canvas id="modelCanvas"></canvas>
-							</section>
-							<p>3D modeling project</p>
-							<button onclick="location.href='3D_models.html'">View Project</button>
+
+						<!-- SyncSonic App -->
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>Multi-Speaker Bluetooth Audio Orchestrator</h3>
+								<button onclick="location.href='projects/syncsonic/syncsonic.html'">View Project</button>
+							</div>
+							<div class="project-content">
+								<img src="images/syncsonic_logo.png" alt="SyncSonic Multi Bluetooth Audio Application Screenshots" />
+							</div>
+						</div>
+
+						<!-- KITBASH -->
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>customizable game controller application</h3>
+								<button onclick="location.href='projects/kitbash/kitbash.html'">View Project</button>
+							</div>
+							<div class="project-content">
+								<img src="images/kitbash_home_horiz.png" alt="KITBASH Project Screenshots" />
+							</div>
 						</div>
 
 						<!-- FoodPall -->
-						<div class="project">
-							<h3>FoodPall</h3>
-							<iframe 
-								src="FoodpalDemo.html" 
-								style="width: 80%; height: 800px; border: none; box-shadow: 0 0 10px rgba(0,0,0,0.1);"
-							></iframe>
-							<p>Food delivery service</p>
-							<button onclick="location.href='foodpal.html'">View Project</button>
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>food delivery application</h3>
+								<button onclick="location.href='projects/foodpal/foodpal.html'">View Project</button>
+							</div>
+							<div class="project-content" style="display: flex; justify-content: center; align-items: center; background-color: #f8f9fa; overflow: hidden;">
+								<iframe 
+									src="projects/foodpal/FoodpalDemo.html" 
+									style="width: 100%; height: 100%; border: none; background-color: #f8f9fa; font-family: 'Poppins', sans-serif;"
+									scrolling="no"
+								></iframe>
+							</div>
 						</div>
 
 						<!-- Control Room Display -->
-						<div class="project">
-							<h3>Control Room Display</h3>
-							<span class="image left">
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>Control Room Display</h3>
+								<button onclick="location.href='projects/control-room/control-room-display.html'">View Project</button>
+							</div>
+							<div class="project-content">
 								<img src="images/control_room_display.png" alt="Control Room Graph showing capacity deviation metrics" />
-							</span>
-							<p>Real-time power grid monitoring</p>
-							<button onclick="location.href='control-room-display.html'" class="project-button">View Project</button>
+							</div>
 						</div>
 
 						<!-- Emergency Contact Automation -->
-						<div class="project">
-							<h3>Emergency Contact Automation</h3>
-							<span class="image">
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>Emergency Contact Automation</h3>
+								<button onclick="location.href='projects/emergency-contact/emergency-contact-automation.html'">View Project</button>
+							</div>
+							<div class="project-content">
 								<img src="images/ENS_weekly_gliffy.png" alt="Emergency Notification System Logic Flow Diagram" />
-							</span>
-							<p>Automated emergency response system</p>
-							<button onclick="location.href='emergency-contact-automation.html'">View Project</button>
+							</div>
 						</div>
 
 						<!-- API Documentation -->
-						<div class="project">
-							<h3>API Documentation</h3>
-							<img src="images/iso_training.png" 
-								 alt="ISO-NE API Training Screenshot" 
-								 style="width: 60%; display: block; margin-bottom: 20px;">
-							<p>Interactive training module</p>
-							<button onclick="location.href='api-documentation.html'">View Project</button>
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>API Template and Documentation</h3>
+								<button onclick="location.href='projects/api-docs/api-documentation.html'">View Project</button>
+							</div>
+							<div class="project-content">
+								<img src="images/iso_training.png" alt="ISO-NE API Training Screenshot" />
+							</div>
+						</div>
+
+						
+						<!-- Face Filter Project -->
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>Real-Time Face Filter</h3>
+								<button onclick="location.href='projects/face-filter/face-filter.html'">View Project</button>
+							</div>
+							<div class="project-content">
+								<div class="video-container" style="width: 100%; height: 100%; position: relative;">
+									<video id="previewVideo" playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+									<canvas id="previewCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+									<div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">
+										<button id="previewStartButton" class="button" style="margin-right: 10px;">Start Camera</button>
+										<button id="previewStopButton" class="button" style="display: none;">Stop Camera</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- 3D Models -->
+						<div class="fullscreen-card">
+							<div class="project-header">
+								<h3>3D Models</h3>
+								<button onclick="location.href='projects/3d-models/3D_models.html'">View Project</button>
+							</div>
+							<div class="project-content">
+								<canvas id="modelCanvas" style="width: 100% !important; height: 100% !important;"></canvas>
+							</div>
 						</div>
 
 						<!-- About Me -->
 						<div class="project">
-							<h3>About Me</h3>
-							<img src="images/face2.jpg" 
-								 alt="" 
-								 style="width: 40%; display: block; margin-bottom: 20px;">
-							<p>
-								Hi, I'm Brooks Wimer, a Computer Science major at Boston University with a 3.8 GPA,
-								driven by a passion for solving real-world problems through technology. My journey spans
-								from automating emergency notification systems for my internship to building 3D models for fun.
-							</p>
-							<p>
-								I have a knack for turning concepts into functional solutions, such as the SmartChef Application,
-								a project that integrates recipe discovery with automated grocery delivery using APIs and web drivers.
-								Beyond academics, I've gained hands-on experience as a Software Development Intern at ISO New England,
-								where I contributed to tools for managing the region's power grid.
-							</p>
-							<p>
-								When I'm not coding, I serve as a Course Assistant for C# full-stack app development at Boston University,
-								play on the Club Roller Hockey Team, and ski whenever I can get the chance. I'm proficient in Python, R, Java, and the C-suite,
-								with growing expertise in SQL, React, and Linux.
-							</p>
-							<p>
-								I believe in merging creativity with technology, whether it's building comprehensive tools, contributing
-								to the energy sector, or collaborating with teams to create impactful software. I am looking for a role where I can learn 
-								a lot about technology and engage in creative problem solving. 
-							</p>
+							<img src="images/face2.jpg" alt="Brooks Wimer" />
+							<div class="text-content">
+								<h3>About Me</h3>
+								<p>
+									Hi, I'm Brooks Wimer, a recent Computer Science graduate from Boston University with a 3.74 GPA,
+									driven by a passion for solving real-world problems through technology. My journey spans
+									from developing software tools for New Englands power grid to building low-latency audio distribution systems.
+								</p>
+								<p>
+									I've created several innovative projects that showcase my technical abilities, including Foodpall - a functioning prototype of a food delivery application, SyncSonic - a multi-speaker Bluetooth audio orchestrator, and Kitbash - a customizable game controller app. Beyond academics, I've gained hands-on experience as a Software Development Intern at ISO New England,
+									where I built tools for managing the region's power grid.
+								</p>
+								<p>
+									I also served as a Teacher's Assistant for C# full-stack app development class at Boston University,
+									played on the Club Roller Hockey Team, was a memeber of the Deans Advisory Board, and was elected to be a peer tutor by my professors. I'm proficient in Python, R, Java, and the C-suite,
+									with growing expertise in SQL, React, and Linux.
+								</p>
+								<p>
+									I believe in merging creativity with technology, whether it's building comprehensive tools, contributing
+									to the energy sector, or collaborating with teams to create impactful software. I am looking for a role where I can learn 
+									a lot about technology and engage in creative problem solving. 
+								</p>
 
-							<!-- Resume Download Button -->
-							<p>
-								<a href="resume.pdf" target="_blank" class="button">Download My Resume</a>
-							</p>
+								<!-- Resume Download Button -->
+								<p>
+									<a href="resume.pdf" target="_blank" class="button">Download My Resume</a>
+								</p>
+							</div>
 						</div>
 
 						<!-- Contact -->
@@ -171,8 +367,75 @@
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<script src="assets/js/control-room-display.js"></script>
+			<script src="projects/face-filter/camera.js"></script>
+			<script src="projects/face-filter/faceDetection.js"></script>
+			<script src="projects/face-filter/maskHandler.js"></script>
 			<script>
+				// Initialize face filter for the preview
+				document.addEventListener('DOMContentLoaded', async () => {
+					const videoElement = document.getElementById('previewVideo');
+					const canvasElement = document.getElementById('previewCanvas');
+					const startButton = document.getElementById('previewStartButton');
+					const stopButton = document.getElementById('previewStopButton');
+					
+					let faceDetector = null;
+					let maskHandler = null;
+					
+					// Initialize camera handler
+					const cameraHandler = new CameraHandler(videoElement, startButton, stopButton);
+					
+					// Start button click handler
+					startButton.addEventListener('click', async () => {
+						const success = await cameraHandler.startCamera();
+						
+						if (success) {
+							// Initialize face detection
+							faceDetector = new FaceDetector(videoElement, canvasElement);
+							await faceDetector.initialize();
+							
+							// Initialize mask handler with cat mask
+							maskHandler = new MaskHandler(canvasElement);
+							await maskHandler.loadMasks();
+							maskHandler.setMask('cat'); // Using cat mask as default
+							
+							// Connect face detector to mask handler
+							faceDetector.onFaceDetected = (landmarks) => {
+								maskHandler.updateMaskPosition(landmarks);
+							};
+							
+							// Start face detection
+							faceDetector.start();
+							
+							// Show stop button, hide start button
+							startButton.style.display = 'none';
+							stopButton.style.display = 'inline-block';
+						}
+					});
+					
+					// Stop button click handler
+					stopButton.addEventListener('click', () => {
+						cameraHandler.stopCamera();
+						if (faceDetector) {
+							faceDetector.stop();
+						}
+						// Clear canvas
+						const ctx = canvasElement.getContext('2d');
+						ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+						
+						// Show start button, hide stop button
+						startButton.style.display = 'inline-block';
+						stopButton.style.display = 'none';
+					});
+				});
+
+				// Only initialize control room display if we're on that page
+				if (document.getElementById('controlRoomCanvas')) {
+					// Load control room display script only when needed
+					const script = document.createElement('script');
+					script.src = 'assets/js/control-room-display.js';
+					document.body.appendChild(script);
+				}
+
 				// Scene setup
 				const scene = new THREE.Scene();
 
@@ -203,7 +466,7 @@
 
 				// HDRI Environment
 				const exrLoader = new THREE.EXRLoader();
-				exrLoader.load('rogland_clear_night_4k.exr', (texture) => {
+				exrLoader.load('projects/3d-models/rogland_clear_night_4k.exr', (texture) => {
 					texture.mapping = THREE.EquirectangularReflectionMapping;
 					scene.environment = texture;
 					scene.background = texture;
@@ -211,7 +474,7 @@
 
 				// GLTF Model
 				const loader = new THREE.GLTFLoader();
-				loader.load('InfinityTower.py.glb', (gltf) => {
+				loader.load('projects/3d-models/InfinityTower.py.glb', (gltf) => {
 					const model = gltf.scene;
 					model.scale.set(0.1, 0.1, 0.1);
 					model.position.set(0, 0, 0);

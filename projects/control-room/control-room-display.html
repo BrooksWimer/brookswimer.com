@@ -1,0 +1,187 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Control Room Display - Brooks Wimer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../../assets/css/noscript.css" /></noscript>
+		<!-- jQuery CDN -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<!-- Chart.js CDN -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<style>
+			.project-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2em;
+				color: #ffffff;
+			}
+
+			.project-header {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+
+			.feature-section {
+				margin: 2em 0;
+			}
+
+			.feature-section h2 {
+				color: #ffffff;
+				border-bottom: 2px solid #ffffff;
+				padding-bottom: 0.5em;
+				margin-bottom: 1em;
+			}
+
+			.feature-list {
+				list-style: none;
+				padding-left: 0;
+				color: #ffffff;
+			}
+
+			.feature-list li {
+				margin: 1em 0;
+				padding-left: 1.5em;
+				position: relative;
+			}
+
+			.feature-list li:before {
+				content: "•";
+				position: absolute;
+				left: 0;
+				color: #ffffff;
+			}
+
+			.tech-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1em;
+				margin: 1em 0;
+			}
+
+			.tech-item {
+				background: rgba(255, 255, 255, 0.1);
+				color: #ffffff;
+				padding: 0.5em 1em;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			.graph-container {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 2em;
+				border-radius: 8px;
+				margin: 2em 0;
+				color: #ffffff;
+			}
+
+			#dynamicGraph {
+				width: 100% !important;
+				height: 400px !important;
+				background: rgba(255, 255, 255, 0.05);
+				border-radius: 4px;
+			}
+
+			#update-time {
+				text-align: right;
+				color: #ffffff;
+				margin-top: 1em;
+				font-size: 0.9em;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="content">
+							<div class="inner">
+								<h1>Interactive Data Visualization for ISO New England Control Room</h1>
+								<p>Real-time capacity deviation monitoring for power grid management</p>
+							</div>
+						</div>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="project-content">
+							<section class="feature-section">
+								<h2>Project Overview</h2>
+								<p>I developed an interactive data visualization tool to support the decision-making processes in ISO New England's control center, a high-tech environment resembling a NASA launch room, equipped with numerous monitors displaying critical information about grid management. This tool focuses on <strong>capacity deviation</strong>, providing actionable insights to control room operators managing the power grid.</p>
+							</section>
+
+							<section class="feature-section">
+								<div style="text-align: center; margin: 2em 0; max-width: 800px; margin-left: auto; margin-right: auto;">
+									<img src="../../images/iso_control_room.png" alt="ISO New England Control Room" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
+									<p style="margin-top: 1em; font-style: italic;">The ISO New England Control Room, where operators monitor and manage the power grid in real-time</p>
+								</div>
+							</section>
+
+							<section class="feature-section">
+								<div style="background: rgba(255, 255, 255, 0.1); padding: 1em; border-radius: 8px; margin-bottom: 1em;">
+									<p style="margin: 0; color: #ffffff; font-style: italic;">
+										<strong>Note:</strong> The graph below is interactive - you can hover over data points, zoom, and pan. While this demo uses simulated data, the actual implementation processes real-time grid metrics every 5 minutes.
+									</p>
+								</div>
+							</section>
+
+							<section class="graph-container">
+								<canvas id="dynamicGraph"></canvas>
+								<div id="update-time">
+									Last Updated: <span id="updateTimestamp">Loading...</span>
+								</div>
+							</section>
+
+							<section class="feature-section">
+								<h2>Key Features</h2>
+								<ul class="feature-list">
+									<li><strong>Interactive Graphs:</strong> Operators can toggle between different visualizations and hover over specific data points to reveal granular details, enabling precise analysis.</li>
+									<li><strong>Data Integration:</strong> The visualization leverages six optimized SQL queries to collect and organize real-time data about grid capacity and performance.</li>
+									<li><strong>Scheduled Data Updates:</strong> An R script, running as a scheduled task every five minutes, processes the data and writes it to a file. This file is dynamically fetched and displayed by JavaScript on the control room monitors.</li>
+									<li><strong>Custom Security-Driven Workflow:</strong> Due to strict security protocols in the control room, a traditional dynamic JavaScript data-fetching solution was not viable. Instead, this workaround ensures compliance with these requirements while maintaining real-time accuracy.</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
+								<h2>Technical Implementation</h2>
+								<div class="tech-stack">
+									<span class="tech-item">SQL</span>
+									<span class="tech-item">R</span>
+									<span class="tech-item">JavaScript</span>
+									<span class="tech-item">Chart.js</span>
+									<span class="tech-item">HTML/CSS</span>
+								</div>
+							</section>
+
+							<section class="feature-section">
+								<h2>Impact</h2>
+								<p>This project bridges technical constraints and user needs, providing a critical tool for real-time monitoring and decision-making in a secure, high-stakes environment. The visualization has streamlined capacity management, enabling operators to respond proactively to grid fluctuations.</p>
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p><a href="https://github.com/BrooksWimer/control-room-display" target="_blank">View Project on GitHub</a></p>
+						<p class="copyright">&copy; Brooks Wimer. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+			<script src="control.js"></script>
+
+	</body>
+</html>

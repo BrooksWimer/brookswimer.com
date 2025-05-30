@@ -1,0 +1,193 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>FoodPal - Brooks Wimer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../../assets/css/noscript.css" /></noscript>
+		<style>
+			.project-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2em;
+				color: #ffffff;
+			}
+
+			.project-header {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+
+			.feature-section {
+				margin: 2em 0;
+			}
+
+			.feature-section h2 {
+				color: #ffffff;
+				border-bottom: 2px solid #ffffff;
+				padding-bottom: 0.5em;
+				margin-bottom: 1em;
+			}
+
+			.feature-list {
+				list-style: none;
+				padding-left: 0;
+				color: #ffffff;
+			}
+
+			.feature-list li {
+				margin: 1em 0;
+				padding-left: 1.5em;
+				position: relative;
+			}
+
+			.feature-list li:before {
+				content: "•";
+				position: absolute;
+				left: 0;
+				color: #ffffff;
+			}
+
+			.tech-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1em;
+				margin: 1em 0;
+			}
+
+			.tech-item {
+				background: rgba(255, 255, 255, 0.1);
+				color: #ffffff;
+				padding: 0.5em 1em;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			.status-section {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 2em;
+				border-radius: 8px;
+				margin: 2em 0;
+				color: #ffffff;
+			}
+
+			.demo-button {
+				display: inline-block;
+				background: rgba(255, 255, 255, 0.1);
+				color: #ffffff;
+				padding: 1em 2em;
+				border-radius: 4px;
+				text-decoration: none;
+				margin-top: 1em;
+				transition: all 0.3s ease;
+			}
+
+			.demo-button:hover {
+				background: rgba(255, 255, 255, 0.2);
+				transform: translateY(-2px);
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="content">
+							<div class="inner">
+								<h1>FoodPal: Revolutionizing Recipe-Based Grocery Ordering</h1>
+								<p>Transform any recipe into a delivered grocery order</p>
+							</div>
+						</div>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="project-content">
+							<section class="feature-section">
+								<h2>Project Overview</h2>
+								<p>Imagine having the power to transform any recipe you find online into a perfectly curated grocery order delivered right to your doorstep. Our application takes the convenience of meal kits like HelloFresh, Blue Apron, and Home Chef to the next level, removing the constraints of pre-packaged menus and empowering you to explore an infinite variety of recipes tailored to your taste and dietary needs.</p>
+							</section>
+
+							<section class="feature-section">
+								<h2>Key Features</h2>
+								<ul class="feature-list">
+									<li><strong>Unlimited Choice:</strong> With access to Spoonacular's extensive database of recipes, you're no longer limited to a fixed set of meals. Find recipes from across the web and bring them to life with ease.</li>
+									<li><strong>Personalized for You:</strong> From gluten-free to vegan, the app ensures your dietary restrictions and preferences are always honored.</li>
+									<li><strong>One-Click Grocery Shopping:</strong> Select a recipe, and the app takes care of everything—from finding the nearest grocery store to matching ingredients for accurate ordering.</li>
+									<li><strong>Streamlined Delivery:</strong> Using advanced APIs and automation, the app not only finds what you need but places the order for you, with real-time tracking of your groceries.</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
+								<h2>How It Works</h2>
+								<p>The app starts by letting you choose your desired cuisines and dietary preferences. Once selected, the backend uses the Spoonacular API to find recipes tailored to your needs. Browse recipes, select the one you like, and let the app handle the rest:</p>
+								<ol class="feature-list">
+									<li>Fetches detailed instructions and ingredients for your chosen recipe</li>
+									<li>Uses a DoorDash integration to find nearby grocery stores with your items in stock</li>
+									<li>Matches each ingredient to the correct category (like "produce" or "meat") for seamless ordering</li>
+									<li>Uses Google Maps to ensure the closest, most convenient store is selected</li>
+									<li>Places the order and sends you a tracking link for real-time updates</li>
+								</ol>
+								<p>No subscriptions. No rigid meal plans. Just complete control over what you want to eat, when you want it, with the ultimate convenience of delivery.</p>
+							</section>
+
+							<section class="feature-section">
+								<h2>Technical Implementation</h2>
+								<div class="tech-stack">
+									<span class="tech-item">Flask</span>
+									<span class="tech-item">Spoonacular API</span>
+									<span class="tech-item">DoorDash API</span>
+									<span class="tech-item">Google Maps API</span>
+									<span class="tech-item">WebDriver</span>
+									<span class="tech-item">Python</span>
+									<span class="tech-item">HTML/CSS</span>
+								</div>
+							</section>
+
+							<section class="status-section">
+								<h2>Current Status</h2>
+								<p>FoodPal is currently a demo, and getting it to work has been a major undertaking. Instead of simply embedding an existing tool, I've had to rebuild the entire system to function on my website. While it's not yet fully deployed in a reliable manner, here's what's gone into making it work so far:</p>
+								
+								<h3>1. Rebuilding the Backend</h3>
+								<p>I had to create a Flask-based backend from scratch to handle requests, process user input, and communicate with the automation system. This includes managing store selections, grocery lists, and formatting data for the frontend.</p>
+								
+								<h3>2. Hosting My Own WebDriver Server</h3>
+								<p>Since external hosting services don't support running WebDriver scripts, I had to turn my old computer into a dedicated server to handle automation. This setup allows FoodPal to process requests dynamically, but I'm still fine-tuning stability and performance to make it more reliable.</p>
+								
+								<h3>3. Overcoming CORS, SSL, and Hosting Challenges</h3>
+								<p>To integrate FoodPal into my website, I had to configure:</p>
+								<ul class="feature-list">
+									<li>CORS (Cross-Origin Resource Sharing): Allows secure communication between the frontend and backend</li>
+									<li>SSL Certificates: Supports HTTPS and prevents security warnings</li>
+									<li>Hosting Adjustments: Keeps the system online while managing resource limitations</li>
+								</ul>
+
+								<a href="FoodpalDemo.html" class="demo-button">View Demo</a>
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p><a href="https://github.com/BrooksWimer/foodpal" target="_blank">View Project on GitHub</a></p>
+						<p class="copyright">&copy; Brooks Wimer. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+	</body>
+</html>

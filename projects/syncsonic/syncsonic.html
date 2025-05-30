@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>SyncSonic - Brooks Wimer</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+		<style>
+			.project-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2em;
+				color: #ffffff;
+			}
+
+			.project-header {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+
+			.feature-section {
+				margin: 2em 0;
+			}
+
+			.feature-section h2 {
+				color: #ffffff;
+				border-bottom: 2px solid #ffffff;
+				padding-bottom: 0.5em;
+				margin-bottom: 1em;
+			}
+
+			.feature-list {
+				list-style: none;
+				padding-left: 0;
+				color: #ffffff;
+			}
+
+			.feature-list li {
+				margin: 1em 0;
+				padding-left: 1.5em;
+				position: relative;
+			}
+
+			.feature-list li:before {
+				content: "•";
+				position: absolute;
+				left: 0;
+				color: #ffffff;
+			}
+
+			.tech-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1em;
+				margin: 1em 0;
+			}
+
+			.tech-item {
+				background: rgba(255, 255, 255, 0.1);
+				color: #ffffff;
+				padding: 0.5em 1em;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			.status-section {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 2em;
+				border-radius: 8px;
+				margin: 2em 0;
+				color: #ffffff;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="content">
+							<div class="inner">
+								<h1>SyncSonic: Multi-Speaker Bluetooth Audio Orchestrator</h1>
+								<p>Low-latency audio distribution system for Raspberry Pi</p>
+							</div>
+						</div>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="project-content">
+							<section class="feature-section">
+								<h2>Project Overview</h2>
+								<p>SyncSonic is a custom-built, low-latency audio distribution system for Raspberry Pi that allows any smartphone to become a powerful multi-speaker controller. It uses a combination of Linux audio tools (PulseAudio), the BlueZ Bluetooth stack, and a custom BLE (Bluetooth Low Energy) service to connect and control a fleet of Bluetooth speakers in real time.</p>
+							</section>
+
+							<section class="feature-section">
+								<h2>Demo Video</h2>
+								<div style="position: relative; width: 100%; padding-top: 56.25%; margin: 2em 0;">
+									<video 
+										style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 8px;"
+										controls
+										playsinline
+										preload="metadata"
+										poster="/images/syncsonic_logo.png"
+									>
+										<source src="/images/syncsonic_demo.mp4" type="video/mp4">
+										Your browser does not support the video tag.
+									</video>
+								</div>
+							</section>
+
+							<section class="feature-section">
+								<h2>How It Works</h2>
+								<p>SyncSonic is deployed on a Raspberry Pi connected to multiple USB Bluetooth adapters. The backend service is written entirely in Python and coordinates all device activity through a finely tuned architecture:</p>
+								<ul class="feature-list">
+									<li><strong>Custom BLE GATT Protocol:</strong> The Pi advertises a BLE characteristic that enables a mobile app to send JSON-encoded commands (e.g., connect/disconnect, set volume, mute, scan for devices). All communication is handled through a single R/W/Notify GATT characteristic.</li>
+									<li><strong>State Machine for Each Speaker:</strong> Each Bluetooth speaker follows a deterministic FSM to ensure proper sequencing of discovery, pairing, trust, connection, and audio loopback setup. The system supports real-time reconnection and handles transient failures automatically.</li>
+									<li><strong>PulseAudio Loopbacks:</strong> A central virtual_out sink is created on the Pi, and audio is looped to each speaker's sink using per-device module-loopback instances, with adjustable latency and volume.</li>
+									<li><strong>BLE Notifications:</strong> Live status updates are pushed from the Pi to the mobile app using BLE notifications, keeping the user informed of connection phases and results.</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
+								<h2>Mobile App Integration</h2>
+								<p>The mobile application connects to the Pi over BLE and allows users to:</p>
+								<ul class="feature-list">
+									<li>Scan and Select Speakers: Dynamically detect available Bluetooth devices and initiate connections</li>
+									<li>Group Speakers: Create and manage audio groups for synchronized playback</li>
+									<li>Adjust Audio Settings: Fine-tune latency, master volume, and left/right balance for each speaker</li>
+									<li>Mute and Unmute: Toggle mute state on a per-device basis</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
+								<h2>Frontend Architecture</h2>
+								<p>The SyncSonic mobile application is built using React Native with Expo, featuring a modern, responsive UI that adapts to both light and dark themes. The frontend is designed with a focus on user experience and real-time device management.</p>
+
+								<h3>Technology Stack</h3>
+								<div class="tech-stack">
+									<span class="tech-item">React Native</span>
+									<span class="tech-item">Expo</span>
+									<span class="tech-item">Tamagui</span>
+									<span class="tech-item">Expo Router</span>
+									<span class="tech-item">React Native BLE PLX</span>
+									<span class="tech-item">Expo SQLite</span>
+									<span class="tech-item">Lottie</span>
+								</div>
+
+								<h3>User Interface Components</h3>
+								<ul class="feature-list">
+									<li><strong>Navigation System:</strong> Custom TopBar and TopBarStart components for consistent navigation, theme-aware logo implementation with dark/light variants, and responsive layout adapting to iOS and Android platforms</li>
+									<li><strong>Theme System:</strong> Dynamic theme switching between light and dark modes with custom color palettes (Light theme: Purple-based #3E0094 with light backgrounds #F2E8FF, Dark theme: Pink-based #E8004D with dark backgrounds #250047) and consistent typography using Finlandica and Inter font families</li>
+									<li><strong>Core Features:</strong> Comprehensive device management interface, audio control system, and configuration management tools</li>
+									<li><strong>User Experience Elements:</strong> Loading animations, connection status overlays, error handling, gesture-based controls, and haptic feedback</li>
+								</ul>
+
+								<h3>State Management & Data Persistence</h3>
+								<ul class="feature-list">
+									<li><strong>State Management:</strong> BLE Context for Bluetooth communication, Theme Context for UI theme switching, Configuration State for speaker groups and settings, and Connection State for device status tracking</li>
+									<li><strong>Data Persistence:</strong> SQLite database for storing speaker configurations, connection history, user preferences, and device groupings</li>
+								</ul>
+
+								<h3>Responsive Design</h3>
+								<ul class="feature-list">
+									<li>Adapts to different screen sizes and orientations</li>
+									<li>Platform-specific adjustments for iOS and Android</li>
+									<li>Safe area handling for notches and system bars</li>
+									<li>Dynamic layout adjustments based on device orientation</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
+								<h2>Technical Architecture</h2>
+								<div class="tech-stack">
+									<span class="tech-item">Python</span>
+									<span class="tech-item">PulseAudio</span>
+									<span class="tech-item">BlueZ</span>
+									<span class="tech-item">BLE GATT</span>
+									<span class="tech-item">Raspberry Pi</span>
+									<span class="tech-item">Linux</span>
+									<span class="tech-item">D-Bus</span>
+								</div>
+							</section>
+
+							<section class="feature-section">
+								<h2>System Highlights</h2>
+								<ul class="feature-list">
+									<li><strong>Multi-Adapter Management:</strong> Utilizes USB Bluetooth dongles in parallel, with one reserved for BLE communication and others for audio streaming</li>
+									<li><strong>Thread-Safe and Modular:</strong> Discovery, connection orchestration, and D-Bus operations are managed through synchronized worker queues</li>
+									<li><strong>Resilient Startup and Operation:</strong> Designed for hands-free operation via systemd with automatic environment initialization</li>
+								</ul>
+							</section>
+
+							<section class="status-section">
+								<h2>Current Status</h2>
+								<p>The prototype successfully streams synchronized audio to up to four Bluetooth speakers from any brand, with live control via the mobile app. It has been tested with real-time audio sources like Spotify and local media.</p>
+							</section>
+
+							<section class="feature-section">
+								<h2>Next Steps</h2>
+								<p>The current prototype proves that seamless, synchronized Bluetooth audio playback is possible using commodity hardware. The next phase of the project is to transition from the Raspberry Pi to a custom hardware platform designed specifically for this use case. I am actively seeking funding to develop a compact, cost-effective board that integrates a Linux-capable processor with multiple directly wired Bluetooth chips—eliminating the need for USB dongles and reducing latency, power consumption, and physical complexity.</p>
+								<p>This purpose-built device will serve as a plug-and-play Bluetooth audio hub, enabling consumer-friendly deployment in homes, outdoor events, shared spaces, and more. The mobile app and backend software are already production-ready and will be fully compatible with the new hardware. With funding, I aim to take SyncSonic from prototype to polished product.</p>
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p><a href="https://github.com/BrooksWimer/SyncSonicRaspberry/blob/master/README.md" target="_blank">View Project on GitHub</a></p>
+						<p class="copyright">&copy; Brooks Wimer. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/browser.min.js"></script>
+			<script src="/assets/js/breakpoints.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<script src="/assets/js/main.js"></script>
+
+	</body>
+</html> 

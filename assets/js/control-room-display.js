@@ -2858,142 +2858,143 @@ $(document).ready(function () {
             }
         ];
 
-        const now = new Date();
+        const data = fake_data;
 
-        // Filter valid data entries
-        const filteredData = fake_data.filter(item => {
-            const itemTime = new Date(item.HR);
-            const hasValidValues = item.SRT_MW !== undefined && item.WRT_MW !== undefined && item.LRT_MW !== undefined;
-            return itemTime <= now && hasValidValues;
-        });
-
-        console.log("Filtered Data:", filteredData);
-
-        /*
-        const labels = filteredData.map(item => {
-            const date = new Date(item.HR);
-            const minutes = date.getMinutes();
-            // Use the hour as the label only for entries on the hour
-            return minutes === 0 ? date.getHours().toString().padStart(2, '0') : "";
-        });
-        
-        Generate x-axis labels for hourly markers only
-        const labels = filteredData.map(item => {
-            const date = new Date(item.HR);
-            return date.getMinutes() === 0
-                ? date.getHours().toString().padStart(2, '0') + ":00"
-                : ""; // Empty string for non-hourly data
-        });
-        */
-        const labels = filteredData.map(item => {
-            const date = new Date(item.HR);
-            return date.getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0'); // Format as HH:mm
-        });
-
-        // Calculate metrics
-        const solarData = filteredData.map(item => (item.SRT_MW || 0) - (item.SSCRA_MW || 0));
-        const windData = filteredData.map(item => (item.WRT_MW || 0) - (item.WSCRA_MW || 0));
-        const loadData = filteredData.map(item => (item.LRT_MW || 0) - (item.LSCRA_MW || 0));
-        const intData = filteredData.map(item => (-1 * (item.ISCRA_MW || 0)) - (item.IRT_MW || 0));
-        const netData = filteredData.map((_, index) =>
-            (solarData[index] || 0) +
-            (windData[index] || 0) +
-            (loadData[index] || 0) +
-            ((-1 * (filteredData[index].ISCRA_MW || 0)) - (filteredData[index].IRT_MW || 0))
-        );
-
-        console.log("Metrics Calculated");
-
-        // Update chart if it exists, otherwise create a new chart
-        const ctx = document.getElementById("dynamicGraph").getContext("2d");
-        if (chartInstance) {
-            chartInstance.data.labels = labels;
-            chartInstance.data.datasets[0].data = solarData;
-            chartInstance.data.datasets[1].data = windData;
-            chartInstance.data.datasets[2].data = loadData;
-            chartInstance.data.datasets[3].data = intData;
-            chartInstance.data.datasets[4].data = netData;
-            chartInstance.update();
-        } else {
-            chartInstance = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: "Delta SCRA|Solar",
-                            data: solarData,
-                            borderColor: "orange",
-                            fill: false,
-                            pointRadius: 0
-                        },
-                        {
-                            label: "Delta SCRA|Wind",
-                            data: windData,
-                            borderColor: "blue",
-                            fill: false,
-                            pointRadius: 0
-                        },
-                        {
-                            label: "Delta SCRA|Load",
-                            data: loadData,
-                            borderColor: "green",
-                            fill: false,
-                            pointRadius: 0
-                        },
-                        {
-                            label: "Delta SCRA|Int",
-                            data: intData,
-                            borderColor: "red",
-                            fill: false,
-                            pointRadius: 0
-                        },
-                        {
-                            label: "NET",
-                            data: netData,
-                            borderColor: "purple",
-                            borderDash: [5, 5], // Dashed line for distinction
-                            fill: false,
-                            pointRadius: 0
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: "top"
+        // Chart configuration
+        const config = {
+            type: 'line',
+            data: {
+                labels: data.map(d => d.HR),
+                datasets: [
+                    {
+                        label: 'SRT MW',
+                        data: data.map(d => d.SRT_MW),
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'SSCRA MW',
+                        data: data.map(d => d.SSCRA_MW),
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'WRT MW',
+                        data: data.map(d => d.WRT_MW),
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'WSCRA MW',
+                        data: data.map(d => d.WSCRA_MW),
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'LRT MW',
+                        data: data.map(d => d.LRT_MW),
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'LSCRA MW',
+                        data: data.map(d => d.LSCRA_MW),
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'IRT MW',
+                        data: data.map(d => d.IRT_MW),
+                        borderColor: 'rgba(199, 199, 199, 1)',
+                        backgroundColor: 'rgba(199, 199, 199, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'ISCRA MW',
+                        data: data.map(d => d.ISCRA_MW),
+                        borderColor: 'rgba(83, 102, 255, 1)',
+                        backgroundColor: 'rgba(83, 102, 255, 0.2)',
+                        borderWidth: 2,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: '#ffffff',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
                         }
                     },
-                    scales: {
-                        x: {
-                            type: 'category',
-
-                            title: {
-                                display: true,
-                                text: "Time"
-                            }
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: 'rgba(255, 255, 255, 0.2)',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
                         },
-                        y: {
-                            title: {
-                                display: true,
-                                text: "MW"
-                            }
+                        ticks: {
+                            color: '#ffffff',
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#ffffff'
                         }
                     }
                 }
-            });
+            }
+        };
+
+        const ctx = document.getElementById('dynamicGraph').getContext('2d');
+        
+        if (chartInstance) {
+            chartInstance.destroy();
         }
 
-        // Update last update timestamp
-        const currentTime = new Date().toLocaleString();
-        $("#updateTimestamp").text(currentTime);
-
+        chartInstance = new Chart(ctx, config);
+        
+        // Update timestamp
+        const now = new Date();
+        document.getElementById('updateTimestamp').textContent = now.toLocaleString();
     }
 
-    // Initial graph rendering
+    // Initial render
     fetchAndRenderGraph();
 
-    // Refresh data and graph every 5 minutes (300000 ms)
-    setInterval(fetchAndRenderGraph, 300000);
+    // Update every 5 minutes
+    setInterval(fetchAndRenderGraph, 5 * 60 * 1000);
 });
