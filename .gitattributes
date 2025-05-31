@@ -1,2 +1,123 @@
-*.mov filter=lfs diff=lfs merge=lfs -text
-*.mp4 filter=lfs diff=lfs merge=lfs -text
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Project specific
+**/masks/
+**/*.log
+**/chromedriver
+**/chromedriver.exe
+**/*.db
+**/.env
+
+# Selenium
+**/geckodriver.log
+**/chromedriver.log
+**/*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Local development
+**/instance/
+**/.webassets-cache
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+**/dist/
+**/build/
+**/.next/
+**/out/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Ignore Visual Studio files
+.vs/
+
+# Large media files (raw/unprocessed)
+**/raw/
+**/source/
+**/*.psd
+**/*.PSD
+**/*.ai
+**/*.AI
+**/*.indd
+**/*.INDD
+**/*.raw
+**/*.RAW
+**/*.cr2
+**/*.CR2
+**/*.nef
+**/*.NEF
+
+# Large binary files
+**/*.zip
+**/*.ZIP
+**/*.rar
+**/*.RAR
+**/*.7z
+**/*.7Z
+**/*.tar
+**/*.TAR
+**/*.gz
+**/*.GZ
+
+# Local Netlify folder
+.netlify
+
+# Python backend files
+**/app.py
+**/foodpallApp.py
+**/doordash info.txt
+
+# Backup files
+**/*.bak
+**/*.backup
+**/*.old
+**/*.orig
+**/*.temp

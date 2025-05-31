@@ -395,8 +395,22 @@
 							
 							// Initialize mask handler with cat mask
 							maskHandler = new MaskHandler(canvasElement);
+							// Override the loadMasks method to use the correct path
+							maskHandler.loadMasks = async function() {
+								const maskTypes = ['bear', 'cat', 'custom1', 'custom2'];
+								for (const type of maskTypes) {
+									this.maskImages[type] = new Image();
+									this.maskImages[type].src = `projects/face-filter/masks/${type}.png`;
+									await new Promise((resolve) => {
+										this.maskImages[type].onload = () => {
+											console.log(`Loaded mask: ${type} with dimensions ${this.maskImages[type].width}x${this.maskImages[type].height}`);
+											resolve();
+										};
+									});
+								}
+							};
 							await maskHandler.loadMasks();
-							maskHandler.setMask('cat'); // Using cat mask as default
+							maskHandler.setMask('bear'); // Using bear mask as default
 							
 							// Connect face detector to mask handler
 							faceDetector.onFaceDetected = (landmarks) => {

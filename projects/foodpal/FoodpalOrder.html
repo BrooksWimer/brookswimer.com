@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodPal Grocery Order</title>
+    <!-- Add config script before other scripts -->
+    <script src="config.js"></script>
     <style>
         /* General Page Styles */
         body {
@@ -276,7 +278,7 @@
 
         // listen for updates function
         function listenForUpdates(targetId) {
-            const eventSource = new EventSource("https://api.brookswimer.com/progress"); 
+            const eventSource = new EventSource(`${config.apiUrl()}/progress`); 
 
             eventSource.onmessage = function(event) {
                 appendStatusUpdate(targetId, event.data);  // Attach update to the correct section
@@ -325,7 +327,9 @@
 
         // Fetch nearby stores from the backend
         function fetchStores(address) {
-            fetch(`https://api.brookswimer.com/find_stores?address=${encodeURIComponent(address)}`)
+            fetch(`${config.apiUrl()}/find_stores?address=${encodeURIComponent(address)}`, {
+                credentials: 'include'
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.stores && data.stores.length > 0) {
@@ -369,9 +373,10 @@
 
 
             // POST request to backend with store ID and grocery list
-            fetch("https://api.brookswimer.com/select_store", {
+            fetch(`${config.apiUrl()}/select_store`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
+                credentials: 'include',
                 body: JSON.stringify({ store_id: storeId, grocery_list: groceryList, store_name: storeName })
             })
                 .then(response => {
@@ -591,11 +596,12 @@
 
 
             // Send the request to the backend
-            fetch("https://api.brookswimer.com/create_order", {
+            fetch(`${config.apiUrl()}/create_order`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify(requestBody)
             })
                 .then(response => {
