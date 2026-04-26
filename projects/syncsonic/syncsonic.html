@@ -93,7 +93,7 @@
 						<div class="project-content">
 							<section class="feature-section">
 								<h2>Project Overview</h2>
-								<p>SyncSonic is a custom-built, low-latency audio distribution system for Raspberry Pi that allows any smartphone to become a powerful multi-speaker controller. It uses a combination of Linux audio tools (PulseAudio), the BlueZ Bluetooth stack, and a custom BLE (Bluetooth Low Energy) service to connect and control a fleet of Bluetooth speakers in real time.</p>
+								<p>SyncSonic is a custom-built, low-latency audio distribution system for Raspberry Pi that allows any smartphone to become a powerful multi-speaker controller. It uses a combination of Linux audio tools (PulseAudio), the BlueZ Bluetooth stack, and a custom BLE (Bluetooth Low Energy) service to connect and control a fleet of Bluetooth speakers in real time. The system now uses PipeWire as the primary audio transport layer for improved latency calibration and device management. PulseAudio is maintained as a compatibility layer.</p>
 							</section>
 
 							<section class="feature-section">
@@ -109,7 +109,7 @@
 								<ul class="feature-list">
 									<li><strong>Custom BLE GATT Protocol:</strong> The Pi advertises a BLE characteristic that enables a mobile app to send JSON-encoded commands (e.g., connect/disconnect, set volume, mute, scan for devices). All communication is handled through a single R/W/Notify GATT characteristic.</li>
 									<li><strong>State Machine for Each Speaker:</strong> Each Bluetooth speaker follows a deterministic FSM to ensure proper sequencing of discovery, pairing, trust, connection, and audio loopback setup. The system supports real-time reconnection and handles transient failures automatically.</li>
-									<li><strong>PulseAudio Loopbacks:</strong> A central virtual_out sink is created on the Pi, and audio is looped to each speaker's sink using per-device module-loopback instances, with adjustable latency and volume.</li>
+									<li><strong>PipeWire and PulseAudio Loopbacks:</strong> The system now uses PipeWire as the primary audio transport layer for improved latency calibration and device management. PulseAudio is maintained as a compatibility layer, with a central virtual_out sink and per-device module-loopback instances for adjustable latency and volume.</li>
 									<li><strong>BLE Notifications:</strong> Live status updates are pushed from the Pi to the mobile app using BLE notifications, keeping the user informed of connection phases and results.</li>
 								</ul>
 							</section>
@@ -117,6 +117,7 @@
 							<section class="feature-section">
 								<h2>Mobile App Integration</h2>
 								<p>The mobile application connects to the Pi over BLE and allows users to:</p>
+								<p>The app includes a Tamagui-powered dark/light theme system and persists local speaker configuration through Expo SQLite.</p>
 								<ul class="feature-list">
 									<li>Scan and Select Speakers: Dynamically detect available Bluetooth devices and initiate connections</li>
 									<li>Group Speakers: Create and manage audio groups for synchronized playback</li>
@@ -137,6 +138,7 @@
 									<span class="tech-item">Expo Router</span>
 									<span class="tech-item">React Native BLE PLX</span>
 									<span class="tech-item">Expo SQLite</span>
+									<span class="tech-item">React Native Reanimated</span>
 									<span class="tech-item">Lottie</span>
 								</div>
 
@@ -167,12 +169,16 @@
 								<h2>Technical Architecture</h2>
 								<div class="tech-stack">
 									<span class="tech-item">Python</span>
+									<span class="tech-item">PipeWire</span>
 									<span class="tech-item">PulseAudio</span>
 									<span class="tech-item">BlueZ</span>
 									<span class="tech-item">BLE GATT</span>
 									<span class="tech-item">Raspberry Pi</span>
 									<span class="tech-item">Linux</span>
 									<span class="tech-item">D-Bus</span>
+									<span class="tech-item">NumPy</span>
+									<span class="tech-item">SciPy</span>
+									<span class="tech-item">soco</span>
 								</div>
 							</section>
 
@@ -201,6 +207,7 @@
 				<!-- Footer -->
 					<footer id="footer">
 						<p><a href="https://github.com/BrooksWimer/SyncSonicRaspberry/blob/master/README.md" target="_blank">View Project on GitHub</a></p>
+						<p><a href="https://github.com/BrooksWimer/Sync-Sonic-App" target="_blank">View Mobile App on GitHub</a></p>
 						<p class="copyright">&copy; Brooks Wimer. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
 					</footer>
 

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Maverick — AI Agent Orchestration Suite</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+		<style>
+			.project-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2em;
+				color: #ffffff;
+			}
+
+			.project-header {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+
+			.feature-section {
+				margin: 2em 0;
+			}
+
+			.feature-section h2 {
+				color: #ffffff;
+				border-bottom: 2px solid #ffffff;
+				padding-bottom: 0.5em;
+				margin-bottom: 1em;
+			}
+
+			.feature-list {
+				list-style: none;
+				padding-left: 0;
+				color: #ffffff;
+			}
+
+			.feature-list li {
+				margin: 1em 0;
+				padding-left: 1.5em;
+				position: relative;
+			}
+
+			.feature-list li:before {
+				content: "•";
+				position: absolute;
+				left: 0;
+				color: #ffffff;
+			}
+
+			.tech-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1em;
+				margin: 1em 0;
+			}
+
+			.tech-item {
+				background: rgba(255, 255, 255, 0.1);
+				color: #ffffff;
+				padding: 0.5em 1em;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			.status-section {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 2em;
+				border-radius: 8px;
+				margin: 2em 0;
+				color: #ffffff;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="content">
+							<div class="inner">
+								<h1>Maverick — AI Agent Orchestration Suite</h1>
+								<p>Discord-controlled multi-project AI development command center</p>
+							</div>
+						</div>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="project-content">
+							<section class="feature-section">
+								<h2>Project Overview</h2>
+								<p>Maverick is a custom-built AI agent orchestration platform that manages complex software development workstreams across multiple projects. It exposes a Discord bot as a control plane, routing work through a structured intake → planning → implementation → verification → review lifecycle. Workstream state is persisted in SQLite and survives across sessions. Multiple AI execution backends (Codex, Claude Code) are supported via configuration.</p>
+							</section>
+							<section class="feature-section">
+								<h2>How It Works</h2>
+								<p>Every task begins with a structured intake that scopes the work, identifies risks, and surfaces operator decisions before any code is written. A decision-gated planning pipeline collects structured answers via Discord and synthesizes them into an execution prompt. Codex or Claude Code executes the plan in an isolated worktree. After execution, a verification agent runs checks and a review agent produces a structured handoff summary.</p>
+							</section>
+							<section class="feature-section">
+								<h2>Key Features</h2>
+								<ul class="feature-list">
+									<li>Specialized agent layer: planning, intake, goal-framing, system modeling, incident triage, epic context, daily brief generation</li>
+									<li>Persistent workstream state machine backed by SQLite — fully resumable across sessions</li>
+									<li>Discord bot control plane: workstream creation, approval gates, status queries, and daily briefing delivery</li>
+									<li>Pluggable execution backends (Codex, Claude Code) selected per-project via configuration</li>
+									<li>Daily brief scheduler aggregating git history, workstreams, approvals, calendar items, and tagged notes</li>
+									<li>Multi-project support with per-project doctrine files (AGENTS.md) and epic lane branch hygiene</li>
+								</ul>
+							</section>
+							<section class="feature-section">
+								<h2>Technical Architecture</h2>
+								<div class="tech-stack">
+									<span class="tech-item">TypeScript</span>
+									<span class="tech-item">Node.js</span>
+									<span class="tech-item">Discord.js</span>
+									<span class="tech-item">Claude AI SDK</span>
+									<span class="tech-item">SQLite (better-sqlite3)</span>
+									<span class="tech-item">Express</span>
+									<span class="tech-item">Vitest</span>
+									<span class="tech-item">Pino</span>
+								</div>
+							</section>
+							<section class="status-section">
+								<h2>Current Status</h2>
+								<p>Active personal tool; drives development of its own codebase and several other projects. Private repository.</p>
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; Brooks Wimer. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/browser.min.js"></script>
+			<script src="/assets/js/breakpoints.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<script src="/assets/js/main.js"></script>
+
+	</body>
+</html>

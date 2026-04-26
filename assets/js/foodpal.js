@@ -3,7 +3,7 @@ document.getElementById('startApp').addEventListener('click', () => {
     document.getElementById('preferences').style.display = 'block';
 });
 
-const SPOONACULAR_API_KEY = '02124e85c8fb45dea420aa38c105d8c4';
+const SPOONACULAR_API_KEY = ''; // API key removed — configure locally if needed
 
 let userPreferences = { diet: '', intolerances: '' };
 

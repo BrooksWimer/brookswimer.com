@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Astra — Local Network Device Discovery</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
+		<style>
+			.project-content {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2em;
+				color: #ffffff;
+			}
+
+			.project-header {
+				text-align: center;
+				margin-bottom: 2em;
+			}
+
+			.feature-section {
+				margin: 2em 0;
+			}
+
+			.feature-section h2 {
+				color: #ffffff;
+				border-bottom: 2px solid #ffffff;
+				padding-bottom: 0.5em;
+				margin-bottom: 1em;
+			}
+
+			.feature-list {
+				list-style: none;
+				padding-left: 0;
+				color: #ffffff;
+			}
+
+			.feature-list li {
+				margin: 1em 0;
+				padding-left: 1.5em;
+				position: relative;
+			}
+
+			.feature-list li:before {
+				content: "•";
+				position: absolute;
+				left: 0;
+				color: #ffffff;
+			}
+
+			.tech-stack {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1em;
+				margin: 1em 0;
+			}
+
+			.tech-item {
+				background: rgba(255, 255, 255, 0.1);
+				color: #ffffff;
+				padding: 0.5em 1em;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			.status-section {
+				background: rgba(255, 255, 255, 0.1);
+				padding: 2em;
+				border-radius: 8px;
+				margin: 2em 0;
+				color: #ffffff;
+			}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="content">
+							<div class="inner">
+								<h1>Astra — Local Network Device Discovery</h1>
+								<p>Cross-platform LAN scanner with pluggable multi-strategy device classification</p>
+							</div>
+						</div>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+						<div class="project-content">
+							<section class="feature-section">
+								<h2>Project Overview</h2>
+								<p>Astra is a cross-platform local network device discovery and classification system. A Go desktop agent, React Native mobile client, and Node.js/Express backend work together to scan your LAN and classify connected devices — routers, TVs, printers, cameras, IoT — using multiple discovery strategies: passive ARP table parsing, TCP port probing, mDNS/Bonjour (Zeroconf), and SSDP advertisement capture.</p>
+							</section>
+							<section class="feature-section">
+								<h2>How It Works</h2>
+								<p>Strategy profiles (label_core, fast, medium, full) combine discovery techniques with different runtime and accuracy tradeoffs. A pluggable strategy registry enables data-driven selection. Device classification uses an OUI vendor lookup table, hostname pattern matching, and service advertisement fingerprinting to generate typed device labels with confidence scores and enumerated reasoning.</p>
+							</section>
+							<section class="feature-section">
+								<h2>Key Features</h2>
+								<ul class="feature-list">
+									<li>Multi-strategy pluggable discovery: passive ARP, mDNS/Zeroconf, SSDP, TCP port probing</li>
+									<li>Rule-based device classification with OUI vendor lookup and explainable confidence scoring</li>
+									<li>Cross-platform passive ARP parsing (Windows, macOS, Linux) — no elevated privileges required for passive mode</li>
+									<li>Monorepo architecture sharing TypeScript schemas across Go agent, React Native mobile, and Node.js backend</li>
+									<li>Strategy evaluation framework with benchmark data for runtime/coverage tradeoff optimization</li>
+								</ul>
+							</section>
+							<section class="feature-section">
+								<h2>Technical Architecture</h2>
+								<div class="tech-stack">
+									<span class="tech-item">Go</span>
+									<span class="tech-item">React Native</span>
+									<span class="tech-item">Expo</span>
+									<span class="tech-item">TypeScript</span>
+									<span class="tech-item">Node.js</span>
+									<span class="tech-item">Express</span>
+									<span class="tech-item">Zustand</span>
+									<span class="tech-item">TanStack Query</span>
+									<span class="tech-item">ZeroConf/mDNS</span>
+									<span class="tech-item">pnpm Workspaces</span>
+								</div>
+							</section>
+							<section class="feature-section">
+								<h2>Mobile App</h2>
+								<p>The Expo React Native client communicates with the Go agent over HTTP on port 7777, advertised via mDNS for zero-configuration discovery. TanStack React Query drives live scan polling. Zustand manages client-side device state. React Native BLE PLX extends discovery to nearby Bluetooth devices.</p>
+							</section>
+							<section class="status-section">
+								<h2>Current Status</h2>
+								<p>Strategy research phase complete with benchmark data across discovery profiles. iPhone feasibility analysis documented. Active development. Private repository.</p>
+							</section>
+						</div>
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; Brooks Wimer. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/browser.min.js"></script>
+			<script src="/assets/js/breakpoints.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+			<script src="/assets/js/main.js"></script>
+
+	</body>
+</html>
