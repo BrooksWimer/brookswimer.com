@@ -15,6 +15,15 @@ The portfolio website should stay clean, current, simple, and authentic. All pro
 
 Public naming rule: use **Astra** for the public-facing network intelligence project. Use **Netwise** only for internal repo/config references.
 
+The interrupted `Making portofolio pop` planning run was recovered and
+distilled into:
+
+- `docs/maverick/epics/portfolio.md`
+- `docs/maverick/plans/making-portfolio-pop.md`
+
+Broad portfolio polish work should treat those files as the current planning
+baseline instead of starting over.
+
 ## Resume Epic Role
 
 The resume epic is not a website coding lane. It maintains official resumes, cover letters, experience inventory, formatting goals, and job-application tailoring rules.
