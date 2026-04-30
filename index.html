@@ -1,542 +1,500 @@
-<!DOCTYPE HTML>
-<!--
--->
-<html>
-	<head>
-		<title>Brooks Wimer</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<base href="/" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-		<!-- Add Three.js dependencies -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/EXRLoader.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/fflate@0.7.4/umd/index.min.js"></script>
-		<!-- MediaPipe Dependencies -->
-		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
-		<style>
-			#modelCanvas {
-				width: 100% !important;
-				height: 100% !important;
-				display: block;
-				margin: 0;
-				padding: 0;
-			}
-			.project:hover > div:last-child {
-				opacity: 1;
-			}
-			.project {
-				position: relative;
-				display: flex;
-				flex-direction: row;
-				align-items: flex-start;
-				gap: 2em;
-				padding: 2em;
-			}
-			
-			.project img {
-				width: 30%;
-				height: auto;
-				object-fit: cover;
-				border-radius: 8px;
-			}
+<!DOCTYPE html>
+<html lang="en" class="portfolio-home">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Brooks Wimer — Software Engineer</title>
+	<meta name="description" content="Brooks Wimer — software engineer building durable systems, AI agent tooling, real-time hardware, and modern APIs. Selected work: Maverick, SyncSonic, Astra." />
+	<meta name="theme-color" content="#0a0d12" />
 
-			.project .text-content {
-				flex: 1;
-			}
+	<!-- Open Graph -->
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Brooks Wimer — Software Engineer" />
+	<meta property="og:description" content="Building durable systems, AI agent tooling, and real-time hardware." />
+	<meta property="og:url" content="https://brookswimer.dev" />
 
-			.project h3 {
-				margin-top: 0;
-			}
+	<base href="/" />
+	<link rel="icon" href="images/BrooksWimer_Logo.png" />
 
-			.hover-content {
-				opacity: 0;
-				transition: opacity 0.3s ease;
-			}
-			
-			.project:hover .hover-content {
-				opacity: 1;
-			}
+	<!-- FontAwesome (kept for icon classes) -->
+	<link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
+	<!-- New design system (loaded after legacy main.css would be) -->
+	<link rel="stylesheet" href="assets/css/portfolio.css" />
+	<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body>
 
-			/* Remove borders and adjust containers */
-			#wrapper {
-				padding: 0;
-				margin: 0;
-				width: 100%;
-				max-width: none;
-			}
+	<!-- Ambient background -->
+	<div class="bg-grid" aria-hidden="true"></div>
+	<div class="bg-glow" aria-hidden="true"></div>
 
-			#main {
-				padding: 0;
-				margin: 0;
-				width: 100%;
-				max-width: none;
-			}
+	<!-- Sticky nav -->
+	<nav class="nav" id="nav" aria-label="Primary">
+		<a href="#top" class="nav__brand" aria-label="Brooks Wimer — home">
+			<span class="nav__monogram">BW</span>
+			<span class="nav__brand-divider" aria-hidden="true"></span>
+			<span class="nav__brand-status">
+				<span class="nav__brand-dot" aria-hidden="true"></span>
+				<span>brooks_wimer.system</span>
+			</span>
+		</a>
+		<div class="nav__links">
+			<a class="nav__link" href="#work">Work</a>
+			<a class="nav__link" href="#about">About</a>
+			<a class="nav__link" href="#experience">Experience</a>
+			<a class="nav__link" href="#contact">Contact</a>
+		</div>
+		<button class="nav__cta" id="cmdk-trigger" aria-label="Open command palette">
+			<span>Quick nav</span>
+			<kbd>⌘K</kbd>
+		</button>
+	</nav>
 
-			.fullscreen-card {
-				width: 100vw;
-				height: 100vh;
-				padding: 0;
-				margin: 0;
-				overflow: hidden;
-				position: relative;
-				border: none;
-			}
+	<main id="top">
 
-			.fullscreen-card:first-of-type {
-				margin-top: 300px;
-			}
+		<!-- ====================== HERO ====================== -->
+		<section class="hero">
+			<div class="container hero__inner">
+				<div class="hero__telemetry reveal">
+					<span><span class="tg-key">$</span> <span class="tg-value">whoami</span></span>
+					<span class="tg-divider" aria-hidden="true"></span>
+					<span><span class="tg-key">role:</span> <span class="tg-value">Software Engineer I</span></span>
+					<span class="tg-divider" aria-hidden="true"></span>
+					<span><span class="tg-key">org:</span> <span class="tg-value">Collette Tours</span></span>
+					<span class="tg-divider" aria-hidden="true"></span>
+					<span><span class="tg-key">status:</span> <span class="tg-accent">● open to interesting work</span></span>
+				</div>
 
-			.project-header {
-				width: 100%;
-				height: 150px;
-				background: rgba(0, 0, 0, 0.7);
-				display: flex;
-				flex-direction: row;
-				justify-content: flex-start;
-				align-items: center;
-				padding: 0 40px;
-				position: relative;
-				z-index: 2;
-			}
+				<h1 class="hero__title reveal">Brooks Wimer<br /><span class="accent-stop">builds systems</span><br />that hold up.</h1>
 
-			.project-header h3 {
-				color: white;
-				margin: 0;
-				font-size: 2.5rem;
-				font-weight: bold;
-			}
+				<div class="hero__role reveal">
+					<span class="hero__role-prompt" aria-hidden="true">~/</span>
+					<span class="hero__role-typed" id="role-typed"></span>
+					<span class="hero__role-cursor" aria-hidden="true"></span>
+				</div>
 
-			.project-header button {
-				color: black;
-				border: none;
-				padding: 15px 30px;
-				border-radius: 4px;
-				cursor: pointer;
-				transition: all 0.3s ease;
-				font-size: 1.1rem;
-				margin-left: 20px;
-			}
+				<p class="hero__lede reveal">
+					I build <strong>durable software</strong> across the stack — modernizing legacy monoliths into modern APIs, orchestrating AI agents through structured pipelines, and shipping real-time hardware that just works. Currently breaking apart a VB stored-procedure monolith into a C# REST API at <strong>Collette</strong>; previously built grid-monitoring tools at <strong>ISO New England</strong>.
+				</p>
 
-			.project-header button:hover {
-				background: #f0f0f0;
-				color: black;
-				transform: translateY(-2px);
-			}
+				<div class="hero__cta reveal">
+					<a class="btn btn--primary" href="#work">
+						See selected work
+						<span class="arr" aria-hidden="true">↗</span>
+					</a>
+					<a class="btn btn--ghost" href="Brooks Wimer Resume.pdf" target="_blank" rel="noopener">
+						Download résumé
+					</a>
+				</div>
 
-			.project-content {
-				width: 100%;
-				height: calc(100vh - 150px);
-				position: relative;
-			}
-
-			.project-content img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				position: absolute;
-				top: 0;
-				left: 0;
-			}
-
-			.project-content img.feature-art {
-				object-fit: contain;
-				object-position: center center;
-				background: #020814;
-			}
-
-			.project-content iframe {
-				width: 100%;
-				height: 100%;
-				position: absolute;
-				top: 0;
-				left: 0;
-			}
-
-			/* Remove the hover effect styles */
-			.fullscreen-card::before {
-				display: none;
-			}
-
-			.logo-img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				border-radius: 50%;
-				display: block;
-			}
-
-			#header {
-				padding-top: 10em;
-			}
-		</style>
-	</head>
-	<body class="is-preload">
-
-		<!-- Wrapper -->
-			<div id="wrapper">
-
-				<!-- Header -->
-					<header id="header">
-						<div class="logo">
-							<img src="./images/BrooksWimer_Logo.png" alt="Brooks Wimer Logo" class="logo-img" />
-						</div>
-						<div class="content">
-							<div class="inner">
-								<h1>Brooks Wimer's Software Portfolio</h1>
-							</div>
-						</div>
-					</header>
-
-				<!-- Main -->
-					<div id="main">
-
-						<!-- SyncSonic App -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>Multi-Speaker Bluetooth Audio Orchestrator</h3>
-								<button onclick="location.href='projects/syncsonic/syncsonic.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<img src="images/syncsonic_logo.png" alt="SyncSonic Multi Bluetooth Audio Application Screenshots" />
-							</div>
-						</div>
-
-
-						<!-- Maverick -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>Maverick — AI Agent Orchestration Suite</h3>
-								<button onclick="location.href='projects/maverick/maverick.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<img class="feature-art" src="images/maverick.png" alt="Maverick AI Agent Orchestration Suite" />
-							</div>
-						</div>
-
-						<!-- Astra -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>Astra — Local Network Device Scanner</h3>
-								<button onclick="location.href='projects/astra/astra.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<img class="feature-art" src="images/astra_logo.png" alt="Astra Network Scanner Application" />
-							</div>
-						</div>
-
-						<!-- KITBASH -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>customizable game controller application</h3>
-								<button onclick="location.href='projects/kitbash/kitbash.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<img src="images/kitbash_home_horiz.png" alt="KITBASH Project Screenshots" />
-							</div>
-						</div>
-
-						<!-- FoodPall -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>food delivery application</h3>
-								<button onclick="location.href='projects/foodpal/foodpal.html'">View Project</button>
-							</div>
-							<div class="project-content" style="display: flex; justify-content: center; align-items: center; background-color: #f8f9fa; overflow: hidden;">
-								<iframe 
-									src="projects/foodpal/FoodpalDemo.html" 
-									style="width: 100%; height: 100%; border: none; background-color: #f8f9fa; font-family: 'Poppins', sans-serif;"
-								></iframe>
-							</div>
-						</div>
-
-						<!-- Control Room Display -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>Control Room Display</h3>
-								<button onclick="location.href='projects/control-room/control-room-display.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<img src="images/control_room_display.png" alt="Control Room Graph showing capacity deviation metrics" />
-							</div>
-						</div>
-
-						<!-- Emergency Contact Automation -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>Emergency Contact Automation</h3>
-								<button onclick="location.href='projects/emergency-contact/emergency-contact-automation.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<img src="images/ENS_weekly_gliffy.png" alt="Emergency Notification System Logic Flow Diagram" />
-							</div>
-						</div>
-
-						<!-- API Documentation -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>API Template and Documentation</h3>
-								<button onclick="location.href='projects/api-docs/api-documentation.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<img src="images/iso_training.png" alt="ISO-NE API Training Screenshot" />
-							</div>
-						</div>
-
-						
-						<!-- Face Filter Project -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>Real-Time Face Filter</h3>
-								<button onclick="location.href='projects/face-filter/face-filter.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<div class="video-container" style="width: 100%; height: 100%; position: relative;">
-									<video id="previewVideo" playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-									<canvas id="previewCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
-									<div style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10;">
-										<button id="previewStartButton" class="button" style="margin-right: 10px;">Start Camera</button>
-										<button id="previewStopButton" class="button" style="display: none;">Stop Camera</button>
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<!-- 3D Models -->
-						<div class="fullscreen-card">
-							<div class="project-header">
-								<h3>3D Models</h3>
-								<button onclick="location.href='projects/3d-models/3D_models.html'">View Project</button>
-							</div>
-							<div class="project-content">
-								<canvas id="modelCanvas" style="width: 100% !important; height: 100% !important;"></canvas>
-							</div>
-						</div>
-
-						<!-- About Me -->
-						<div class="project">
-							<img src="images/face2.jpg" alt="Brooks Wimer" />
-							<div class="text-content">
-								<h3>About Me</h3>
-								<p>
-									Hi, I'm Brooks Wimer, a Software Engineer I at Collette Tours, passionate about building tools that solve real-world problems. My work spans breaking apart legacy systems into modern APIs, building low-latency audio distribution hardware, and designing AI agent orchestration frameworks.
-								</p>
-								<p>
-									I've built several projects that showcase my technical abilities: SyncSonic — a multi-speaker Bluetooth audio orchestrator for Raspberry Pi; Kitbash — a customizable wireless game controller; Maverick — a custom AI agent orchestration suite for managing multi-project development workflows; and Astra — a cross-platform local network device discovery system.
-								</p>
-								<p>
-									I studied Computer Science at Boston University (GPA: 3.74), where I served as a Teacher's Assistant for a C# full-stack development course, played on the Club Roller Hockey Team, sat on the Dean's Advisory Board, and was elected as a peer tutor. I'm proficient in C#, Python, TypeScript, Java, and R, with growing expertise in SQL, React Native, and Linux.
-								</p>
-								<p>
-									I believe in merging creativity with technology to build impactful, durable software.
-								</p>
-								<!-- Resume Download Button -->
-								<p>
-									<a href="Brooks Wimer Resume.pdf" target="_blank" class="button">View My Resume</a>
-								</p>
-							</div>
-						</div>
-
-						<!-- Experience -->
-						<div class="project">
-							<div class="text-content">
-								<h3>Experience</h3>
-
-								<div style="margin-bottom: 2em;">
-									<h4 style="margin-bottom: 0.2em;">Software Engineer I — Collette Tours</h4>
-									<p style="margin: 0 0 0.5em 0; color: rgba(255,255,255,0.7);">Strategic Initiatives Team &nbsp;|&nbsp; September 2024 – Present</p>
-									<ul>
-										<li>Breaking apart a legacy VB monolith and stored-procedure-heavy database into a modern REST API built on C#, improving maintainability and enabling incremental system modernization.</li>
-										<li>Led the initiative to update the payment processing flow through the booking API while maintaining full backwards compatibility with the existing legacy system.</li>
-									</ul>
-								</div>
-
-								<div>
-									<h4 style="margin-bottom: 0.2em;">Software Development Intern — ISO New England</h4>
-									<p style="margin: 0 0 0.5em 0; color: rgba(255,255,255,0.7);">Summer 2023</p>
-									<ul>
-										<li>Built internal tools for monitoring and managing the New England power grid, including a real-time control room display dashboard and an emergency contact automation system.</li>
-										<li>Developed and documented REST API templates used for wind and solar power forecasting web services.</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-
-						<!-- Contact -->
-						<div class="project">
-							<h3>Contact</h3>
-							<ul class="icons">
-								<li><a href="https://www.linkedin.com/in/brooks-wimer-258232210/" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
-								<li><a href="https://github.com/BrooksWimer" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-							</ul>
-							<p>
-								<a href="mailto:wimerbrooks@gmail.com" class="email-link">wimerbrooks@gmail.com</a>
-							</p>
-						</div>
+				<div class="hero__caps reveal-stagger">
+					<div class="hero__cap">
+						<span class="hero__cap-num">01</span>
+						<span class="hero__cap-label">AI Orchestration</span>
+						<span class="hero__cap-meta">Maverick · Discord · agents</span>
 					</div>
-
+					<div class="hero__cap">
+						<span class="hero__cap-num">02</span>
+						<span class="hero__cap-label">Real-Time Hardware</span>
+						<span class="hero__cap-meta">SyncSonic · Kitbash · Pi/Linux</span>
+					</div>
+					<div class="hero__cap">
+						<span class="hero__cap-num">03</span>
+						<span class="hero__cap-label">Distributed Systems</span>
+						<span class="hero__cap-meta">Astra · networking · discovery</span>
+					</div>
+					<div class="hero__cap">
+						<span class="hero__cap-num">04</span>
+						<span class="hero__cap-label">Legacy Modernization</span>
+						<span class="hero__cap-meta">VB → C# REST · grid monitoring</span>
+					</div>
+				</div>
 			</div>
 
-		<!-- BG -->
-			<div id="bg"></div>
+			<div class="hero__scroll" aria-hidden="true">
+				<span>scroll</span>
+				<span>↓</span>
+			</div>
+		</section>
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-			<script src="projects/face-filter/camera.js"></script>
-			<script src="projects/face-filter/faceDetection.js"></script>
-			<script src="projects/face-filter/maskHandler.js"></script>
-			<script>
-				// Initialize face filter for the preview
-				document.addEventListener('DOMContentLoaded', async () => {
-					const videoElement = document.getElementById('previewVideo');
-					const canvasElement = document.getElementById('previewCanvas');
-					const startButton = document.getElementById('previewStartButton');
-					const stopButton = document.getElementById('previewStopButton');
-					
-					let faceDetector = null;
-					let maskHandler = null;
-					
-					// Initialize camera handler
-					const cameraHandler = new CameraHandler(videoElement, startButton, stopButton);
-					
-					// Start button click handler
-					startButton.addEventListener('click', async () => {
-						const success = await cameraHandler.startCamera();
-						
-						if (success) {
-							// Initialize face detection
-							faceDetector = new FaceDetector(videoElement, canvasElement);
-							await faceDetector.initialize();
-							
-							// Initialize mask handler with cat mask
-							maskHandler = new MaskHandler(canvasElement);
-							// Override the loadMasks method to use the correct path
-							maskHandler.loadMasks = async function() {
-								const maskTypes = ['bear', 'cat', 'custom1', 'custom2'];
-								for (const type of maskTypes) {
-									this.maskImages[type] = new Image();
-									this.maskImages[type].src = `projects/face-filter/masks/${type}.png`;
-									await new Promise((resolve) => {
-										this.maskImages[type].onload = () => {
-											console.log(`Loaded mask: ${type} with dimensions ${this.maskImages[type].width}x${this.maskImages[type].height}`);
-											resolve();
-										};
-									});
-								}
-							};
-							await maskHandler.loadMasks();
-							maskHandler.setMask('bear'); // Using bear mask as default
-							
-							// Connect face detector to mask handler
-							faceDetector.onFaceDetected = (landmarks) => {
-								maskHandler.updateMaskPosition(landmarks);
-							};
-							
-							// Start face detection
-							faceDetector.start();
-							
-							// Show stop button, hide start button
-							startButton.style.display = 'none';
-							stopButton.style.display = 'inline-block';
-						}
-					});
-					
-					// Stop button click handler
-					stopButton.addEventListener('click', () => {
-						cameraHandler.stopCamera();
-						if (faceDetector) {
-							faceDetector.stop();
-						}
-						// Clear canvas
-						const ctx = canvasElement.getContext('2d');
-						ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-						
-						// Show start button, hide stop button
-						startButton.style.display = 'inline-block';
-						stopButton.style.display = 'none';
-					});
-				});
+		<!-- ====================== FEATURED WORK ====================== -->
+		<section class="section" id="work">
+			<div class="container">
+				<header class="section__head reveal">
+					<span class="section__eyebrow">Featured · 2024 — Present</span>
+					<h2 class="section__title">Work I'm proud of.</h2>
+					<p class="section__subtitle">
+						Three flagship systems — each one a load-bearing project that ships, gets used, and was built end-to-end. Click through for the deeper write-ups.
+					</p>
+				</header>
 
-				// Only initialize control room display if we're on that page
-				if (document.getElementById('controlRoomCanvas')) {
-					// Load control room display script only when needed
-					const script = document.createElement('script');
-					script.src = 'assets/js/control-room-display.js';
-					document.body.appendChild(script);
-				}
+				<div class="featured">
 
-				// Scene setup
-				const scene = new THREE.Scene();
+					<!-- Maverick -->
+					<a class="feature reveal" href="projects/maverick/maverick.html">
+						<div class="feature__body">
+							<div class="feature__index">
+								<span class="num">01</span>
+								<span class="tag">AI · Dev Tools</span>
+							</div>
+							<h3 class="feature__title">Maverick — AI Agent Orchestration Suite</h3>
+							<p class="feature__hook">
+								A Discord-controlled command center that orchestrates AI coding agents across multiple projects. Structured intake → planning → implementation → verification → review, with persistent SQLite state and pluggable Codex / Claude Code backends.
+							</p>
+							<div class="feature__stack">
+								<span class="chip chip--accent">Python</span>
+								<span class="chip">Discord.py</span>
+								<span class="chip">SQLite</span>
+								<span class="chip">Claude Code</span>
+								<span class="chip">Codex CLI</span>
+								<span class="chip">git worktrees</span>
+							</div>
+							<span class="feature__cta">Read the case study</span>
+						</div>
+						<div class="feature__media feature__media--contain">
+							<img src="images/maverick.png" alt="Maverick AI Agent Orchestration Suite key art" loading="lazy" />
+						</div>
+					</a>
 
-				// Camera setup
-				const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-				camera.position.set(0, 50, 30);
-				camera.lookAt(0, 0, 0);
+					<!-- SyncSonic -->
+					<a class="feature feature--reverse reveal" href="projects/syncsonic/syncsonic.html">
+						<div class="feature__body">
+							<div class="feature__index">
+								<span class="num">02</span>
+								<span class="tag">Hardware · Audio</span>
+							</div>
+							<h3 class="feature__title">SyncSonic — Multi-Speaker Bluetooth Orchestrator</h3>
+							<p class="feature__hook">
+								Raspberry Pi-based audio hub that lets a single phone broadcast to multiple Bluetooth speakers in sync. Hardware integration, low-latency audio routing, and a companion mobile app for setup and control.
+							</p>
+							<div class="feature__stack">
+								<span class="chip chip--accent">Raspberry Pi</span>
+								<span class="chip">BlueZ / Linux</span>
+								<span class="chip">Python</span>
+								<span class="chip">React Native</span>
+								<span class="chip">PulseAudio</span>
+							</div>
+							<span class="feature__cta">Read the case study</span>
+						</div>
+						<div class="feature__media">
+							<img src="images/syncsonic_logo.png" alt="SyncSonic application screenshots" loading="lazy" />
+						</div>
+					</a>
 
-				// Renderer setup
-				const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('modelCanvas') });
-				renderer.setSize(window.innerWidth * 0.5, 600);
+					<!-- Astra -->
+					<a class="feature reveal" href="projects/astra/astra.html">
+						<div class="feature__body">
+							<div class="feature__index">
+								<span class="num">03</span>
+								<span class="tag">Networking · Systems</span>
+							</div>
+							<h3 class="feature__title">Astra — Local Network Device Scanner</h3>
+							<p class="feature__hook">
+								Cross-platform desktop app that discovers, fingerprints, and visualizes every device on a local network. Built to make home and small-office networks legible — no enterprise dashboard required.
+							</p>
+							<div class="feature__stack">
+								<span class="chip chip--accent">TypeScript</span>
+								<span class="chip">Electron</span>
+								<span class="chip">mDNS / SSDP</span>
+								<span class="chip">ARP</span>
+								<span class="chip">Network protocols</span>
+							</div>
+							<span class="feature__cta">Read the case study</span>
+						</div>
+						<div class="feature__media feature__media--contain">
+							<img src="images/astra_logo.png" alt="Astra Network Scanner application" loading="lazy" />
+						</div>
+					</a>
 
-				// Lights
-				const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-				scene.add(ambientLight);
+				</div>
+			</div>
+		</section>
 
-				const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-				directionalLight.position.set(5, 10, 7.5);
-				scene.add(directionalLight);
+		<!-- ====================== MORE WORK ====================== -->
+		<section class="section" style="padding-top: 0;">
+			<div class="container">
+				<header class="section__head reveal">
+					<span class="section__eyebrow">Selected · everything else</span>
+					<h2 class="section__title">More projects.</h2>
+					<p class="section__subtitle">
+						Hardware prototypes, real-time grid tooling, computer vision, 3D, and a few experiments I keep around because I learned something building them.
+					</p>
+				</header>
 
-				// OrbitControls
-				const controls = new THREE.OrbitControls(camera, renderer.domElement);
-				controls.enableDamping = true;
-				controls.dampingFactor = 0.05;
-				controls.minDistance = 2;
-				controls.maxDistance = 500;
-				controls.target.set(5, 10, 0);
+				<div class="work-grid reveal-stagger">
 
-				// HDRI Environment
-				const exrLoader = new THREE.EXRLoader();
-				exrLoader.load('projects/3d-models/rogland_clear_night_4k.exr', (texture) => {
-					texture.mapping = THREE.EquirectangularReflectionMapping;
-					scene.environment = texture;
-					scene.background = texture;
-				});
+					<a class="card" href="projects/kitbash/kitbash.html">
+						<div class="card__media">
+							<img src="images/kitbash_home_horiz.png" alt="KITBASH custom controller" loading="lazy" />
+						</div>
+						<div class="card__body">
+							<div class="card__index"><span class="num">04</span><span>HARDWARE · FIRMWARE</span></div>
+							<h3 class="card__title">Kitbash — Customizable Wireless Controller</h3>
+							<p class="card__hook">A modular wireless game controller with a companion configuration app — remap buttons, save profiles, push firmware over the air.</p>
+							<div class="card__stack">
+								<span class="chip">C++</span><span class="chip">Embedded</span><span class="chip">BLE</span><span class="chip">React Native</span>
+							</div>
+						</div>
+					</a>
 
-				// GLTF Model
-				const loader = new THREE.GLTFLoader();
-				loader.load('projects/3d-models/InfinityTower.py.glb', (gltf) => {
-					const model = gltf.scene;
-					model.scale.set(0.1, 0.1, 0.1);
-					model.position.set(0, 0, 0);
-					scene.add(model);
-				});
+					<a class="card" href="projects/control-room/control-room-display.html">
+						<div class="card__media">
+							<img src="images/control_room_display.png" alt="Control Room Display dashboard" loading="lazy" />
+						</div>
+						<div class="card__body">
+							<div class="card__index"><span class="num">05</span><span>REAL-TIME · INFRA</span></div>
+							<h3 class="card__title">Control Room Display</h3>
+							<p class="card__hook">Real-time New England power grid capacity dashboard built at ISO-NE — used by operators monitoring deviation and load metrics live.</p>
+							<div class="card__stack">
+								<span class="chip">JavaScript</span><span class="chip">D3</span><span class="chip">Real-time</span>
+							</div>
+						</div>
+					</a>
 
-				// Animation loop
-				function animate() {
-					requestAnimationFrame(animate);
-					controls.update();
-					renderer.render(scene, camera);
-				}
-				animate();
+					<a class="card" href="projects/foodpal/foodpal.html">
+						<div class="card__media card__art card__art--foodpal" aria-hidden="true">
+							<div class="card__art-mark">
+								<span class="card__art-glyph">🍜</span>
+								<span class="card__art-name">FoodPal</span>
+								<span class="card__art-meta">restaurant.discovery / ordering.flow</span>
+							</div>
+						</div>
+						<div class="card__body">
+							<div class="card__index"><span class="num">06</span><span>MOBILE · UX</span></div>
+							<h3 class="card__title">FoodPal — Restaurant Discovery</h3>
+							<p class="card__hook">Restaurant discovery and ordering prototype with end-to-end flow — design, frontend, backend logic — and a demo embedded in the case study.</p>
+							<div class="card__stack">
+								<span class="chip">Web</span><span class="chip">UX</span><span class="chip">Prototype</span>
+							</div>
+						</div>
+					</a>
 
-				// Handle resizing
-				window.addEventListener('resize', () => {
-					const width = window.innerWidth * 0.5;
-					const height = 600;
-					renderer.setSize(width, height);
-					camera.aspect = width / height;
-					camera.updateProjectionMatrix();
-				});
-			</script>
+					<a class="card" href="projects/emergency-contact/emergency-contact-automation.html">
+						<div class="card__media card__media--contain">
+							<img src="images/ENS_weekly_gliffy.png" alt="Emergency notification system flow" loading="lazy" />
+						</div>
+						<div class="card__body">
+							<div class="card__index"><span class="num">07</span><span>AUTOMATION</span></div>
+							<h3 class="card__title">Emergency Contact Automation</h3>
+							<p class="card__hook">Notification system for ISO New England grid operators — automated escalation paths, redundancy, and weekly reporting.</p>
+							<div class="card__stack">
+								<span class="chip">C#</span><span class="chip">Workflow</span><span class="chip">SQL</span>
+							</div>
+						</div>
+					</a>
 
-	</body>
+					<a class="card" href="projects/face-filter/face-filter.html">
+						<div class="card__media">
+							<img src="images/face2.jpg" alt="Real-time face filter" loading="lazy" />
+						</div>
+						<div class="card__body">
+							<div class="card__index"><span class="num">08</span><span>ML · GRAPHICS</span></div>
+							<h3 class="card__title">Real-Time Face Filter</h3>
+							<p class="card__hook">Browser-based face detection and AR mask overlay using MediaPipe FaceMesh and HTML canvas. Runs entirely client-side.</p>
+							<div class="card__stack">
+								<span class="chip">MediaPipe</span><span class="chip">Canvas</span><span class="chip">JS</span>
+							</div>
+						</div>
+					</a>
+
+					<a class="card" href="projects/3d-models/3D_models.html">
+						<div class="card__media">
+							<img src="images/Cayan_Tower.jpg" alt="3D model preview" loading="lazy" />
+						</div>
+						<div class="card__body">
+							<div class="card__index"><span class="num">09</span><span>3D · GRAPHICS</span></div>
+							<h3 class="card__title">3D Model Viewer</h3>
+							<p class="card__hook">Interactive Three.js viewer with HDRI environment lighting and orbit controls. Showcases buildings I've modeled.</p>
+							<div class="card__stack">
+								<span class="chip">Three.js</span><span class="chip">WebGL</span><span class="chip">GLTF</span>
+							</div>
+						</div>
+					</a>
+
+					<a class="card" href="projects/api-docs/api-documentation.html">
+						<div class="card__media">
+							<img src="images/iso_training.png" alt="API documentation" loading="lazy" />
+						</div>
+						<div class="card__body">
+							<div class="card__index"><span class="num">10</span><span>API · DOCS</span></div>
+							<h3 class="card__title">Wind & Solar Forecast API</h3>
+							<p class="card__hook">REST API templates and documentation for ISO-NE wind and solar power forecasting services. Schema design + dev portal materials.</p>
+							<div class="card__stack">
+								<span class="chip">REST</span><span class="chip">OpenAPI</span><span class="chip">.NET</span>
+							</div>
+						</div>
+					</a>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- ====================== ABOUT ====================== -->
+		<section class="section" id="about">
+			<div class="container">
+				<header class="section__head reveal">
+					<span class="section__eyebrow">About</span>
+					<h2 class="section__title">Engineer first. Builder by habit.</h2>
+				</header>
+
+				<div class="about reveal">
+					<div class="about__copy">
+						<p class="lead">
+							I work where durable systems meet messy reality — legacy modernization at <strong>Collette Tours</strong>, real-time grid monitoring at <strong>ISO New England</strong>, and a stack of personal projects that span hardware, AI orchestration, and distributed systems.
+						</p>
+						<p>
+							At <strong>Collette</strong>, I'm on the Strategic Initiatives team breaking apart a legacy VB monolith and stored-procedure-heavy database into a modern C# REST API. I led the rework of the payment processing flow through the booking API while keeping full backwards compatibility with the existing system.
+						</p>
+						<p>
+							Outside of work, I built <strong>Maverick</strong> (an AI agent orchestration suite controlled through Discord), <strong>SyncSonic</strong> (a Raspberry Pi multi-speaker Bluetooth audio hub), <strong>Astra</strong> (a cross-platform local network scanner), and <strong>Kitbash</strong> (a customizable wireless game controller). I like building things end-to-end and shipping them.
+						</p>
+						<p>
+							I studied Computer Science at <strong>Boston University</strong> (3.74 GPA), TA'd a C# full-stack course, sat on the Dean's Advisory Board, was elected as a peer tutor, and played on the club roller hockey team.
+						</p>
+					</div>
+
+					<aside class="about__sidebar">
+						<div class="skills">
+							<div class="skills__title">// stack</div>
+
+							<div class="skills__group">
+								<div class="skills__group-label">Languages</div>
+								<div class="skills__chips">
+									<span class="chip">C#</span>
+									<span class="chip">Python</span>
+									<span class="chip">TypeScript</span>
+									<span class="chip">JavaScript</span>
+									<span class="chip">Java</span>
+									<span class="chip">SQL</span>
+									<span class="chip">R</span>
+								</div>
+							</div>
+
+							<div class="skills__group">
+								<div class="skills__group-label">Platforms & Frameworks</div>
+								<div class="skills__chips">
+									<span class="chip">.NET</span>
+									<span class="chip">React Native</span>
+									<span class="chip">Electron</span>
+									<span class="chip">Three.js</span>
+									<span class="chip">Linux / Pi</span>
+								</div>
+							</div>
+
+							<div class="skills__group">
+								<div class="skills__group-label">Practices</div>
+								<div class="skills__chips">
+									<span class="chip">REST API design</span>
+									<span class="chip">Legacy modernization</span>
+									<span class="chip">AI agent orchestration</span>
+									<span class="chip">Real-time systems</span>
+									<span class="chip">Hardware integration</span>
+								</div>
+							</div>
+						</div>
+					</aside>
+				</div>
+			</div>
+		</section>
+
+		<!-- ====================== EXPERIENCE ====================== -->
+		<section class="section" id="experience">
+			<div class="container">
+				<header class="section__head reveal">
+					<span class="section__eyebrow">Experience</span>
+					<h2 class="section__title">Where I've shipped.</h2>
+				</header>
+
+				<div class="timeline reveal-stagger">
+
+					<div class="tl-item">
+						<div class="tl-item__meta">2024 — Present · Strategic Initiatives</div>
+						<h3 class="tl-item__role">Software Engineer I</h3>
+						<p class="tl-item__org">Collette Tours</p>
+						<ul class="tl-item__bullets">
+							<li>Breaking apart a legacy VB monolith and stored-procedure-heavy database into a modern REST API in C#, improving maintainability and enabling incremental modernization.</li>
+							<li>Led the initiative to update the payment processing flow through the booking API while preserving full backwards compatibility with the existing legacy system.</li>
+						</ul>
+					</div>
+
+					<div class="tl-item">
+						<div class="tl-item__meta">Summer 2023 · Internship</div>
+						<h3 class="tl-item__role">Software Development Intern</h3>
+						<p class="tl-item__org">ISO New England</p>
+						<ul class="tl-item__bullets">
+							<li>Built internal tools for monitoring and managing the New England power grid, including a real-time control room display dashboard and an emergency contact automation system.</li>
+							<li>Developed and documented REST API templates used for wind and solar power forecasting web services.</li>
+						</ul>
+					</div>
+
+					<div class="tl-item">
+						<div class="tl-item__meta">2020 — 2024 · B.S. Computer Science</div>
+						<h3 class="tl-item__role">Boston University</h3>
+						<p class="tl-item__org">3.74 GPA · Dean's Advisory Board · Elected Peer Tutor</p>
+						<ul class="tl-item__bullets">
+							<li>Teacher's Assistant for a C# full-stack development course; elected peer tutor.</li>
+							<li>Club Roller Hockey Team; Dean's Advisory Board.</li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
+		</section>
+
+		<!-- ====================== CONTACT ====================== -->
+		<section class="contact" id="contact">
+			<div class="container">
+				<div class="contact__eyebrow reveal">// let's build something</div>
+				<h2 class="contact__title reveal">
+					Got a hard <span class="accent-stop">problem?</span>
+				</h2>
+				<a class="contact__email reveal" href="mailto:wimerbrooks@gmail.com">
+					wimerbrooks@gmail.com
+					<span aria-hidden="true">↗</span>
+				</a>
+
+				<div class="contact__socials reveal">
+					<a class="social" href="https://github.com/BrooksWimer" target="_blank" rel="noopener" aria-label="GitHub">
+						<i class="fab fa-github" aria-hidden="true"></i>
+					</a>
+					<a class="social" href="https://www.linkedin.com/in/brooks-wimer-258232210/" target="_blank" rel="noopener" aria-label="LinkedIn">
+						<i class="fab fa-linkedin" aria-hidden="true"></i>
+					</a>
+					<a class="social" href="mailto:wimerbrooks@gmail.com" aria-label="Email">
+						<i class="fas fa-envelope" aria-hidden="true"></i>
+					</a>
+					<a class="social" href="Brooks Wimer Resume.pdf" target="_blank" rel="noopener" aria-label="Résumé PDF">
+						<i class="fas fa-file" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+
+			<div class="container">
+				<footer class="footer">
+					<div class="footer__sig">brooks_wimer.dev — built from scratch, no framework</div>
+					<div>© <span id="year">2026</span> Brooks Wimer · v2.1</div>
+				</footer>
+			</div>
+		</section>
+
+	</main>
+
+	<!-- Command palette -->
+	<div class="cmdk-backdrop" id="cmdk" role="dialog" aria-modal="true" aria-label="Command palette">
+		<div class="cmdk">
+			<div class="cmdk__input-wrap">
+				<span class="cmdk__chev">›</span>
+				<input class="cmdk__input" id="cmdk-input" placeholder="Type to filter projects, sections, or actions…" autocomplete="off" spellcheck="false" />
+			</div>
+			<div class="cmdk__list" id="cmdk-list" role="listbox"></div>
+			<div class="cmdk__hint">
+				<span><kbd>↑↓</kbd>navigate</span>
+				<span><kbd>↵</kbd>select</span>
+				<span><kbd>esc</kbd>close</span>
+			</div>
+		</div>
+	</div>
+
+	<script src="assets/js/portfolio.js"></script>
+</body>
 </html>
