@@ -5,6 +5,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/project-detail.css" />
 		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
 		<style>
 			.project-content {
@@ -110,6 +111,8 @@
 									<li><strong>Custom BLE GATT Protocol:</strong> The Pi advertises a BLE characteristic that enables a mobile app to send JSON-encoded commands (e.g., connect/disconnect, set volume, mute, scan for devices). All communication is handled through a single R/W/Notify GATT characteristic.</li>
 									<li><strong>State Machine for Each Speaker:</strong> Each Bluetooth speaker follows a deterministic FSM to ensure proper sequencing of discovery, pairing, trust, connection, and audio loopback setup. The system supports real-time reconnection and handles transient failures automatically.</li>
 									<li><strong>PipeWire and PulseAudio Loopbacks:</strong> The system now uses PipeWire as the primary audio transport layer for improved latency calibration and device management. PulseAudio is maintained as a compatibility layer, with a central virtual_out sink and per-device module-loopback instances for adjustable latency and volume.</li>
+									<li><strong>Microphone-Based Synchronization at Startup:</strong> At initialization, the system uses a microphone input and an muting sequence paired with audio cross-correlation to measure and synchronize speaker startup timing. This eliminates phase differences before playback begins.</li>
+									<li><strong>Upcoming: Real-Time Drift Correction via High-Frequency Bursts:</strong> To maintain synchronization during playback without interrupting listening, a planned update will use inaudible high-frequency bursts. The system will periodically transmit these bursts to all speakers, measure cross-correlation in real time, and apply micro-adjustments to prevent drift. Feasibility has been experimentally validated.</li>
 									<li><strong>BLE Notifications:</strong> Live status updates are pushed from the Pi to the mobile app using BLE notifications, keeping the user informed of connection phases and results.</li>
 								</ul>
 							</section>
@@ -193,7 +196,7 @@
 
 							<section class="status-section">
 								<h2>Current Status</h2>
-								<p>The prototype successfully streams synchronized audio to up to four Bluetooth speakers from any brand, with live control via the mobile app. It has been tested with real-time audio sources like Spotify and local media.</p>
+								<p>The prototype successfully streams synchronized audio to multiple Bluetooth speakers (5+ when including Wi-Fi speaker integration) from any brand, with live control via the mobile app. Startup synchronization uses microphone-based cross-correlation for phase alignment. Extensively tested with real-time audio sources (Spotify, local media). Operators use it daily in personal deployment.</p>
 							</section>
 
 							<section class="feature-section">
@@ -222,6 +225,7 @@
 			<script src="/assets/js/breakpoints.min.js"></script>
 			<script src="/assets/js/util.js"></script>
 			<script src="/assets/js/main.js"></script>
+			<script src="/assets/js/project-detail.js"></script>
 
 	</body>
 </html> 

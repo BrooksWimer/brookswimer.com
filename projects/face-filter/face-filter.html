@@ -5,6 +5,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="stylesheet" href="../../assets/css/project-detail.css" />
 		<noscript><link rel="stylesheet" href="../../assets/css/noscript.css" /></noscript>
 		<link rel="stylesheet" href="styles.css" />
 		<!-- MediaPipe Dependencies -->
@@ -202,10 +203,7 @@
 						<div class="project-content">
 							<section class="feature-section">
 								<h2>Project Overview</h2>
-								<p>Real-Time Funny Mask Overlay Web App</p>
-								<p>A browser-based AR face filter using our custom facial landmark model</p>
-								<p>This interactive web application overlays animated masks—like animal ears and clown noses—onto users' faces in real-time using just their webcam. At its core is a custom-built facial landmark detection model, designed and trained by our team, inspired by the performance characteristics of Google's MediaPipe FaceMesh. Our model predicts 468 facial landmarks per frame and powers real-time mask alignment, scaling, and rotation directly in the browser.</p>
-								<p>Developed from scratch for web deployment, the system is fully client-side and leverages WebGL for efficient rendering, enabling 30–60 FPS performance on modern devices. Users can choose from a variety of masks and experience seamless tracking that adapts to head movement and facial expressions.</p>
+								<p>A browser-based face detection system with real-time AR mask overlays using MediaPipe FaceMesh and HTML Canvas. Built as a class project exploring computer vision and machine learning—we rebuilt face detection from scratch to understand the mechanics behind landmark detection, then applied custom mask rendering to create interactive visualizations. Runs entirely client-side; no server required.</p>
 							</section>
 
 							<section class="feature-section">
@@ -256,6 +254,17 @@
 							</section>
 
 							<section class="feature-section">
+								<h2>Technical Learning & Implementation</h2>
+								<p>Rather than simply using MediaPipe as a black box, the project involved reconstructing face detection fundamentals to understand how modern ML models work:</p>
+								<ul class="feature-list">
+									<li><strong>Landmark Detection Pipeline:</strong> Face detection begins with a neural network trained to predict 468 3D facial landmarks from 2D input. The model learns to identify subtle geometry—jawlines, eye corners, mouth contours—by detecting local features (edges, textures) and combining them hierarchically. We explored how pooling, convolution, and non-linear activations enable this spatial reasoning.</li>
+									<li><strong>Real-Time Performance Constraints:</strong> Running inference every frame (30+ FPS) requires model quantization and optimization. We analyzed trade-offs between model size, latency, and accuracy—understanding why mobile-optimized models sacrifice some precision for speed.</li>
+									<li><strong>Mask Registration & Warping:</strong> Once landmarks are detected, applying a 2D mask image to a 3D face requires perspective transformation. We implemented affine and homographic warping using Canvas 2D transforms, learning how to map image coordinates across coordinate systems and handle occlusion (e.g., hair covering landmarks).</li>
+									<li><strong>Interactive Design for Learning:</strong> The mask filter adds engagement—converting an abstract ML pipeline into a tangible, fun output. This taught me that effective ML visualization requires bridging technical depth with user experience.</li>
+								</ul>
+							</section>
+
+							<section class="feature-section">
 								<h2>Technical Implementation</h2>
 								<div class="tech-stack">
 									<span class="tech-item">Custom Facial Landmark Model</span>
@@ -296,6 +305,7 @@
 			<script src="../../assets/js/breakpoints.min.js"></script>
 			<script src="../../assets/js/util.js"></script>
 			<script src="../../assets/js/main.js"></script>
+			<script src="../../assets/js/project-detail.js"></script>
 			<script src="camera.js"></script>
 			<script src="faceDetection.js"></script>
 			<script src="maskHandler.js"></script>

@@ -5,6 +5,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="stylesheet" href="../../assets/css/project-detail.css" />
 		<noscript><link rel="stylesheet" href="../../assets/css/noscript.css" /></noscript>
 		<style>
 			.project-content {
@@ -109,7 +110,7 @@
 						<div class="project-content">
 							<section class="feature-section">
 								<h2>Project Overview</h2>
-								<p>Imagine having the power to transform any recipe you find online into a perfectly curated grocery order delivered right to your doorstep. Our application takes the convenience of meal kits like HelloFresh, Blue Apron, and Home Chef to the next level, removing the constraints of pre-packaged menus and empowering you to explore an infinite variety of recipes tailored to your taste and dietary needs.</p>
+								<p>FoodPal was a class project exploring recipe-to-grocery automation: take any recipe, match ingredients to nearby grocery stores, and orchestrate a delivery through DoorDash. The application integrates Spoonacular (recipes), DoorDash (fulfillment), and Google Maps (location matching) to demonstrate multi-API coordination and full-stack web development.</p>
 							</section>
 
 							<section class="feature-section">
@@ -164,7 +165,8 @@
 
 							<section class="status-section">
 								<h2>Current Status</h2>
-								<p>FoodPal is currently a demo, and getting it to work has been a major undertaking. Instead of simply embedding an existing tool, I've had to rebuild the entire system to function on my website. While it's not yet fully deployed in a reliable manner, here's what's gone into making it work so far:</p>
+								<p>Live demo is no longer available because the DoorDash integration was only for a test account tied to my personal credentials. Turning this into a production-grade project would require a DoorDash contract and proper authentication flow.</p>
+								<p>Despite the demo limitations, the technical work demonstrated full-stack capabilities. Here's what went into building the system:</p>
 								
 								<h3>1. Rebuilding the Backend</h3>
 								<p>I had to create a Flask-based backend from scratch to handle requests, process user input, and communicate with the automation system. This includes managing store selections, grocery lists, and formatting data for the frontend.</p>
@@ -179,8 +181,6 @@
 									<li>SSL Certificates: Supports HTTPS and prevents security warnings</li>
 									<li>Hosting Adjustments: Keeps the system online while managing resource limitations</li>
 								</ul>
-
-								<a href="FoodpalDemo.html" class="demo-button">Try Demo</a>
 							</section>
 						</div>
 					</div>
@@ -202,6 +202,7 @@
 			<script src="../../assets/js/breakpoints.min.js"></script>
 			<script src="../../assets/js/util.js"></script>
 			<script src="../../assets/js/main.js"></script>
+			<script src="../../assets/js/project-detail.js"></script>
 
 	</body>
 </html>

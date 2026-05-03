@@ -5,6 +5,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="/assets/css/main.css" />
+		<link rel="stylesheet" href="/assets/css/project-detail.css" />
 		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
 		<!-- Three.js dependencies -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -118,8 +119,8 @@
 					<header id="header">
 						<div class="content">
 							<div class="inner">
-								<h1>3D Model NFTs</h1>
-								<p>Digital architectural models combining art, architecture, and technology</p>
+								<h1>3D Building Visualization</h1>
+								<p>Interactive digital architectural models</p>
 							</div>
 						</div>
 					</header>
@@ -129,8 +130,12 @@
 						<div class="project-content">
 							<section class="feature-section">
 								<h2>Project Overview</h2>
-								<p>I am currently working on hosting a line of 3D model NFTs I built for my Dad on this website. He is an architect who specializes in designing large buildings. For every building he designs, he creates a physical model and a 2D representation. As a present to him, I decided to replicate his work in another medium using Blender's 3D modeling software.</p>
-								<p>These digital 3D models capture the essence of his architectural designs and provide a unique, modern way to showcase his creative vision. The goal is to make these models available as NFTs, combining art, architecture, and technology into a new collectible format.</p>
+								<p>
+									During the NFT boom, I was inspired to digitize one of my dad's architectural designs. My dad is an architect known for designing massive structures—skyscrapers, stadiums, civic buildings—with a philosophy of buildings as bold artistic statements. He creates multiple representations of his designs: physical 3D models, 2D geometric prints that capture essence without detail, and sketches. I wanted to explore his work in the digital space using 3D modeling and rendering.
+								</p>
+								<p>
+									This project taught me 3D modeling workflows, GLTF asset preparation, HDRI environment lighting, and real-time rendering optimization. It remains incomplete—only one building is rendered, not his full body of work—and I never pursued the original plan to make it shareable in platforms like Roblox. But I still plan to expand this someday, rendering his entire catalog of designs as interactive 3D experiences.
+								</p>
 							</section>
 
 							<section class="feature-section">
@@ -150,14 +155,13 @@
 							</section>
 
 							<section class="feature-section">
-								<h2>Technical Implementation</h2>
-								<div class="tech-stack">
-									<span class="tech-item">Blender</span>
-									<span class="tech-item">Three.js</span>
-									<span class="tech-item">WebGL</span>
-									<span class="tech-item">3D Modeling</span>
-									<span class="tech-item">NFT Development</span>
-								</div>
+								<h2>Technical Stack</h2>
+								<ul class="feature-list">
+									<li>Modeled in Blender; exported to glTF format for Three.js</li>
+									<li>HDRI environment provides photorealistic lighting without baked shadows</li>
+									<li>OrbitControls enable intuitive 3D navigation</li>
+									<li>Real-time rendering at 60 FPS on desktop browsers</li>
+								</ul>
 							</section>
 						</div>
 					</div>
@@ -179,6 +183,7 @@
 			<script src="/assets/js/breakpoints.min.js"></script>
 			<script src="/assets/js/util.js"></script>
 			<script src="/assets/js/main.js"></script>
+			<script src="/assets/js/project-detail.js"></script>
 			<script>
 				document.addEventListener("DOMContentLoaded", function() {
 					const canvas = document.getElementById('modelCanvas');
