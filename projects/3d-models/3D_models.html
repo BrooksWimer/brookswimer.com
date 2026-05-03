@@ -71,36 +71,62 @@
 				font-size: 0.9em;
 			}
 
+			/* Gallery: side-by-side on desktop, stacked on mobile */
+			.model-gallery {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 1.5em;
+				margin: 1em 0;
+			}
+
+			@media (min-width: 1024px) {
+				.model-gallery {
+					grid-template-columns: 1fr 1fr;
+					align-items: start;
+				}
+			}
+
 			.model-viewer-container {
 				background: rgba(255, 255, 255, 0.1);
-				padding: 2em;
+				padding: 1em;
 				border-radius: 8px;
-				margin: 2em 0;
 				text-align: center;
 			}
 
 			#modelCanvas {
-				width: 60% !important;
-				height: 800px !important;
+				width: 100% !important;
+				height: 560px !important;
 				display: block;
-				margin: 0 auto;
 				border-radius: 4px;
 				box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+			}
+
+			@media (max-width: 1023px) {
+				#modelCanvas {
+					height: 420px !important;
+				}
 			}
 
 			.image-container {
 				background: rgba(255, 255, 255, 0.1);
-				padding: 2em;
+				padding: 1em;
 				border-radius: 8px;
-				margin: 2em 0;
 				text-align: center;
 			}
 
 			.image-container img {
-				max-width: 100%;
-				height: auto;
+				width: 100%;
+				height: 560px;
+				object-fit: cover;
 				border-radius: 4px;
 				box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+				display: block;
+			}
+
+			@media (max-width: 1023px) {
+				.image-container img {
+					height: auto;
+				}
 			}
 
 			.image-container p {
@@ -190,6 +216,11 @@
 						return;
 					}
 
+					// Dimensions — resolved before anything else that needs them
+					const container = document.querySelector('.model-viewer-container');
+					const containerWidth = container ? container.clientWidth : 600;
+					const containerHeight = window.innerWidth >= 1024 ? 560 : 420;
+
 					// Scene setup
 					const scene = new THREE.Scene();
 
@@ -199,9 +230,6 @@
 					camera.lookAt(0, 0, 0);
 
 					// Renderer setup
-					const container = document.querySelector('.model-viewer-container');
-					const containerWidth = container ? container.clientWidth : window.innerWidth * 0.6;
-					const containerHeight = window.innerWidth >= 1024 ? 600 : 500;
 
 					const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('modelCanvas'), antialias: true });
 					renderer.setSize(containerWidth, containerHeight);
@@ -251,8 +279,8 @@
 					// Handle resizing
 					window.addEventListener('resize', () => {
 						const newContainer = document.querySelector('.model-viewer-container');
-						const newWidth = newContainer ? newContainer.clientWidth : window.innerWidth * 0.6;
-						const newHeight = window.innerWidth >= 1024 ? 600 : 500;
+						const newWidth = newContainer ? newContainer.clientWidth : 600;
+						const newHeight = window.innerWidth >= 1024 ? 560 : 420;
 						renderer.setSize(newWidth, newHeight);
 						camera.aspect = newWidth / newHeight;
 						camera.updateProjectionMatrix();
