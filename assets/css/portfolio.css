@@ -1339,6 +1339,83 @@ html.portfolio-home :focus-visible {
 	border-radius: 4px;
 }
 
+/* ---------- 3D Models Gallery Layout ---------- */
+
+.model-gallery {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2em;
+}
+
+/* Desktop: side-by-side layout */
+@media (min-width: 1024px) {
+	.model-gallery {
+		grid-template-columns: 1fr 1fr;
+		align-items: start;
+	}
+
+	.model-viewer-container {
+		width: 100%;
+		height: 600px;
+	}
+
+	#modelCanvas {
+		width: 100% !important;
+		height: 600px !important;
+	}
+
+	.image-container {
+		width: 100%;
+		height: 600px;
+		overflow: hidden;
+	}
+
+	.image-container img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 4px;
+	}
+
+	.image-container p {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 1em;
+		background: linear-gradient(to top, rgba(10, 13, 18, 0.9), transparent);
+		margin: 0;
+	}
+}
+
+/* Mobile: stacked layout */
+@media (max-width: 1023px) {
+	.model-gallery {
+		grid-template-columns: 1fr;
+	}
+
+	.model-viewer-container {
+		width: 100%;
+		height: 500px;
+	}
+
+	#modelCanvas {
+		width: 100% !important;
+		height: 500px !important;
+	}
+
+	.image-container {
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.image-container img {
+		max-width: 100%;
+		height: auto;
+		border-radius: 4px;
+	}
+}
+
 /* ---------- Selection ---------- */
 
 html.portfolio-home ::selection {
