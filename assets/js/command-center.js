@@ -20,7 +20,7 @@
   };
 
   const state = {
-    apiBase: localStorage.getItem("maverickCommandCenter.apiBase") || "http://127.0.0.1:3847",
+    apiBase: localStorage.getItem("maverickCommandCenter.apiBase") || "http://127.0.0.1:3848",
     token: sessionStorage.getItem("maverickCommandCenter.token") || "",
     lastPayload: null,
     detailCache: new Map(),
