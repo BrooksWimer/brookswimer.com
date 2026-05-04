@@ -79,67 +79,175 @@
         </div>
       </section>
 
-      <section class="grid grid-main">
-        <article class="panel panel-tasks">
-          <div class="panel-head">
-            <h2>Tasks</h2>
-            <span id="task-total">0 total</span>
-          </div>
-          <div class="task-metrics" id="task-metrics"></div>
-          <div class="queue-list" id="task-queue"></div>
-        </article>
+      <nav class="view-tabs" aria-label="Command Center views">
+        <a href="#/today" data-route-link="today">Today</a>
+        <a href="#/projects" data-route-link="projects">Projects</a>
+      </nav>
 
-        <article class="panel panel-approvals">
-          <div class="panel-head">
-            <h2>Approvals</h2>
-            <span id="approval-count">0 waiting</span>
-          </div>
-          <div class="queue-list" id="approval-list"></div>
-        </article>
-      </section>
+      <section class="route-view" id="view-today" data-route-view="today">
+        <div class="grid grid-main">
+          <article class="panel panel-tasks">
+            <div class="panel-head">
+              <h2>Day Plan</h2>
+              <span id="task-total">0 total</span>
+            </div>
+            <div class="task-metrics" id="task-metrics"></div>
+            <div class="split-list">
+              <div>
+                <h3>Focus</h3>
+                <div class="queue-list" id="today-focus"></div>
+              </div>
+              <div>
+                <h3>Calendar</h3>
+                <div class="queue-list" id="today-calendar"></div>
+              </div>
+            </div>
+          </article>
 
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Projects</h2>
-          <span id="project-count">0 tracked</span>
+          <article class="panel panel-approvals">
+            <div class="panel-head">
+              <h2>Approvals</h2>
+              <span id="approval-count">0 waiting</span>
+            </div>
+            <div class="queue-list" id="approval-list"></div>
+          </article>
         </div>
-        <div class="project-grid" id="project-grid"></div>
+
+        <div class="grid grid-secondary">
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Tasks</h2>
+              <span id="today-task-count">0 queued</span>
+            </div>
+            <div class="queue-list" id="today-tasks"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Personal</h2>
+              <span id="today-personal-count">0 queued</span>
+            </div>
+            <div class="queue-list" id="today-personal"></div>
+          </article>
+        </div>
+
+        <div class="grid grid-secondary">
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Planning Notes</h2>
+              <span id="planning-note-count">0 recent</span>
+            </div>
+            <div class="queue-list" id="planning-notes"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Workstreams</h2>
+              <span id="workstream-count">0 active</span>
+            </div>
+            <div class="queue-list" id="workstream-list"></div>
+          </article>
+        </div>
       </section>
 
-      <section class="grid grid-secondary">
-        <article class="panel">
+      <section class="route-view" id="view-projects" data-route-view="projects">
+        <section class="panel">
           <div class="panel-head">
-            <h2>Workstreams</h2>
-            <span id="workstream-count">0 active</span>
+            <h2>Project Reports</h2>
+            <span id="project-count">0 active</span>
           </div>
-          <div class="queue-list" id="workstream-list"></div>
-        </article>
+          <div class="project-tabs" id="project-tabs"></div>
+          <div class="project-grid" id="project-grid"></div>
+        </section>
 
-        <article class="panel">
-          <div class="panel-head">
-            <h2>Reports</h2>
-            <span id="report-count">0 recent</span>
-          </div>
-          <div class="queue-list" id="report-list"></div>
-        </article>
+        <section class="grid grid-secondary">
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Reports</h2>
+              <span id="report-count">0 recent</span>
+            </div>
+            <div class="queue-list" id="report-list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Recent Notes</h2>
+              <span id="note-count">0 recent</span>
+            </div>
+            <div class="queue-list" id="note-list"></div>
+          </article>
+        </section>
       </section>
 
-      <section class="grid grid-secondary">
-        <article class="panel">
-          <div class="panel-head">
-            <h2>Notes</h2>
-            <span id="note-count">0 recent</span>
+      <section class="route-view" id="view-project-detail" data-route-view="project-detail">
+        <section class="panel project-detail-panel">
+          <div class="detail-head">
+            <a class="back-link" href="#/projects">
+              <i class="fas fa-arrow-left" aria-hidden="true"></i>
+              Projects
+            </a>
+            <div>
+              <p class="eyebrow" id="detail-project-id">Project</p>
+              <h2 id="detail-project-name">Loading</h2>
+              <p id="detail-project-headline"></p>
+            </div>
           </div>
-          <div class="queue-list" id="note-list"></div>
-        </article>
+          <div class="detail-meta" id="detail-meta"></div>
+        </section>
 
-        <article class="panel">
-          <div class="panel-head">
-            <h2>Events</h2>
-            <span id="event-count">0 recent</span>
-          </div>
-          <div class="queue-list" id="event-list"></div>
-        </article>
+        <section class="grid grid-secondary">
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Lanes</h2>
+              <span id="detail-lane-count">0 lanes</span>
+            </div>
+            <div class="queue-list" id="detail-lanes"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Action Items</h2>
+              <span id="detail-task-count">0 tasks</span>
+            </div>
+            <div class="queue-list" id="detail-tasks"></div>
+          </article>
+        </section>
+
+        <section class="grid grid-secondary">
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Notes</h2>
+              <span id="detail-note-count">0 notes</span>
+            </div>
+            <div class="queue-list" id="detail-notes"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Evidence</h2>
+              <span id="detail-evidence-count">0 links</span>
+            </div>
+            <div class="queue-list" id="detail-evidence"></div>
+          </article>
+        </section>
+
+        <section class="grid grid-secondary">
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Calendar</h2>
+              <span id="detail-calendar-count">0 events</span>
+            </div>
+            <div class="queue-list" id="detail-calendar"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <h2>Unresolved</h2>
+              <span id="detail-unresolved-count">0 captures</span>
+            </div>
+            <div class="queue-list" id="detail-unresolved"></div>
+          </article>
+        </section>
       </section>
     </main>
   </div>
