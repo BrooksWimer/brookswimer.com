@@ -1,0 +1,148 @@
+{
+  "name": "Brooks Wimer",
+  "contact": {
+    "address": "4 Gardner St., Allston, MA",
+    "phone": "(847) 648-1332",
+    "email": "wimerbrooks@gmail.com",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "portfolio": "Portfolio"
+  },
+  "education": [
+    {
+      "institution": "Boston University",
+      "date": "Jan 2021 – May 2025",
+      "degree": "Computer Science",
+      "gpa": "3.74",
+      "bullets": [
+        "Achievements: Deans Advisory Board, Peer Tutor, Deans List, Teacher's Assistant"
+      ]
+    }
+  ],
+  "coding_experience": [
+    {
+      "name": "Maverick",
+      "tech": "TypeScript · Node.js · Discord.js · SQLite · Claude Code · Codex CLI",
+      "date": "Jan 2025 – Present",
+      "priority": 10,
+      "bullets": [
+        "Built an AI agent orchestration platform controlled via Discord — routes software engineering tasks to Claude Code and Codex agents across concurrent projects",
+        "Implements structured pipelines (intake → plan → implement → verify → review) with persistent SQLite state, git worktree isolation per task, and pluggable AI backends",
+        "Supports concurrent multi-project workflows; agents surface results and diffs back to the operator through Discord with a full audit trail per task"
+      ]
+    },
+    {
+      "name": "SyncSonic",
+      "tech": "Python · BLE GATT · React Native · Shell",
+      "date": "Feb 2025 – Present",
+      "priority": 9,
+      "bullets": [
+        "Built the first open-source, brand-agnostic multi-speaker Bluetooth audio orchestrator — synchronizes 5+ speakers from any manufacturer simultaneously",
+        "Programmed Raspberry Pi + multiple USB Bluetooth adapters with a deterministic state machine per device handling discovery, pairing, trust, connection, and audio loopback",
+        "Built a React Native mobile app (BLE GATT) for per-speaker volume, latency, and mute control; engineered startup phase-alignment via microphone-based audio cross-correlation"
+      ]
+    },
+    {
+      "name": "Kitbash",
+      "tech": "Kotlin · Jetpack Compose",
+      "date": "Feb 2025 – May 2025",
+      "priority": 7,
+      "bullets": [
+        "Built an Android app (Jetpack Compose) that turns a phone into a fully customizable PC game controller — drag-and-drop layout builder with button, joystick, D-pad, voice, and motion controls",
+        "Relayed inputs from device to PC over WebSocket via a Google Cloud relay server; synced layouts to Firebase with offline buffering and real-time reconnection handling"
+      ]
+    },
+    {
+      "name": "Capacity Deviation Display",
+      "tech": "R · SQL · JS · CSS · HTML",
+      "date": "Sep 2024 – Nov 2024",
+      "priority": 8,
+      "bullets": [
+        "Built a live dashboard used by power grid operators to monitor real-time capacity deviations",
+        "Enabled faster emergency response by consolidating capacity metrics into a single real-time view, eliminating manual data collection across disparate systems"
+      ]
+    },
+    {
+      "name": "Emergency Notification System",
+      "tech": "Python · SQL · Selenium",
+      "date": "May 2024 – Sep 2024",
+      "priority": 7,
+      "bullets": [
+        "Built Python + Selenium tooling to synchronize two disconnected operator data sources for the Emergency Notification System, keeping escalation paths accurate during grid events",
+        "Eliminated hours of weekly manual data entry and prevented input errors that could delay operator response during grid emergencies"
+      ]
+    },
+    {
+      "name": "API Template and Instructions",
+      "tech": "Java · XML · Python",
+      "date": "May 2024 – Aug 2024",
+      "priority": 8,
+      "bullets": [
+        "Authored a 60-page API guide and interactive GUI training tool covering every endpoint, schema, and workflow for renewable energy data submission",
+        "Built a GUI-based Python API template so operators could submit data without writing code, removing the technical barrier driving non-compliance",
+        "Directly enabled 30% of previously non-compliant renewable energy plants to meet mandated data submission requirements for ISO New England"
+      ]
+    },
+    {
+      "name": "FoodPal",
+      "tech": "Java · SQL · Python · HTML · CSS",
+      "date": "Sep 2023 – Dec 2023",
+      "priority": 3,
+      "bullets": [
+        "Class project: built full-stack app integrating Spoonacular, DoorDash, and Google Maps APIs to automate recipe → ingredient matching → grocery delivery"
+      ]
+    }
+  ],
+  "work_experience": [
+    {
+      "name": "Collette",
+      "role": "Software Engineer I · Strategic Initiatives",
+      "date": "Sep 2025 – Present",
+      "priority": 10,
+      "bullets": [
+        "Design and develop RESTful APIs supporting core travel services including Booking, Payments, and Air systems on the Strategic Initiatives modernization team",
+        "Led rework of the payment processing flow through the booking API, preserving full backwards compatibility with the existing legacy system throughout migration",
+        "Contribute to company-wide initiative migrating legacy SOAP-based and stored-procedure-heavy VB services to modern C# REST architecture"
+      ]
+    },
+    {
+      "name": "Corso",
+      "role": "Full Stack Engineer Intern",
+      "date": "Jan 2025 – Apr 2025",
+      "priority": 7,
+      "bullets": [
+        "Built a Next.js web application for AI-powered analytics and visualization of construction permits and regulatory data — owned full-stack implementation including data pipeline, API layer, and interactive frontend dashboard"
+      ]
+    },
+    {
+      "name": "ISO New England",
+      "role": "Software Development Intern",
+      "date": "Jun 2024 – Jan 2025",
+      "priority": 9,
+      "bullets": [
+        "Built a real-time capacity deviation dashboard used live by control room operators to monitor grid stability — replaced manual data collection with a consolidated single view",
+        "Engineered Emergency Notification tooling that synchronized two disconnected operator data sources, ensuring escalation accuracy and eliminating manual entry during grid events",
+        "Delivered 60-page API documentation and GUI-based template that brought 30% of non-compliant renewable energy plants into mandated data submission compliance"
+      ]
+    },
+    {
+      "name": "Boston University",
+      "role": "Teacher Assistant · C# Full Stack App Dev",
+      "date": "Sep 2023 – May 2025",
+      "priority": 6,
+      "bullets": [
+        "Developed curriculum, taught classes, and mentored students in conceptualizing and building novel C# full-stack applications"
+      ]
+    },
+    {
+      "name": "Talitha",
+      "role": "CPG Research Analyst",
+      "date": "May 2023 – May 2024",
+      "priority": 5,
+      "bullets": [
+        "Collaborated with the M&A team to analyze Salesforce data, identify potential acquisition targets, and streamline the acquisition process"
+      ]
+    }
+  ],
+  "technologies": "Programming Languages: Python, TypeScript, JavaScript, C#, Java, C, R, C++, HTML, CSS, SQL, XML  |  Frameworks & Tools: Node.js, React Native, Next.js, .NET/ASP.NET, BLE/GATT, Git, SQLite, Firebase, Selenium, Linux/Raspberry Pi"
+}

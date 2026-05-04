@@ -917,11 +917,7 @@ html.portfolio-home ul { list-style: none; padding: 0; margin: 0; }
 	display: grid;
 	grid-template-columns: 1.1fr 1fr;
 	gap: 64px;
-	align-items: start;
-}
-
-@media (max-width: 900px) {
-	.about { grid-template-columns: 1fr; gap: 40px; }
+	align-items: stretch;
 }
 
 .about__copy p {
@@ -945,7 +941,48 @@ html.portfolio-home ul { list-style: none; padding: 0; margin: 0; }
 .about__sidebar {
 	display: flex;
 	flex-direction: column;
+	justify-content: space-between;
 	gap: 28px;
+	min-height: 100%;
+}
+
+.about__sidebar .skills {
+	flex-shrink: 0;
+}
+
+.about__photo {
+	background: var(--bg-elev);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	overflow: hidden;
+	flex-shrink: 0;
+	align-self: center;
+	width: 100%;
+	max-width: min(340px, 92%);
+}
+
+.about__photo img {
+	width: 100%;
+	aspect-ratio: 3 / 4;
+	object-fit: cover;
+	object-position: center 22%;
+	display: block;
+}
+
+@media (max-width: 900px) {
+	.about {
+		grid-template-columns: 1fr;
+		gap: 40px;
+		align-items: start;
+	}
+	.about__sidebar {
+		justify-content: flex-start;
+		min-height: 0;
+	}
+	.about__photo {
+		max-width: min(360px, 94%);
+		align-self: center;
+	}
 }
 
 .skills {

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="command-center-page">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Maverick Command Center</title>
+  <meta name="theme-color" content="#101418" />
+  <link rel="icon" href="images/BrooksWimer_Logo.png" />
+  <link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
+  <link rel="stylesheet" href="assets/css/command-center.css" />
+</head>
+<body>
+  <div class="command-shell" data-view="loading">
+    <header class="topbar">
+      <div class="brand-block">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <div>
+          <p class="eyebrow">Maverick</p>
+          <h1>Command Center</h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <span class="sync-pill" id="sync-status">Connecting</span>
+        <button class="icon-button" id="refresh-button" type="button" aria-label="Refresh dashboard" title="Refresh">
+          <i class="fas fa-sync-alt" aria-hidden="true"></i>
+        </button>
+        <button class="icon-button" id="lock-button" type="button" aria-label="Lock dashboard" title="Lock">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <section class="gate" id="gate-panel" aria-labelledby="gate-title">
+      <form class="gate-form" id="gate-form">
+        <div>
+          <p class="eyebrow">Private Access</p>
+          <h2 id="gate-title">Connect to Maverick</h2>
+        </div>
+        <label>
+          <span>API base</span>
+          <input id="api-base" name="apiBase" type="url" value="http://127.0.0.1:3847" autocomplete="url" required />
+        </label>
+        <label>
+          <span>Access token</span>
+          <input id="api-token" name="apiToken" type="password" autocomplete="current-password" />
+        </label>
+        <p class="form-error" id="gate-error" role="alert"></p>
+        <button class="primary-button" type="submit">
+          <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          Connect
+        </button>
+      </form>
+    </section>
+
+    <main class="dashboard" id="dashboard" aria-live="polite">
+      <section class="status-band" aria-label="Command center status">
+        <div class="status-copy">
+          <p class="eyebrow" id="generated-at">Waiting for data</p>
+          <h2 id="next-action">Loading command center state</h2>
+        </div>
+        <div class="metric-row">
+          <div class="metric">
+            <span class="metric-value" id="metric-health">--</span>
+            <span class="metric-label">Health</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value" id="metric-workstreams">0</span>
+            <span class="metric-label">Active</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value" id="metric-approvals">0</span>
+            <span class="metric-label">Approvals</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value" id="metric-tasks">0</span>
+            <span class="metric-label">Tasks</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid grid-main">
+        <article class="panel panel-tasks">
+          <div class="panel-head">
+            <h2>Tasks</h2>
+            <span id="task-total">0 total</span>
+          </div>
+          <div class="task-metrics" id="task-metrics"></div>
+          <div class="queue-list" id="task-queue"></div>
+        </article>
+
+        <article class="panel panel-approvals">
+          <div class="panel-head">
+            <h2>Approvals</h2>
+            <span id="approval-count">0 waiting</span>
+          </div>
+          <div class="queue-list" id="approval-list"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Projects</h2>
+          <span id="project-count">0 tracked</span>
+        </div>
+        <div class="project-grid" id="project-grid"></div>
+      </section>
+
+      <section class="grid grid-secondary">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Workstreams</h2>
+            <span id="workstream-count">0 active</span>
+          </div>
+          <div class="queue-list" id="workstream-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Reports</h2>
+            <span id="report-count">0 recent</span>
+          </div>
+          <div class="queue-list" id="report-list"></div>
+        </article>
+      </section>
+
+      <section class="grid grid-secondary">
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Notes</h2>
+            <span id="note-count">0 recent</span>
+          </div>
+          <div class="queue-list" id="note-list"></div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <h2>Events</h2>
+            <span id="event-count">0 recent</span>
+          </div>
+          <div class="queue-list" id="event-list"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/command-center.js"></script>
+</body>
+</html>
