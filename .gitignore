@@ -25,6 +25,9 @@ venv/
 env/
 ENV/
 
+# Claude disposable worktrees (git worktrees; must never be committed as gitlinks)
+.claude/worktrees/
+
 # IDE
 .idea/
 .vscode/
