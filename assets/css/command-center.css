@@ -28,7 +28,9 @@ body {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -151,7 +153,9 @@ input {
 }
 
 .icon-button,
-.primary-button {
+.primary-button,
+.secondary-button,
+.mini-action {
   border: 0;
   cursor: pointer;
   color: var(--text);
@@ -168,7 +172,9 @@ input {
 }
 
 .icon-button:hover,
-.primary-button:hover {
+.primary-button:hover,
+.secondary-button:hover,
+.mini-action:hover {
   filter: brightness(1.08);
 }
 
@@ -194,14 +200,28 @@ input {
   font-weight: 700;
 }
 
-.gate-form input {
+.gate-form input,
+.modal-field input,
+.modal-field select,
+.modal-field textarea {
   width: 100%;
-  min-height: 46px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #0f1317;
   color: var(--text);
   padding: 0 12px;
+}
+
+.gate-form input,
+.modal-field input,
+.modal-field select {
+  min-height: 46px;
+}
+
+.modal-field textarea {
+  min-height: 126px;
+  padding: 12px;
+  resize: vertical;
 }
 
 .primary-button {
@@ -218,6 +238,15 @@ input {
   font-weight: 800;
 }
 
+.secondary-button {
+  min-height: 46px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  font-weight: 800;
+}
+
 .form-error {
   min-height: 20px;
   margin: 12px 0 0;
@@ -228,6 +257,10 @@ input {
   display: grid;
   gap: 18px;
   margin-top: 18px;
+}
+
+.route-view[hidden] {
+  display: none;
 }
 
 .status-band {
@@ -309,6 +342,99 @@ input {
   white-space: nowrap;
 }
 
+.view-tabs,
+.project-tabs,
+.project-nav-tabs,
+.detail-meta,
+.evidence-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.view-tabs {
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #12171c;
+}
+
+.view-tabs a,
+.project-tabs a,
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.view-tabs a[aria-current],
+.view-tabs a:hover,
+.project-tabs a:hover,
+.back-link:hover {
+  border-color: rgba(102, 168, 255, 0.45);
+  background: rgba(102, 168, 255, 0.1);
+  color: var(--accent-2);
+}
+
+.project-nav-tabs {
+  min-width: 0;
+}
+
+.panel-subhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0 10px;
+}
+
+.panel-subhead h3 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.mini-action {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+
+.item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.split-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+  gap: 14px;
+}
+
+.split-list h3,
+.project-card h3 {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
 .task-metrics {
   display: grid;
   grid-template-columns: repeat(5, minmax(72px, 1fr));
@@ -340,12 +466,75 @@ input {
 }
 
 .queue-item,
-.project-panel {
+.project-panel,
+.project-card,
+.lane-section,
+.plan-column {
   min-width: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #12171c;
   padding: 12px;
+}
+
+.queue-item[data-state="done"] {
+  opacity: 0.68;
+}
+
+.plan-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.plan-column {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 170px;
+}
+
+.plan-column h4,
+.lane-section h3 {
+  margin: 0;
+  font-size: 0.86rem;
+}
+
+.lane-section {
+  display: grid;
+  gap: 12px;
+}
+
+.lane-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.lane-group {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.lane-group h4 {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.project-card {
+  display: grid;
+  gap: 10px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.project-card:hover {
+  border-color: rgba(76, 195, 138, 0.5);
+  background: #141c1f;
 }
 
 .queue-title {
@@ -360,11 +549,21 @@ input {
 }
 
 .queue-item p,
-.project-panel p {
+.project-panel p,
+.project-card p,
+.project-detail-panel p {
   margin: 0;
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.45;
+}
+
+.project-card ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .project-grid {
@@ -400,6 +599,85 @@ input {
   font-size: 0.82rem;
 }
 
+.detail-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.detail-head h2 {
+  margin: 0 0 6px;
+}
+
+.detail-meta {
+  margin-top: 14px;
+}
+
+.evidence-inline {
+  justify-content: flex-end;
+}
+
+.evidence-tag,
+.evidence-item {
+  text-decoration: none;
+}
+
+.evidence-item {
+  display: block;
+  color: var(--accent-2);
+}
+
+.modal-shell[hidden] {
+  display: none;
+}
+
+.modal-shell {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  justify-items: end;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 8, 10, 0.68);
+}
+
+.action-drawer {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  width: min(480px, 100%);
+  min-height: 100vh;
+  padding: 20px;
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.modal-field {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.modal-field[hidden] {
+  display: none;
+}
+
+.drawer-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
 .empty {
   min-height: 72px;
   display: grid;
@@ -428,7 +706,10 @@ input {
   .status-band,
   .grid-main,
   .grid-secondary,
-  .project-grid {
+  .project-grid,
+  .split-list,
+  .plan-board,
+  .lane-grid {
     grid-template-columns: 1fr;
   }
 
@@ -455,7 +736,9 @@ input {
 
   .topbar-actions,
   .metric-row,
-  .task-metrics {
+  .task-metrics,
+  .view-tabs,
+  .drawer-actions {
     width: 100%;
   }
 
@@ -477,5 +760,13 @@ input {
   .panel,
   .gate-form {
     padding: 14px;
+  }
+
+  .detail-head {
+    grid-template-columns: 1fr;
+  }
+
+  .drawer-actions {
+    grid-template-columns: 1fr;
   }
 }
