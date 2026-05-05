@@ -12,6 +12,24 @@
   const actionModal = document.getElementById("action-modal");
   const actionForm = document.getElementById("action-form");
 
+  function readMetaContent(name) {
+    const el = document.querySelector('meta[name="' + name + '"]');
+    const raw = el && el.getAttribute("content");
+    return raw ? String(raw).trim() : "";
+  }
+
+  function defaultApiBaseForPage() {
+    const fromMeta = readMetaContent("maverick-dashboard-api-base");
+    if (fromMeta) {
+      return normalizeBase(fromMeta);
+    }
+    const host = (location.hostname || "").toLowerCase();
+    if (host === "localhost" || host === "127.0.0.1" || host === "") {
+      return "http://127.0.0.1:3847";
+    }
+    return "https://maverick.brookswimer.com";
+  }
+
   const sectionLabels = {
     focus: "Focus",
     next: "Next",
@@ -20,7 +38,7 @@
   };
 
   const state = {
-    apiBase: localStorage.getItem("maverickCommandCenter.apiBase") || "http://127.0.0.1:3848",
+    apiBase: localStorage.getItem("maverickCommandCenter.apiBase") || defaultApiBaseForPage(),
     token: sessionStorage.getItem("maverickCommandCenter.token") || "",
     lastPayload: null,
     detailCache: new Map(),
@@ -165,6 +183,7 @@
     }
     const response = await fetch(state.apiBase + path, {
       method: options && options.method ? options.method : "GET",
+      credentials: "include",
       headers: Object.assign(
         {},
         authHeaders(),

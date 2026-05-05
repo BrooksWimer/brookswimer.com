@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow" />
+  <!-- Optional deploy override for the Maverick dashboard API origin (leave empty to auto-pick by hostname). -->
+  <meta name="maverick-dashboard-api-base" content="" />
   <title>Maverick Command Center</title>
   <meta name="theme-color" content="#101418" />
   <link rel="icon" href="images/BrooksWimer_Logo.png" />
@@ -39,10 +41,10 @@
         </div>
         <label>
           <span>API base</span>
-          <input id="api-base" name="apiBase" type="url" value="http://127.0.0.1:3848" autocomplete="url" required />
+          <input id="api-base" name="apiBase" type="url" value="http://127.0.0.1:3847" autocomplete="url" required />
         </label>
         <label>
-          <span>Access token</span>
+          <span>Access token (optional if the API only uses Cloudflare Access and has no MAVERICK_DASHBOARD_TOKEN)</span>
           <input id="api-token" name="apiToken" type="password" autocomplete="current-password" />
         </label>
         <p class="form-error" id="gate-error" role="alert"></p>
