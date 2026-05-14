@@ -57,3 +57,24 @@ Durable cross-workstream facts, decisions, and conventions. Operator-editable.
 - **Project ordering after the flagships** (Maverick → Astra → SyncSonic): what's next? Defer until M2 surfaces the question with concrete content updates.
 - **Detail-page treatment for non-flagships:** how much polish do older projects get? Operator default: enough to feel intentional, not enough to crowd the flagships.
 - **Resume target role family:** unknown until the operator picks one for M4. Defer.
+
+## 2026-05-14 — MASTER_INVENTORY populated + content.json is canonical source
+
+PR #9 brought `resume/MASTER_INVENTORY.md` out of skeleton state. Two durable findings worth recording:
+
+**`content.json` is the canonical source, not the PDF.** M3's original framing in `PROJECT_ROADMAP.md` said "extract from `Brooks Wimer Resume.pdf` into `MASTER_INVENTORY.md`." Reality: `resume/content.json` is what the Python renderer pipeline (`generator.py`, `html_builder.py`, `renderer.py`) actually consumes. The PDF is downstream output, not source-of-truth. `MASTER_INVENTORY.md` is now the human-readable mirror of `content.json` — when facts change, update both. M3 roadmap text was updated to match in the same PR.
+
+**Astra missing from `resume/content.json` is an open decision.** Astra is a flagship project on the portfolio site (`projects/astra/`) and on the public-name rule above, but it has no entry in `content.json`. The resume renderer cannot include Astra in any tailored output today. PR #9 added an explicit "Astra (public name; internal: Netwise) — *not yet in content.json*" section to `MASTER_INVENTORY.md` so the gap stays visible across future tailoring passes.
+
+Resolution options:
+1. **Add Astra to `content.json`** with bullets aligned to the Astra entry in the Netwise repo's `PROJECT_MEMORY.md` (e.g., "Anonymous-handle hosted sync between mobile and desktop scanner, network-level insight aggregator on top of 7 device-type advice rules"). Then remove the "not yet in content.json" note from MASTER_INVENTORY.md.
+2. **Mark Astra portfolio-only** if you intentionally don't want it on tailored resumes (e.g., if it's not yet at a state you'd point a hiring manager toward). Then keep MASTER_INVENTORY's flagged section as a permanent record of the decision.
+
+Cross-repo concern: this is also captured in the Astra/Netwise `docs/maverick/PROJECT_MEMORY.md` 2026-05-14 entry so the decision can be made consistently from either side.
+
+## 2026-05-14 — command-center sub-surface on master
+
+The `cursor/command-center-maverick-tunnel` branch's command-center work was merged to master via commits `2307c06` ("feat(command-center): tunnel API base, credentialed fetch, port 3847 default") and `194f2fe` ("Default command center to linux state endpoint"). The command-center is a dashboard sub-surface that fetches data from the live Linux Maverick API and renders it under the brookswimer.com domain.
+
+This sub-surface is **part of the portfolio repo by design** but is not the public-facing portfolio — it's the operator's tunnel into Maverick state from outside the local network. It uses Cloudflare Access for auth (per the existing `MAVERICK_DASHBOARD_ALLOWED_ORIGIN` + Cloudflare Access service-token pattern). The portfolio epic charter ([`epics/portfolio.md`](epics/portfolio.md)) treats the public site as the primary surface; command-center is operator-only and shouldn't be linked from public navigation. Future polish work on the public portfolio should not touch command-center routing or assets.
+
